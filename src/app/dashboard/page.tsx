@@ -1,65 +1,29 @@
 import { redirect } from 'next/navigation';
-// Removed unused Link import: import Link from 'next/link'; 
-// Removed useState, useEffect, useAuth, useRouter
+import { createClient } from '@/utils/supabase/server';
+import DashboardSiderbar from '@/components/DashboardSiderbar'; 
+import DashboardClient from '@/components/DashboardClient';
 
-import { createClient } from '@/utils/supabase/server'; // Import server client
-import DashboardHeader from '@/components/DashboardHeader'; // 使用新的DashboardHeader组件
-import DashboardClient from '@/components/DashboardClient'; // Import the new client component
-
-// Define interfaces (can stay here or move)
-// MonitoredAccount interface 被移除
-
-export default async function Dashboard() {
+export default async function DashboardPage() {
   const supabase = await createClient();
 
   const {
     data: { user },
-    error: authError, // Capture auth error
+    error: authError,
   } = await supabase.auth.getUser();
 
-  // Redirect to login if not authenticated or if there was an error getting user
   if (authError || !user) {
     console.error('Auth Error or No User, redirecting to login:', authError);
-    redirect('/login?message=请先登录以访问控制台'); // Add a message
+    redirect('/login?message=请先登录以访问控制台');
   }
 
-  // Fetch monitored accounts server-side for the logged-in user
-  // let accounts: MonitoredAccount[] = []; // 移除
-  // let fetchError: string | null = null; // 移除
-
-  // try {
-  //   const { data, error } = await supabase
-  //     .from('monitored_accounts')
-  //     .select('*')
-  //     .eq('user_id', user.id) // Filter by logged-in user
-  //     .order('created_at', { ascending: false });
-
-  //   if (error) {
-  //     throw error;
-  //   }
-  //   accounts = data || [];
-  // } catch (error: unknown) {
-  //   console.error('Error fetching monitored accounts:', error);
-  //   // Check if error has a message property before accessing it
-  //   fetchError = '无法加载监控账号列表: ' + (error instanceof Error ? error.message : '未知错误');
-  //   // Decide how to handle this - maybe show an error message in the UI
-  //   // For now, we'll pass the error state down
-  // } // 整个 try-catch 块被移除
-
-  // Removed client-side state and effects
-
   return (
-    <div className="min-h-screen bg-[#0f1218] text-white">
-      {/* Header component likely needs to be a client component to handle logout etc. */}
-      {/* Ensure Header component is adapted or created */}
-      <DashboardHeader /> 
-
-      <main className="p-6">
-        {/* Render the client component, passing initial data */}
-        {/* DashboardClient 将不再接收 initialAccounts 和 initialFetchError */}
+    <div className="flex h-screen bg-[#0f1218] text-white">
+      {/* 侧边栏: DashboardHeader 组件现在被用作侧边栏 */}
+      <DashboardSiderbar /> 
+      
+      {/* 主要内容区域: 添加了 ml-64 以适应侧边栏宽度 */}
+      <main className="flex-1 overflow-y-auto p-6 ml-64"> 
         <DashboardClient />
-        
-        {/* 电话号码绑定提示框 - 已移至DashboardClient组件中 */}
       </main>
     </div>
   );

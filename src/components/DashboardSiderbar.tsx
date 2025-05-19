@@ -1,0 +1,164 @@
+'use client';
+
+import { useState, useEffect } from 'react';
+import Link from 'next/link';
+import { createClient } from '@/utils/supabase/client';
+import { type User } from '@supabase/supabase-js';
+import { LayoutDashboard, PlusSquare, Bell, LogOut, Zap, Layers } from 'lucide-react';
+
+export default function DashboardSidebar() {
+  const [user, setUser] = useState<User | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [activeTab, setActiveTab] = useState<'create' | 'projects'>('create');
+  const supabase = createClient();
+
+  useEffect(() => {
+    const currentPathname = window.location.pathname;
+    // "Projects" is active only if the path is exactly /dashboard/projects
+    // Otherwise, "Create" is active for any other path under /dashboard (e.g., /dashboard, /dashboard/some-other-page)
+    if (currentPathname === '/dashboard/projects') {
+      setActiveTab('projects');
+    } else {
+      setActiveTab('create');
+    }
+
+    const getUser = async () => {
+      try {
+        const { data: { user: currentUser } } = await supabase.auth.getUser();
+        setUser(currentUser);
+      } catch (error) {
+        console.error("Error fetching user in Sidebar:", error);
+        setUser(null);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    getUser();
+
+    const { data: authListener } = supabase.auth.onAuthStateChange((event, session) => {
+      setUser(session?.user ?? null);
+      setLoading(false);
+      if (event === 'SIGNED_OUT') {
+        window.location.href = '/login';
+      }
+    });
+
+    return () => {
+      authListener?.subscription.unsubscribe();
+    };
+  }, [supabase]); // Listen to supabase client changes if any
+
+  // Effect to update activeTab if pathname changes due to client-side navigation
+  useEffect(() => {
+    const handleRouteChange = () => {
+      const currentPathname = window.location.pathname;
+      if (currentPathname === '/dashboard/projects') {
+        setActiveTab('projects');
+      } else if (currentPathname.startsWith('/dashboard')) { // Ensure we are under dashboard
+        setActiveTab('create');
+      }
+    };
+
+    // Listen to Next.js router events if you were using <Link> for SPA-like navigation for "Create"
+    // For now, direct window.location.pathname check on mount and simple Link clicks is fine.
+    // If using Next/Router, you might use:
+    // import { useRouter } from 'next/navigation';
+    // const router = useRouter();
+    // useEffect(() => { handleRouteChange(router.asPath) }, [router.asPath]);
+    
+    // For simple href changes and direct loads, the initial useEffect is okay.
+    // This additional effect can help if other client-side route changes happen that don't remount the component.
+    window.addEventListener('popstate', handleRouteChange); // Handles browser back/forward
+    return () => {
+      window.removeEventListener('popstate', handleRouteChange);
+    };
+  }, []);
+
+
+  const handleSignOut = async () => {
+    await supabase.auth.signOut();
+  };
+
+  return (
+    <aside className="w-64 bg-[#1c2532] text-white p-4 flex flex-col justify-between h-full border-r border-gray-700 fixed left-0 top-0">
+      <div>
+        {/* Logo and Brand Name */}
+        <div className="flex items-center space-x-2 mb-10 p-2">
+          <Link href="/dashboard" className="flex items-center space-x-2 whitespace-nowrap">
+            <Layers size={30} className="text-purple-400" />
+            <h1 className="text-xl font-semibold">AI Baby Podcast</h1>
+          </Link>
+        </div>
+
+        {/* Navigation Links */}
+        <nav className="space-y-2">
+          <Link
+            href="/dashboard" // Changed href to always point to /dashboard
+            onClick={(e) => {
+              // e.preventDefault(); // Removed preventDefault as it now navigates
+              setActiveTab('create');
+            }}
+            className={`flex items-center space-x-3 py-2.5 px-3 rounded-lg transition-all duration-200 ease-in-out ${activeTab === 'create' ? 'bg-purple-600 text-white shadow-lg scale-105' : 'text-gray-400 hover:bg-gray-700/60 hover:text-gray-200'}`}>
+            <PlusSquare size={20} />
+            <span className="font-medium">Create</span>
+          </Link>
+          <Link
+            href="/dashboard/projects" // "Projects" navigates to its own page
+            onClick={() => setActiveTab('projects')} // Set active tab optimistically
+            className={`flex items-center space-x-3 py-2.5 px-3 rounded-lg transition-all duration-200 ease-in-out ${activeTab === 'projects' ? 'bg-purple-600 text-white shadow-lg scale-105' : 'text-gray-400 hover:bg-gray-700/60 hover:text-gray-200'}`}>
+            <LayoutDashboard size={20} />
+            <span className="font-medium">Projects</span>
+          </Link>
+        </nav>
+      </div>
+
+      <div className="space-y-3">
+        {/* Credit Info */}
+        <div className="bg-gray-700/40 p-3 rounded-lg text-sm">
+            <div className="flex items-center justify-between text-gray-300 mb-2">
+                <span className="flex items-center font-medium"><Zap size={16} className="mr-1.5 text-yellow-400"/>Credit left</span>
+                <span className="font-semibold text-white">0</span>
+            </div>
+            {/* Changed button to Link for navigation */}
+            <Link href="/pricing" className="block w-full bg-gray-600 hover:bg-purple-500/80 text-white text-center py-2 rounded-md text-xs font-medium transition-colors">
+                Check Plan
+            </Link>
+        </div>
+
+        {/* Notification Link */}
+        <Link href="/dashboard/notifications" className={`flex items-center space-x-3 py-2.5 px-3 rounded-lg transition-all duration-200 ease-in-out text-gray-400 hover:bg-gray-700/60 hover:text-gray-200`}>
+          <Bell size={20} />
+          <span className="font-medium">Notification</span>
+        </Link>
+
+        {/* User Info and Sign Out */}
+        {loading ? (
+          <div className="h-10 bg-gray-700/60 animate-pulse rounded-lg"></div>
+        ) : user ? (
+          <div className="border-t border-gray-700/50 pt-3 mt-2">
+            <div className="flex items-center space-x-2 p-2 rounded-lg hover:bg-gray-700/60 group relative transition-colors">
+              <div className="w-9 h-9 rounded-full bg-gray-600 flex items-center justify-center text-white text-base font-semibold">
+                {user.email?.charAt(0).toUpperCase()}
+              </div>
+              <div className="overflow-hidden">
+                <span className="text-sm font-medium text-gray-200 block truncate">Hi, {user.email?.split('@')[0]}</span>
+              </div>
+              <button
+                onClick={handleSignOut}
+                className="ml-auto p-1.5 rounded-md text-gray-500 hover:text-red-400 hover:bg-red-500/20 opacity-0 group-hover:opacity-100 transition-all"
+                title="Sign Out"
+              >
+                <LogOut size={18} />
+              </button>
+            </div>
+          </div>
+        ) : (
+          <Link href="/login" className="block w-full text-center p-2.5 bg-purple-600 hover:bg-purple-700 rounded-lg text-sm font-medium text-white transition-colors">
+            Login
+          </Link>
+        )}
+      </div>
+    </aside>
+  );
+}

@@ -1,99 +1,122 @@
 'use client';
 
-import { useState, useEffect, useRef } from 'react';
-// import Image from 'next/image'; // No longer used
-import { createClient } from '@/utils/supabase/client';
-// import type { RealtimeChannel } from '@supabase/supabase-js'; // No longer used if realtime features are removed or simplified
+import { useState, useEffect } from 'react';
+// import { createClient } from '@/utils/supabase/client'; // supabase client, uncomment if needed
+import { LinkIcon, UploadCloud, FileText, Settings2, Sparkles, Film, SearchCode } from 'lucide-react';
 
-// Removed MonitoredAccount interface
-// Removed ApiResponse interface if it was specific to account adding
-
-// Simplified Notification interface if it was Twitter specific
 interface Notification {
   id: string;
-  title: string; // Generic title
+  title: string;
   content: string;
   timestamp: Date;
   isImportant: boolean;
-  // Removed accountUsername, accountDisplayName, profileImageUrl if they were Twitter specific
 }
 
-// Removed DashboardClientProps if no props are passed anymore
-// interface DashboardClientProps {
-//   initialAccounts: MonitoredAccount[]; // Removed
-//   initialFetchError: string | null; // Removed
-// }
+interface YouTubeVideo {
+  id: string;
+  videoId: string;
+  title: string; // Title will be empty as requested
+}
 
-// Removed TweetData, PresenceData, PresenceState interfaces as they were Twitter/Realtime specific for monitoring
+export default function DashboardClient() {
+  const [allReceivedNotifications, setAllReceivedNotifications] = useState<Notification[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
 
-// Removed getStartOfToday if no longer used by notification clearing logic
+  // Mocked YouTube videos - titles are now empty strings
+  const youtubeVideos: YouTubeVideo[] = [
+    { id: '1', videoId: 'EuWy150zyp8', title: '' },
+    { id: '2', videoId: 'Oj_2aW7p0qc', title: '' },
+    { id: '3', videoId: 'XKEbMspIrfo', title: '' },
+  ];
 
-export default function DashboardClient(/* Removed props */) {
-  // Removed states related to newAccount, isAddingAccount, addAccountError, addAccountSuccess, monitoredAccounts, accountsError
-  const [allReceivedNotifications, setAllReceivedNotifications] = useState<Notification[]>([]); 
-  const [isLoading, setIsLoading] = useState(false); // May or may not be needed depending on final functionality
-  const supabase = createClient();
-  // const channelRef = useRef<RealtimeChannel | null>(null); // Removed if realtime features are removed
-  // const dailyClearTimerRef = useRef<NodeJS.Timeout | null>(null); // Removed if notification logic is removed/simplified
-
-  // Removed useEffect for dailyClearTimerRef if notifications are simplified or removed
-  // Removed useEffect for Realtime setup (new-tweets-notifications) if Twitter monitoring is removed
-  // Removed handleAddAccount function
-  // Removed formatTimeAgo function if not used elsewhere
-
-  // Dummy effect to simulate loading or fetching some initial dashboard data (e.g., user stats, recent videos)
   useEffect(() => {
     setIsLoading(true);
-    // Replace with actual data fetching for AI Baby Podcast dashboard if needed
     setTimeout(() => {
-      // Example: Fetch recently created videos or user stats
-      // For now, just setting loading to false
       setIsLoading(false);
-    }, 1000);
+    }, 500);
   }, []);
 
-  // This component will now primarily display general dashboard information for AI Baby Podcast
-  // or serve as a placeholder for future dashboard widgets.
-
   return (
-    <div className="space-y-6">
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {/* Placeholder for Dashboard Widgets - e.g., Stats, Quick Actions */}
-        <div className="bg-[#1c2128] p-6 rounded-lg shadow-lg">
-          <h3 className="text-xl font-semibold mb-3">欢迎回来!</h3>
-          <p className="text-gray-400">
-            这里是您的 AI Baby Podcast 控制台。您可以在这里管理您的视频，查看统计数据，并创建新的内容。
-          </p>
+    <div className="space-y-8">
+      {/* Top: Video Creation Input Area */}
+      <section className="bg-[#161b22] p-6 rounded-lg shadow-md">
+        <textarea
+          placeholder="Describe what you want to create"
+          className="w-full h-24 p-3 bg-[#0d1117] border border-gray-700 rounded-md focus:ring-2 focus:ring-purple-500 focus:border-purple-500 placeholder-gray-500 text-white resize-none"
+        />
+        <div className="mt-4 flex flex-wrap items-center gap-3 text-sm">
+          <button className="flex items-center space-x-1.5 px-3 py-1.5 bg-gray-700 hover:bg-gray-600 rounded-md text-gray-300 transition-colors">
+            <LinkIcon size={16} />
+            <span>URL</span>
+          </button>
+          <button className="flex items-center space-x-1.5 px-3 py-1.5 bg-gray-700 hover:bg-gray-600 rounded-md text-gray-300 transition-colors">
+            <UploadCloud size={16} />
+            <span>Files</span>
+          </button>
+          <button className="flex items-center space-x-1.5 px-3 py-1.5 bg-gray-700 hover:bg-gray-600 rounded-md text-gray-300 transition-colors">
+            <FileText size={16} />
+            <span>Audio script</span>
+          </button>
+          <button className="ml-auto flex items-center space-x-1.5 px-3 py-1.5 bg-gray-700 hover:bg-gray-600 rounded-md text-gray-300 transition-colors">
+            <Settings2 size={16} />
+          </button>
         </div>
+        <div className="mt-4 flex items-center justify-end gap-3 text-sm">
+            <button className="flex items-center space-x-1.5 px-4 py-2 bg-purple-600 hover:bg-purple-700 rounded-md text-white font-medium transition-colors">
+                <Sparkles size={16} />
+                <span>Full AI</span>
+            </button>
+            <button className="px-4 py-2 bg-gray-700 hover:bg-gray-600 rounded-md text-gray-300 transition-colors">
+                Smart match
+            </button>
+        </div>
+      </section>
 
-        <div className="bg-[#1c2128] p-6 rounded-lg shadow-lg">
-          <h3 className="text-xl font-semibold mb-3">快速导航</h3>
-          <ul className="space-y-2">
-            {/* Add more relevant links as needed */}
-          </ul>
+      {/* YouTube Iframe Examples - Title translated, icon added */}
+      <section>
+        <h2 className="text-2xl font-semibold mb-4 text-white flex items-center">
+          <SearchCode size={24} className="mr-3 text-purple-400"/> 
+          Explores & Examples
+        </h2>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {youtubeVideos.map(video => (
+            <div key={video.id} className="bg-[#1c2128] p-4 rounded-lg shadow-lg hover:shadow-purple-500/30 transition-shadow">
+              <div className="aspect-video overflow-hidden rounded-md mb-3">
+                <iframe
+                  className="w-full h-full"
+                  src={`https://www.youtube.com/embed/${video.videoId}?loop=1&controls=0&rel=0&showinfo=0&modestbranding=1`}
+                  title={video.title} // Title will be empty, but attribute is still good for accessibility
+                  frameBorder="0"
+                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                  allowFullScreen
+                ></iframe>
+              </div>
+              {/* Title h4 is kept for structure but will be empty */}
+              <h4 className="text-sm font-medium text-white truncate h-5"></h4>
+            </div>
+          ))}
         </div>
-        
-        {/* Example Stats Card - replace with actual data */}
-        <div className="bg-[#1c2128] p-6 rounded-lg shadow-lg">
-          <h3 className="text-xl font-semibold mb-3">视频统计 (示例)</h3>
-          <div className="space-y-2">
-            <p className="text-gray-400">总视频数: <span className="font-semibold text-white">0</span></p>
-            <p className="text-gray-400">总观看次数: <span className="font-semibold text-white">0</span></p>
-            {/* Add more stats as the application develops */}
-          </div>
-        </div>
-      </div>
+      </section>
 
-      {/* Section for notifications - simplified or to be adapted for AI Baby Podcast events */}
+      {/* My Projects - Content cleared and placeholder added */}
+      <section>
+        <h2 className="text-2xl font-semibold mb-4 text-white flex items-center"><Film size={24} className="mr-3 text-purple-400"/> My Projects</h2>
+        <div className="bg-[#1c2128] p-6 rounded-lg shadow-lg min-h-[200px] flex flex-col items-center justify-center text-center">
+          <p className="text-gray-500">Your created video projects will be displayed here.</p>
+          <p className="text-gray-400 mt-1">Start creating your first Baby Podcast!</p>
+        </div>
+      </section>
+
+      {/* Notifications Section (Existing) - Title translated */}
       {allReceivedNotifications.length > 0 && (
-        <div className="bg-[#1c2128] p-6 rounded-lg shadow-lg">
-          <h3 className="text-xl font-semibold mb-4">最新通知</h3>
+        <section className="bg-[#1c2128] p-6 rounded-lg shadow-lg">
+          <h3 className="text-xl font-semibold mb-4">Recent Notifications</h3>
           <div className="space-y-3 max-h-96 overflow-y-auto">
             {allReceivedNotifications.map((notification) => (
-              <div key={notification.id} className={`p-3 rounded-md ${notification.isImportant ? 'bg-blue-900/50 border border-blue-700' : 'bg-[#161b22]'}`}>
+              <div key={notification.id} className={`p-3 rounded-md ${notification.isImportant ? 'bg-purple-800/60 border border-purple-600' : 'bg-[#161b22]'}`}>
                 <div className="flex justify-between items-start">
                   <div>
-                    <h4 className="font-medium">{notification.title}</h4>
+                    <h4 className="font-medium text-white">{notification.title}</h4>
                     <p className="text-sm text-gray-400 mt-1">{notification.content}</p>
                   </div>
                   <span className="text-xs text-gray-500 whitespace-nowrap">
@@ -103,12 +126,12 @@ export default function DashboardClient(/* Removed props */) {
               </div>
             ))}
           </div>
-        </div>
+        </section>
       )}
 
       {isLoading && (
-        <div className="text-center py-4">
-          <p className="text-gray-500">加载控制台数据...</p>
+        <div className="text-center py-10">
+          <p className="text-gray-500">Loading dashboard data...</p>
         </div>
       )}
     </div>
