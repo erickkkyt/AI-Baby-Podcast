@@ -182,6 +182,7 @@ AI-Baby-Podcast/
 *   **视频 URL 存储:** 直接在 `projects` 表中存储来自 n8n 的 `videoUrl`，而不是重新上传。
 *   **仪表盘 UI 清理:** 从主 `DashboardClient.tsx` 中移除了"我的项目"预览部分，以简化创建页面。
 *   **RLS 策略调试:** 解决了与从 RPC 函数内部向 `projects` 插入数据和更新 `user_profiles`相关的几个 RLS 问题。关键是确保 `authenticated` 角色（用户会话在调用 RPC 时使用的角色）具有必要的权限，或者 RPC 函数本身以提升的权限运行（如果使用 `SECURITY DEFINER` 定义并由超级用户拥有）（尽管此处使用了对 `authenticated` 的直接 RLS 授权）。
+*   **类型定义修复:** 解决了 Vercel 部署中 `src/types/project.ts` 不是模块的错误，通过在该文件中定义并导出 `Project` 接口。
 
 ## ⚠️已知问题和注意事项
 
