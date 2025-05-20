@@ -11,7 +11,7 @@ export default function TermsOfServicePage() {
 
       <section className="mb-8 p-6 bg-white dark:bg-gray-800 shadow-lg rounded-lg">
         <p className="mb-4">
-          By accessing and using <strong>AI Baby Podcast</strong> ("the Service"), you agree to comply with and be bound by the following Terms of Use ("Terms") related to the use of Google Login. If you do not agree to these Terms, please do not use the Service or the Google Login functionality.
+          By accessing and using <strong>AI Baby Podcast</strong> (&quot;the Service&quot;), you agree to comply with and be bound by the following Terms of Use (&quot;Terms&quot;) related to the use of Google Login. If you do not agree to these Terms, please do not use the Service or the Google Login functionality.
         </p>
       </section>
 
@@ -136,7 +136,7 @@ export default function TermsOfServicePage() {
       <section className="mb-8 p-6 bg-white dark:bg-gray-800 shadow-lg rounded-lg">
         <h2 className="text-2xl font-semibold mb-4 text-blue-500 dark:text-blue-300">8. Disclaimer of Warranties</h2>
         <p className="mb-2">
-          8.1. The Service is provided "as is" and "as available." We disclaim all warranties, express or implied, including fitness for a particular purpose and non-infringement.
+          8.1. The Service is provided &quot;as is&quot; and &quot;as available.&quot; We disclaim all warranties, express or implied, including fitness for a particular purpose and non-infringement.
         </p>
         <p className="mb-2">
           8.2. We do not guarantee the Service will be uninterrupted, error-free, or compatible with all devices or platforms.
