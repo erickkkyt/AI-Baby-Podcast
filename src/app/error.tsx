@@ -38,7 +38,7 @@ export default function Error({
         <h1 className="text-2xl font-bold mb-4 text-gray-800">An Unexpected Error Occurred</h1>
         
         <p className="mb-6 text-gray-600">
-          We're sorry, an error occurred in the application. Our technical team has been notified.
+          We&apos;re sorry, an error occurred in the application. Our technical team has been notified.
         </p>
         
         <div className="flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-3 justify-center">

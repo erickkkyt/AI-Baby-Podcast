@@ -185,6 +185,7 @@ AI-Baby-Podcast/
 *   **类型定义修复:** 解决了 Vercel 部署中 `src/types/project.ts` 不是模块的错误，通过在该文件中定义并导出 `Project` 接口。
 *   **模态框属性修复:** 修复了 `DashboardClient.tsx` 中 `ConfirmationModal` 组件的 `onClose` 属性错误，将其更正为 `onCancel`，以解决 Vercel 构建错误。
 *   **模态框文本属性修复:** 修复了 `DashboardClient.tsx` 中 `ConfirmationModal` 组件的 `confirmButtonText` 和 `cancelButtonText` 属性错误，将其更正为 `confirmText` 和 `cancelText`，以解决 Vercel 构建错误。
+*   **ESLint 错误修复:** 修复了 `src/app/error.tsx` 中的 `react/no-unescaped-entities` ESLint 错误，将未转义的单引号替换为 HTML 实体，以解决 Vercel 构建错误。
 
 ## ⚠️已知问题和注意事项
 
