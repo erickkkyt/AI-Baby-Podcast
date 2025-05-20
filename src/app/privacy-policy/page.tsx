@@ -11,7 +11,7 @@ export default function PrivacyPolicyPage() {
 
         <article className="prose prose-invert prose-sm sm:prose-base max-w-none space-y-6">
           <p>
-            AI Baby Podcast ("us", "we", or "our") operates the AI Baby Podcast website and related services (the "Service"). This page informs you of our policies regarding the collection, use, and disclosure of personal data when you use our Service and the choices you have associated with that data.
+            AI Baby Podcast (&quot;us&quot;, &quot;we&quot;, or &quot;our&quot;) operates the AI Baby Podcast website and related services (the &quot;Service&quot;). This page informs you of our policies regarding the collection, use, and disclosure of personal data when you use our Service and the choices you have associated with that data.
           </p>
 
           <section>
@@ -22,7 +22,7 @@ export default function PrivacyPolicyPage() {
             <h3 className="text-lg sm:text-xl font-medium text-white mt-4">Types of Data Collected</h3>
             <h4 className="text-md sm:text-lg font-normal text-gray-200 mt-2">Personal Data</h4>
             <p>
-              While using our Service, we may ask you to provide us with certain personally identifiable information that can be used to contact or identify you ("Personal Data"). Personally identifiable information may include, but is not limited to:
+              While using our Service, we may ask you to provide us with certain personally identifiable information that can be used to contact or identify you (&quot;Personal Data&quot;). Personally identifiable information may include, but is not limited to:
             </p>
             <ul className="list-disc pl-5 space-y-1">
               <li>Email address</li>
@@ -32,7 +32,7 @@ export default function PrivacyPolicyPage() {
             </ul>
             <h4 className="text-md sm:text-lg font-normal text-gray-200 mt-3">Usage Data</h4>
             <p>
-              We may also collect information on how the Service is accessed and used ("Usage Data"). This Usage Data may include information such as your computer's Internet Protocol address (e.g. IP address), browser type, browser version, the pages of our Service that you visit, the time and date of your visit, the time spent on those pages, unique device identifiers and other diagnostic data.
+              We may also collect information on how the Service is accessed and used (&quot;Usage Data&quot;). This Usage Data may include information such as your computer&apos;s Internet Protocol address (e.g. IP address), browser type, browser version, the pages of our Service that you visit, the time and date of your visit, the time spent on those pages, unique device identifiers and other diagnostic data.
             </p>
             <h4 className="text-md sm:text-lg font-normal text-gray-200 mt-3">Tracking & Cookies Data</h4>
             <p>
@@ -68,7 +68,7 @@ export default function PrivacyPolicyPage() {
             <p>
              Your information, including Personal Data, may be transferred to — and maintained on — computers located outside of your state, province, country or other governmental jurisdiction where the data protection laws may differ than those from your jurisdiction.
             </p>
-             <p>If you are located outside [Your Company's Country of Operation] and choose to provide information to us, please note that we transfer the data, including Personal Data, to [Your Company's Country of Operation] and process it there. Your consent to this Privacy Policy followed by your submission of such information represents your agreement to that transfer.</p>
+             <p>If you are located outside [Your Company&apos;s Country of Operation] and choose to provide information to us, please note that we transfer the data, including Personal Data, to [Your Company&apos;s Country of Operation] and process it there. Your consent to this Privacy Policy followed by your submission of such information represents your agreement to that transfer.</p>
           </section>
 
           <section>
@@ -104,7 +104,7 @@ export default function PrivacyPolicyPage() {
           <section>
             <h2 className="text-xl sm:text-2xl font-semibold text-white">8. Service Providers</h2>
             <p>
-                We may employ third party companies and individuals to facilitate our Service ("Service Providers"), to provide the Service on our behalf, to perform Service-related services or to assist us in analyzing how our Service is used. These third parties have access to your Personal Data only to perform these tasks on our behalf and are obligated not to disclose or use it for any other purpose.
+                We may employ third party companies and individuals to facilitate our Service (&quot;Service Providers&quot;), to provide the Service on our behalf, to perform Service-related services or to assist us in analyzing how our Service is used. These third parties have access to your Personal Data only to perform these tasks on our behalf and are obligated not to disclose or use it for any other purpose.
             </p>
           </section>
 
@@ -116,16 +116,16 @@ export default function PrivacyPolicyPage() {
           </section>
 
           <section>
-            <h2 className="text-xl sm:text-2xl font-semibold text-white">10. Children's Privacy</h2>
+            <h2 className="text-xl sm:text-2xl font-semibold text-white">10. Children&apos;s Privacy</h2>
             <p>
-              Our Service does not address anyone under the age of 13 ("Children"). We do not knowingly collect personally identifiable information from anyone under the age of 13. If you are a parent or guardian and you are aware that your Child has provided us with Personal Data, please contact us. If we become aware that we have collected Personal Data from children without verification of parental consent, we take steps to remove that information from our servers.
+              Our Service does not address anyone under the age of 13 (&quot;Children&quot;). We do not knowingly collect personally identifiable information from anyone under the age of 13. If you are a parent or guardian and you are aware that your Child has provided us with Personal Data, please contact us. If we become aware that we have collected Personal Data from children without verification of parental consent, we take steps to remove that information from our servers.
             </p>
           </section>
 
           <section>
             <h2 className="text-xl sm:text-2xl font-semibold text-white">11. Changes to This Privacy Policy</h2>
             <p>
-              We may update our Privacy Policy from time to time. We will notify you of any changes by posting the new Privacy Policy on this page. We will let you know via email and/or a prominent notice on our Service, prior to the change becoming effective and update the "Last Updated" date at the top of this Privacy Policy.
+              We may update our Privacy Policy from time to time. We will notify you of any changes by posting the new Privacy Policy on this page. We will let you know via email and/or a prominent notice on our Service, prior to the change becoming effective and update the &quot;Last Updated&quot; date at the top of this Privacy Policy.
             </p>
             <p>
               You are advised to review this Privacy Policy periodically for any changes. Changes to this Privacy Policy are effective when they are posted on this page.

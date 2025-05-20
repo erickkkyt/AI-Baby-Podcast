@@ -190,6 +190,8 @@ AI-Baby-Podcast/
 *   **RPC 参数修复:** 根据数据库错误日志 (PGRST202)，修正了 `/api/submit-podcast-idea` 路由中调用 `deduct_credits_and_create_project` RPC 函数时传递的参数，确保与数据库函数签名一致 (添加 `p_credits_to_deduct`，移除 `p_user_id`)。
 *   **RPC 响应处理修复:** 调整了 `/api/submit-podcast-idea` 路由对 `deduct_credits_and_create_project` RPC 函数成功响应的处理逻辑，以适应 RPC 直接返回扁平项目对象而非嵌套对象的情况。同时确保了错误路径下的 `details` 字段为字符串，避免前端显示 `[object Object]`。
 *   **UI 文本更新:** 更新了 Projects 页面的处理中卡片和 Dashboard 创建成功后的提示信息，增加了预计等待时间 (约3分钟) 的描述，以改善用户体验。
+*   **ESLint 错误修复 (Privacy Policy):** 修复了 `src/app/privacy-policy/page.tsx` 中的 `react/no-unescaped-entities` ESLint 错误，将 JSX 中未转义的引号和撇号替换为相应的 HTML 实体，以解决 Vercel 构建错误。
+*   **ESLint 错误修复 (Terms of Service):** 修复了 `src/app/terms-of-service/page.tsx` 中的 `react/no-unescaped-entities` ESLint 错误，将 JSX 中未转义的引号和撇号替换为相应的 HTML 实体，以解决 Vercel 构建错误。
 
 ## ⚠️已知问题和注意事项
 

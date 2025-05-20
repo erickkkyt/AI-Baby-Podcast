@@ -11,7 +11,7 @@ export default function TermsOfServicePage() {
 
         <article className="prose prose-invert prose-sm sm:prose-base max-w-none space-y-6">
           <p>
-            Welcome to AI Baby Podcast! These Terms of Service ("Terms") govern your access to and use of the AI Baby Podcast website, applications, and services (collectively, the "Service"). By accessing or using the Service, you agree to be bound by these Terms.
+            Welcome to AI Baby Podcast! These Terms of Service (&quot;Terms&quot;) govern your access to and use of the AI Baby Podcast website, applications, and services (collectively, the &quot;Service&quot;). By accessing or using the Service, you agree to be bound by these Terms.
           </p>
 
           <section>
@@ -24,7 +24,7 @@ export default function TermsOfServicePage() {
           <section>
             <h2 className="text-xl sm:text-2xl font-semibold text-white">2. Description of Service</h2>
             <p>
-              AI Baby Podcast provides a platform for generating and listening to podcast content, potentially leveraging AI technologies for content creation and personalization (the "Service"). Features and offerings may evolve over time.
+              AI Baby Podcast provides a platform for generating and listening to podcast content, potentially leveraging AI technologies for content creation and personalization (the &quot;Service&quot;). Features and offerings may evolve over time.
             </p>
           </section>
 
@@ -62,7 +62,7 @@ export default function TermsOfServicePage() {
           <section>
             <h2 className="text-xl sm:text-2xl font-semibold text-white">6. Content You Provide</h2>
             <p>
-              If you submit, upload, or otherwise make available any content to the Service ("User Content"), you grant AI Baby Podcast a worldwide, non-exclusive, royalty-free, sublicensable, and transferable license to use, reproduce, distribute, prepare derivative works of, display, and perform your User Content in connection with the Service and AI Baby Podcast's (and its successors' and affiliates') business, including for promoting and redistributing part or all of the Service.
+              If you submit, upload, or otherwise make available any content to the Service (&quot;User Content&quot;), you grant AI Baby Podcast a worldwide, non-exclusive, royalty-free, sublicensable, and transferable license to use, reproduce, distribute, prepare derivative works of, display, and perform your User Content in connection with the Service and AI Baby Podcast&apos;s (and its successors&apos; and affiliates&apos;) business, including for promoting and redistributing part or all of the Service.
             </p>
              <p>You represent and warrant that you have all necessary rights to grant the licenses granted in this section and that your User Content does not violate any third-party rights or applicable laws.</p>
           </section>
@@ -77,7 +77,7 @@ export default function TermsOfServicePage() {
           <section>
             <h2 className="text-xl sm:text-2xl font-semibold text-white">8. Disclaimer of Warranties</h2>
             <p>
-              The Service is provided on an "AS IS" and "AS AVAILABLE" basis. AI Baby Podcast makes no warranties, expressed or implied, and hereby disclaims and negates all other warranties including, without limitation, implied warranties or conditions of merchantability, fitness for a particular purpose, or non-infringement of intellectual property or other violation of rights.
+              The Service is provided on an &quot;AS IS&quot; and &quot;AS AVAILABLE&quot; basis. AI Baby Podcast makes no warranties, expressed or implied, and hereby disclaims and negates all other warranties including, without limitation, implied warranties or conditions of merchantability, fitness for a particular purpose, or non-infringement of intellectual property or other violation of rights.
             </p>
           </section>
 
@@ -91,7 +91,7 @@ export default function TermsOfServicePage() {
           <section>
             <h2 className="text-xl sm:text-2xl font-semibold text-white">10. Governing Law</h2>
             <p>
-              These Terms shall be governed and construed in accordance with the laws of [Your Jurisdiction] (e.g., "the State of California, USA" or your company's operating jurisdiction), without regard to its conflict of law provisions. You should replace "[Your Jurisdiction]" with the actual governing jurisdiction.
+              These Terms shall be governed and construed in accordance with the laws of [Your Jurisdiction] (e.g., &quot;the State of California, USA&quot; or your company&apos;s operating jurisdiction), without regard to its conflict of law provisions. You should replace &quot;[Your Jurisdiction]&quot; with the actual governing jurisdiction.
             </p>
           </section>
 
