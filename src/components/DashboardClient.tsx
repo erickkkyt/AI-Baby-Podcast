@@ -378,7 +378,7 @@ export default function DashboardClient({ currentCredits }: { currentCredits: nu
       {/* Modals */}
       <ConfirmationModal
         isOpen={showConfirmModal}
-        onClose={() => setShowConfirmModal(false)}
+        onCancel={() => setShowConfirmModal(false)}
         onConfirm={() => {
           setShowConfirmModal(false);
           executeSubmitLogic(); 
