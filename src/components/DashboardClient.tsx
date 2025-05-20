@@ -385,8 +385,8 @@ export default function DashboardClient({ currentCredits }: { currentCredits: nu
         }}
         title="Confirm Podcast Creation"
         message="Are you sure you want to proceed with creating this AI Baby Podcast?"
-        confirmButtonText="Yes, Create Now"
-        cancelButtonText="Cancel"
+        confirmText="Yes, Create Now"
+        cancelText="Cancel"
       />
 
       <InsufficientCreditsModal
