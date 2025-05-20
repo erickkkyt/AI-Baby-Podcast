@@ -51,30 +51,22 @@ export default function Footer() {
             <h3 className="text-lg font-semibold mb-6">About</h3>
             <ul className="space-y-4">
               <li>
-                <Link href="/privacy" className="text-gray-400 hover:text-white transition-colors">Privacy Policy</Link>
+                <Link href="/privacy-policy" className="text-gray-400 hover:text-white transition-colors">Privacy Policy</Link>
               </li>
               <li>
-                <Link href="/terms" className="text-gray-400 hover:text-white transition-colors">Terms of Service</Link>
+                <Link href="/terms-of-service" className="text-gray-400 hover:text-white transition-colors">Terms of Service</Link>
               </li>
             </ul>
           </div>
         </div>
         
         <div className="mt-12 pt-8 border-t border-gray-800 flex flex-col md:flex-row justify-between items-center">
-          <p className="text-gray-400 text-sm">
+          <p className="text-gray-400 text-sm mb-4 md:mb-0">
             &copy; {new Date().getFullYear()} AI Baby Podcast. All rights reserved.
           </p>
-          <div className="mt-4 md:mt-0">
-            <div className="flex items-center space-x-4">
-              <Link href="/privacy" className="text-xs text-gray-400 hover:text-white transition-colors">
-                Privacy Policy
-              </Link>
-              <span className="text-gray-600">|</span>
-              <Link href="/terms" className="text-xs text-gray-400 hover:text-white transition-colors">
-                Terms of Service
-              </Link>
-            </div>
-          </div>
+          <a href="mailto:m15905196940@163.com" className="text-gray-400 text-sm hover:text-white transition-colors">
+            Support Email: m15905196940@163.com
+          </a>
         </div>
       </div>
     </footer>
