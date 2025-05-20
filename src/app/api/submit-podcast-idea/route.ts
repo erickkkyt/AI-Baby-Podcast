@@ -31,30 +31,35 @@ export async function POST(request: Request) {
     const jobId = uuidv4();
     console.log(`[Submit API] Generated Job ID for RPC: ${jobId}`);
 
+    // Define the credits required for a project, matching the RPC's expected parameter
+    const REQUIRED_CREDITS_PER_PROJECT = 100; 
+
     console.log(`[Submit API] Calling RPC 'deduct_credits_and_create_project' for job ${jobId} by user ${user.id}`);
     const { data: rpcResponseData, error: rpcError } = await supabaseUserClient.rpc(
       'deduct_credits_and_create_project', 
       {
-        // p_user_id is implicitly passed by Supabase for the authenticated user when calling RPC
-        // If your RPC specifically needs it as a named parameter, and it's not automatically picked up, 
-        // you would add: p_user_id: user.id, 
-        // However, the previous version of your RPC didn't show p_user_id being explicitly passed here
-        // and it seemed to work. Let's stick to that unless RPC requires p_user_id.
-        // The RPC function definition DOES have p_user_id, so we should pass it.
-        p_user_id: user.id, // Added p_user_id based on RPC definition
+        // Parameters as suggested by the database error hint
+        p_credits_to_deduct: REQUIRED_CREDITS_PER_PROJECT,
         p_job_id: jobId,
         p_ethnicity: String(ethnicity),
         p_hair: String(hair),
         p_topic: String(topic)
+        // p_user_id is removed as the hint suggests it's not an explicit parameter
+        // and is likely derived from the authenticated session within the RPC function (auth.uid()).
       }
     );
 
     if (rpcError) {
       console.error(`[Submit API] RPC call itself failed for job ${jobId}:`, rpcError);
+      // Ensure that what's passed in 'details' is serializable and informative, not the whole object
+      const errorDetailsString = typeof rpcError.details === 'string' ? rpcError.details : 
+                                 rpcError.message ? `${rpcError.message} (Code: ${rpcError.code || 'N/A'})` : 
+                                 JSON.stringify(rpcError); // Fallback to stringifying the whole rpcError if no better detail found
+
       return NextResponse.json({ 
         message: 'Failed to process request due to a database function error.', 
-        error: rpcError.message, 
-        details: rpcError, // Pass along the full rpcError object for more context if needed
+        error: rpcError.message, // This is already good
+        details: errorDetailsString, // Pass a string representation
         error_code: 'RPC_CALL_FAILED' 
       }, { status: 500 });
     }
