@@ -81,7 +81,7 @@ export default function ProjectsClient({ projects }: ProjectsClientProps) {
                 <div className="aspect-video bg-slate-700/50 rounded-md flex flex-col items-center justify-center mb-2.5 p-3 text-center min-h-[100px]">
                   <Loader2 className="h-6 w-6 text-slate-400 animate-spin mb-1.5" /> 
                   <p className="text-[0.7rem] text-slate-300">Video Processing...</p>
-                  <p className="text-[0.65rem] text-slate-500">Please wait</p>
+                  <p className="text-[0.65rem] text-slate-500">This usually takes about 3 minutes.</p>
                 </div>
               ) : project.status === 'failed' ? (
                 <div className="aspect-video bg-red-700/20 border border-red-600/40 rounded-md flex flex-col items-center justify-center mb-2.5 p-3 text-center min-h-[100px]">

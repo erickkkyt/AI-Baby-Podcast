@@ -169,7 +169,7 @@ export default function DashboardClient({ currentCredits }: { currentCredits: nu
 
       if (response.ok) {
         setSubmissionStatus({ 
-          message: '✅ Request submitted! Your AI baby podcast is now being generated. You can check "My Projects" later for updates.', 
+          message: '✅ Your AI baby podcast is now being generated. You can check "My Projects" later for updates. This usually takes about 3 minutes.', 
           type: 'success' 
         });
         router.refresh(); // Refresh server-side data, including credits
