@@ -36,7 +36,16 @@ export default function LoginPage() {
     });
   };
 
-  const isError = message && (message.includes('失败') || message.includes('不能为空') || message.includes('必须'));
+  // 注意：如果 actions.ts 返回的错误消息是中文，这里的判断逻辑可能需要调整，或者 actions.ts 也需要国际化
+  // 为简单起见，我们假设错误消息会包含 'failed' 或 'error'，或者可以根据后端实际返回的英文错误消息调整
+  const isError = message && (
+    message.toLowerCase().includes('failed') ||
+    message.toLowerCase().includes('error') ||
+    message.toLowerCase().includes('incorrect') ||
+    message.toLowerCase().includes('invalid') ||
+    message.toLowerCase().includes('empty') || // 对应 “不能为空”
+    message.toLowerCase().includes('must')    // 对应 “必须”
+  );
   const isSuccess = message && !isError;
 
   return (
@@ -47,7 +56,7 @@ export default function LoginPage() {
         <div>
           {/* 调整标题下边距 */}
           <h2 className="mt-6 mb-8 text-center text-3xl font-bold tracking-tight text-gray-900">
-            登录或注册
+            Sign In or Sign Up
           </h2>
         </div>
 
@@ -65,7 +74,7 @@ export default function LoginPage() {
         <form className="mt-8 space-y-6" onSubmit={(e) => e.preventDefault()}> {/* 阻止 form 默认提交 */}
           <div className="rounded-md -space-y-px"> {/* 可以移除 shadow-sm，因为外部容器有阴影 */}
             <div>
-              <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-1">邮箱地址</label>
+              <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-1">Email address</label>
               <input
                 id="email"
                 name="email" // name 属性仍用于 FormData
@@ -80,7 +89,7 @@ export default function LoginPage() {
               />
             </div>
             <div>
-              <label htmlFor="password" className="block text-sm font-medium text-gray-700 mb-1 mt-2">密码</label> {/* 增加一点上边距 */}
+              <label htmlFor="password" className="block text-sm font-medium text-gray-700 mb-1 mt-2">Password</label> {/* 增加一点上边距 */}
               <input
                 id="password"
                 name="password" // name 属性仍用于 FormData
@@ -92,7 +101,7 @@ export default function LoginPage() {
                 // onChange={(e) => setPassword(e.target.value)}
                  // 调整输入框样式，增加圆角区分
                 className="appearance-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-b-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
-                placeholder="•••••••• (至少6位)"
+                placeholder="•••••••• (at least 6 characters)"
               />
             </div>
           </div>
@@ -110,7 +119,7 @@ export default function LoginPage() {
               // 统一按钮样式，调整颜色和圆角
               className="group relative w-full flex justify-center py-2.5 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 disabled:opacity-60"
             >
-              {isPending ? '处理中...' : '登录'}
+              {isPending ? 'Processing...' : 'Sign In'}
             </button>
             <button
               type="button" // 更改为 type="button"
@@ -124,17 +133,17 @@ export default function LoginPage() {
               // 统一按钮样式，调整颜色和圆角
               className="group relative w-full flex justify-center py-2.5 px-4 border border-gray-300 text-sm font-medium rounded-md text-indigo-700 bg-indigo-50 hover:bg-indigo-100 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 disabled:opacity-60"
             >
-              {isPending ? '处理中...' : '注册'}
+              {isPending ? 'Processing...' : 'Sign Up'}
             </button>
           </div>
         </form>
 
         <div className="text-center mt-6"> {/* 调整上边距 */}
           <Link href="/" className="text-sm font-medium text-indigo-600 hover:text-indigo-500">
-            返回首页
+            Back to Home
           </Link>
         </div>
       </div>
     </div>
   );
-} 
+}
