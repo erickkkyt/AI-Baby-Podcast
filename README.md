@@ -188,6 +188,7 @@ AI-Baby-Podcast/
 *   **ESLint 错误修复:** 修复了 `src/app/error.tsx` 中的 `react/no-unescaped-entities` ESLint 错误，将未转义的单引号替换为 HTML 实体，以解决 Vercel 构建错误。
 *   **API 错误响应改进:** 修改了 `/api/submit-podcast-idea` 路由，以便在数据库 RPC 调用失败时，能更清晰地将错误详情作为字符串传递给客户端，避免了前端显示 `[object Object]` 的问题。
 *   **RPC 参数修复:** 根据数据库错误日志 (PGRST202)，修正了 `/api/submit-podcast-idea` 路由中调用 `deduct_credits_and_create_project` RPC 函数时传递的参数，确保与数据库函数签名一致 (添加 `p_credits_to_deduct`，移除 `p_user_id`)。
+*   **RPC 响应处理修复:** 调整了 `/api/submit-podcast-idea` 路由对 `deduct_credits_and_create_project` RPC 函数成功响应的处理逻辑，以适应 RPC 直接返回扁平项目对象而非嵌套对象的情况。同时确保了错误路径下的 `details` 字段为字符串，避免前端显示 `[object Object]`。
 
 ## ⚠️已知问题和注意事项
 

@@ -65,14 +65,13 @@ export async function POST(request: Request) {
     }
 
     // New error handling based on RPC's { status: 'error', code: '...', message: '...' } structure
-    if (rpcResponseData && rpcResponseData.status === 'error') {
+    if (rpcResponseData && typeof rpcResponseData === 'object' && 'status' in rpcResponseData && rpcResponseData.status === 'error') {
       console.warn(`[Submit API] RPC returned an application error for job ${jobId}: Code='${rpcResponseData.code}', Message='${rpcResponseData.message}', Details: '${rpcResponseData.details}'`);
       if (rpcResponseData.code === 'insufficient_credits') {
         return NextResponse.json({ 
-          message: "No credits left. Please check out the plan.", // YOUR NEW CUSTOM MESSAGE
+          message: "No credits left. Please check out the plan.",
           error_code: 'INSUFFICIENT_CREDITS',
-          // original_rpc_message: rpcResponseData.message // Optional for debugging
-        }, { status: 402 }); // 402 Payment Required is appropriate
+        }, { status: 402 });
       } else if (rpcResponseData.code === 'unauthorized') { 
          return NextResponse.json({ 
            message: rpcResponseData.message || 'Unauthorized to perform this action.', 
@@ -83,23 +82,27 @@ export async function POST(request: Request) {
       return NextResponse.json({ 
         message: rpcResponseData.message || 'Failed to process project due to a transaction error.', 
         error_code: rpcResponseData.code || 'RPC_LOGIC_ERROR', 
-        details: rpcResponseData.details 
+        details: typeof rpcResponseData.details === 'string' ? rpcResponseData.details : JSON.stringify(rpcResponseData.details) 
       }, { status: 500 });
     }
     
-    // Adjusted success check: RPC success means rpcResponseData.status === 'success' 
-    // AND the nested rpcResponseData.project object contains the job_id
-    if (!rpcResponseData || rpcResponseData.status !== 'success' || !rpcResponseData.project || !rpcResponseData.project.job_id) {
-        console.error(`[Submit API] RPC for job ${jobId} did not return successful project data or status was not 'success':`, rpcResponseData);
+    // Adjusted success check: RPC success means rpcResponseData contains the job_id
+    // and is an object (not null, undefined, or a primitive)
+    if (!rpcResponseData || typeof rpcResponseData !== 'object' || !rpcResponseData.job_id || rpcResponseData.job_id !== jobId) {
+        console.error(`[Submit API] RPC for job ${jobId} did not return the expected project data (e.g., missing or mismatched job_id). Actual response:`, rpcResponseData);
+        
+        // Ensure details are stringified if rpcResponseData is an object but not in the expected shape
+        const responseDetailsString = typeof rpcResponseData === 'object' ? JSON.stringify(rpcResponseData) : String(rpcResponseData);
+
         return NextResponse.json({ 
-          message: 'Project creation acknowledged but failed to retrieve confirmation details or RPC status was not success.', 
-          error_code: 'RPC_UNEXPECTED_SUCCESS_RESPONSE',
-          details: rpcResponseData 
+          message: 'Project creation acknowledged, but confirmation details from RPC were unexpected or missing critical data like job_id.', 
+          error_code: 'RPC_UNEXPECTED_RESPONSE_SHAPE',
+          details: responseDetailsString 
         }, { status: 500 });
     }
 
-    // Log the nested project details
-    console.log(`[Submit API] RPC success for job ${jobId}. Project created & credits deducted. Details:`, rpcResponseData.project);
+    // Log the project details (which is rpcResponseData itself)
+    console.log(`[Submit API] RPC success for job ${jobId}. Project created & credits deducted. Details:`, rpcResponseData);
 
     const requestBodyToN8n = { jobId, ethnicity: String(ethnicity), hair: String(hair), topic: String(topic) };
     console.log(`[Submit API] Sending POST request to n8n: ${n8nWebhookUrl} for job ${jobId}`);
@@ -124,12 +127,12 @@ export async function POST(request: Request) {
       console.error(`[Submit API] Network error calling n8n for job ${jobId}:`, networkErrorMessage);
     });
 
-    // Adjust final success response to use the nested project data
+    // Adjust final success response to use rpcResponseData directly as project details
     return NextResponse.json({ 
       message: 'Request received, project created, and processing started.', 
-      status: rpcResponseData.project.status || 'processing', 
-      jobId: rpcResponseData.project.job_id, 
-      projectDetails: rpcResponseData.project 
+      status: rpcResponseData.status || 'processing', // status is directly on rpcResponseData
+      jobId: rpcResponseData.job_id,                 // job_id is directly on rpcResponseData
+      projectDetails: rpcResponseData                // rpcResponseData is the project details
     });
 
   } catch (error: unknown) { 
