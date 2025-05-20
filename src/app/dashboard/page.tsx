@@ -1,5 +1,6 @@
 import { redirect } from 'next/navigation';
 import { createClient } from '@/utils/supabase/server';
+// 注意：下面这个导入将会被修改
 import DashboardSiderbar from '@/components/DashboardSiderbar'; 
 import DashboardClient from '@/components/DashboardClient';
 

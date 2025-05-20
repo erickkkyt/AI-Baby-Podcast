@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { createClient } from '@/utils/supabase/client';
-import { LinkIcon, UploadCloud, FileText, Settings2, Sparkles, Film } from 'lucide-react';
+import { LinkIcon, UploadCloud, FileText, Settings2, Sparkles, Film } from 'lucide-react'; // Added icons
 
 interface Notification {
   id: string;
@@ -86,10 +86,10 @@ export default function DashboardClient() {
               <div className="aspect-video overflow-hidden rounded-md mb-3">
                 <iframe
                   className="w-full h-full"
-                  src={`https://www.youtube.com/embed/${video.videoId}?loop=1&controls=0&rel=0&showinfo=0&modestbranding=1`}
+                  src={`https://www.youtube.com/embed/${video.videoId}`}
                   title={video.title}
                   frameBorder="0"
-                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                   allowFullScreen
                 ></iframe>
               </div>
