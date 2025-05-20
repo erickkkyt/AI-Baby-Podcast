@@ -4,11 +4,18 @@ import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { createClient } from '@/utils/supabase/client';
 import { type User } from '@supabase/supabase-js';
-import { LayoutDashboard, PlusSquare, Bell, LogOut, Zap, Layers } from 'lucide-react';
+import { LayoutDashboard, PlusSquare, Bell, LogOut, Zap, Layers, Home as HomeIcon } from 'lucide-react';
+
+// Define a type for the profile to expect `credits`
+interface UserProfile {
+  credits: number;
+  // Add other profile fields if needed
+}
 
 export default function DashboardSidebar() {
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
+  const [credits, setCredits] = useState<number>(0); // Initialize credits to 0
   const [activeTab, setActiveTab] = useState<'create' | 'projects'>('create');
   const supabase = createClient();
 
@@ -26,6 +33,27 @@ export default function DashboardSidebar() {
       try {
         const { data: { user: currentUser } } = await supabase.auth.getUser();
         setUser(currentUser);
+        if (currentUser) {
+          // Fetch credits if user exists
+          const { data: profile, error: profileError } = await supabase
+            .from('user_profiles')
+            .select('credits')
+            .eq('user_id', currentUser.id)
+            .single();
+
+          if (profileError) {
+            console.warn("Error fetching user profile for credits or profile doesn't exist:", profileError.message);
+            setCredits(0); // Default to 0 if profile not found or error
+          } else if (profile) {
+            setCredits((profile as UserProfile).credits);
+          } else {
+            // This case might happen if the user exists in auth.users but not in user_profiles yet
+            console.warn("User profile not found for user_id:", currentUser.id, ". Defaulting credits to 0.");
+            setCredits(0);
+          }
+        } else {
+          setCredits(0); // No user, no credits
+        }
       } catch (error) {
         console.error("Error fetching user in Sidebar:", error);
         setUser(null);
@@ -39,6 +67,29 @@ export default function DashboardSidebar() {
     const { data: authListener } = supabase.auth.onAuthStateChange((event, session) => {
       setUser(session?.user ?? null);
       setLoading(false);
+      if (session?.user) {
+        // Re-fetch credits on auth change if user is present
+        const fetchUserCredits = async () => {
+          const { data: profile, error: profileError } = await supabase
+            .from('user_profiles')
+            .select('credits')
+            .eq('user_id', session.user.id)
+            .single();
+
+          if (profileError) {
+            console.warn("Error fetching user profile for credits on auth change or profile doesn't exist:", profileError.message);
+            setCredits(0);
+          } else if (profile) {
+            setCredits((profile as UserProfile).credits);
+          } else {
+            console.warn("User profile not found for user_id (on auth change):", session.user.id, ". Defaulting credits to 0.");
+            setCredits(0);
+          }
+        };
+        fetchUserCredits();
+      } else {
+        setCredits(0); // Clear credits if user signs out
+      }
       if (event === 'SIGNED_OUT') {
         window.location.href = '/login';
       }
@@ -110,6 +161,13 @@ export default function DashboardSidebar() {
             <LayoutDashboard size={20} />
             <span className="font-medium">Projects</span>
           </Link>
+          {/* New Home Link */}
+          <Link
+            href="/"
+            className={`flex items-center space-x-3 py-2.5 px-3 rounded-lg transition-all duration-200 ease-in-out text-gray-400 hover:bg-gray-700/60 hover:text-gray-200`}>
+            <HomeIcon size={20} />
+            <span className="font-medium">Home</span>
+          </Link>
         </nav>
       </div>
 
@@ -118,7 +176,7 @@ export default function DashboardSidebar() {
         <div className="bg-gray-700/40 p-3 rounded-lg text-sm">
             <div className="flex items-center justify-between text-gray-300 mb-2">
                 <span className="flex items-center font-medium"><Zap size={16} className="mr-1.5 text-yellow-400"/>Credit left</span>
-                <span className="font-semibold text-white">0</span>
+                <span className="font-semibold text-white">{loading ? '...' : credits}</span>
             </div>
             {/* Changed button to Link for navigation */}
             <Link href="/pricing" className="block w-full bg-gray-600 hover:bg-purple-500/80 text-white text-center py-2 rounded-md text-xs font-medium transition-colors">

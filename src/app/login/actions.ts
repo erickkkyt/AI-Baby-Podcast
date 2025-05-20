@@ -5,7 +5,7 @@ import { redirect } from 'next/navigation'
 import { createClient } from '@/utils/supabase/server' // 导入我们更新后的服务器端客户端
 
 export async function login(formData: FormData) {
-  const supabase = createClient() // 直接调用，不再 await
+  const supabase = await createClient() // 使用 await
 
   // 从表单数据获取邮箱和密码
   const email = formData.get('email') as string
@@ -35,7 +35,7 @@ export async function login(formData: FormData) {
 
 // 修改 signup 函数使其返回 Promise<{ success: boolean; message: string }>
 export async function signup(formData: FormData): Promise<{ success: boolean; message: string }> {
-  const supabase = createClient() // 直接调用，不再 await
+  const supabase = await createClient() // 使用 await
 
   const email = formData.get('email') as string
   const password = formData.get('password') as string

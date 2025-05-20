@@ -35,10 +35,10 @@ export default function Error({
           ></path>
         </svg>
         
-        <h1 className="text-2xl font-bold mb-4 text-gray-800">发生意外错误</h1>
+        <h1 className="text-2xl font-bold mb-4 text-gray-800">An Unexpected Error Occurred</h1>
         
         <p className="mb-6 text-gray-600">
-          很抱歉，应用程序发生了错误。我们的技术团队已被通知。
+          We're sorry, an error occurred in the application. Our technical team has been notified.
         </p>
         
         <div className="flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-3 justify-center">
@@ -46,20 +46,20 @@ export default function Error({
             onClick={reset}
             className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-colors"
           >
-            重试
+            Retry
           </button>
           
           <Link 
             href="/"
             className="px-4 py-2 bg-gray-200 text-gray-800 rounded-md hover:bg-gray-300 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 transition-colors"
           >
-            返回首页
+            Back to Home
           </Link>
         </div>
         
         {error.digest && (
           <p className="mt-6 text-xs text-gray-500">
-            错误 ID: {error.digest}
+            Error ID: {error.digest}
           </p>
         )}
       </div>

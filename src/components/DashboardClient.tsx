@@ -1,8 +1,10 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { Settings2, Sparkles, Film, SearchCode, ChevronDown } from 'lucide-react';
+import { Settings2, Sparkles, Film, SearchCode, ChevronDown } from 'lucide-react'; // Film might be unused now
 import { ConfirmationModal } from './modals/ConfirmationModal';
+import InsufficientCreditsModal from './modals/InsufficientCreditsModal';
+import { useRouter } from 'next/navigation'; // Import useRouter
 
 interface Notification {
   id: string;
@@ -20,10 +22,12 @@ interface YouTubeVideo {
 
 const MAX_TOPIC_LENGTH = 100;
 const MAX_CUSTOM_FIELD_LENGTH = 50;
+const REQUIRED_CREDITS_PER_PROJECT = 100;
 
-export default function DashboardClient() {
+export default function DashboardClient({ currentCredits }: { currentCredits: number }) {
+  const router = useRouter(); // Initialize useRouter
   const [allReceivedNotifications, setAllReceivedNotifications] = useState<Notification[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState(true); // This might need to be re-evaluated if My Projects is gone
 
   const [selectedEthnicity, setSelectedEthnicity] = useState('');
   const [customEthnicity, setCustomEthnicity] = useState('');
@@ -40,8 +44,8 @@ export default function DashboardClient() {
 
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [showConfirmModal, setShowConfirmModal] = useState(false);
+  const [isCreditsModalOpen, setIsCreditsModalOpen] = useState(false);
   
-  // New state for submission status message
   const [submissionStatus, setSubmissionStatus] = useState<{ message: string; type: 'info' | 'success' | 'error' | null }>({ message: '', type: null });
 
   const ethnicityOptions = [
@@ -66,7 +70,7 @@ export default function DashboardClient() {
   const handleEthnicityChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
     const value = event.target.value;
     setSelectedEthnicity(value);
-    setSubmissionStatus({ message: '', type: null }); // Clear status on form change
+    setSubmissionStatus({ message: '', type: null });
     if (value === '_other_') {
       setIsEthnicityOther(true);
       setCustomEthnicityError(''); 
@@ -80,7 +84,7 @@ export default function DashboardClient() {
   const handleHairChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
     const value = event.target.value;
     setSelectedHair(value);
-    setSubmissionStatus({ message: '', type: null }); // Clear status on form change
+    setSubmissionStatus({ message: '', type: null });
     if (value === '_other_') {
       setIsHairOther(true);
       setCustomHairError(''); 
@@ -94,7 +98,7 @@ export default function DashboardClient() {
   const handleCustomEthnicityChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const value = event.target.value;
     setCustomEthnicity(value);
-    setSubmissionStatus({ message: '', type: null }); // Clear status on form change
+    setSubmissionStatus({ message: '', type: null });
     if (value.length > MAX_CUSTOM_FIELD_LENGTH) {
       setCustomEthnicityError(`Exceeded ${MAX_CUSTOM_FIELD_LENGTH} characters. Please shorten.`);
     } else {
@@ -105,7 +109,7 @@ export default function DashboardClient() {
   const handleCustomHairChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const value = event.target.value;
     setCustomHair(value);
-    setSubmissionStatus({ message: '', type: null }); // Clear status on form change
+    setSubmissionStatus({ message: '', type: null });
     if (value.length > MAX_CUSTOM_FIELD_LENGTH) {
       setCustomHairError(`Exceeded ${MAX_CUSTOM_FIELD_LENGTH} characters. Please shorten.`);
     } else {
@@ -116,7 +120,7 @@ export default function DashboardClient() {
   const handleTopicChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const value = event.target.value;
     setTopicOfBabyPodcast(value);
-    setSubmissionStatus({ message: '', type: null }); // Clear status on form change
+    setSubmissionStatus({ message: '', type: null });
     if (value.length > MAX_TOPIC_LENGTH) {
       setTopicError(`Exceeded ${MAX_TOPIC_LENGTH} characters. Please shorten.`);
     } else {
@@ -168,29 +172,29 @@ export default function DashboardClient() {
           message: '✅ Request submitted! Your AI baby podcast is now being generated. You can check "My Projects" later for updates.', 
           type: 'success' 
         });
-        // Optionally reset form fields after a successful submission
-        // setTopicOfBabyPodcast('');
-        // setSelectedEthnicity(''); // etc.
+        router.refresh(); // Refresh server-side data, including credits
       } else {
         setSubmissionStatus({ 
-          message: `⚠️ Error submitting request: ${result.message || 'Unknown server error'}. ${result.details || ''}`, 
+          // Use the message from the API response (which we customized)
+          message: `⚠️ ${result.message || 'Unknown server error'}. ${result.details || ''}`, 
           type: 'error' 
         });
       }
     } catch (error) {
       console.error('Failed to submit to API route:', error);
-      setSubmissionStatus({ message: '❌ An unexpected error occurred while submitting. Please try again.', type: 'error' });
+      const errorMessage = error instanceof Error ? error.message : 'An unexpected error occurred.';
+      setSubmissionStatus({ message: `❌ An unexpected error occurred while submitting: ${errorMessage}. Please try again.`, type: 'error' });
     } finally {
       setIsSubmitting(false); 
     }
   };
 
   const handleAICreatePress = () => {
-    // Clear previous submission status before showing confirm modal
     setSubmissionStatus({ message: '', type: null }); 
-    
-    // No need to check isSubmitDisabled here, as the button itself will be disabled.
-    // This handler is only called if the button is clickable.
+    if (currentCredits < REQUIRED_CREDITS_PER_PROJECT) {
+      setIsCreditsModalOpen(true);
+      return; 
+    }
     setShowConfirmModal(true);
   };
 
@@ -201,9 +205,12 @@ export default function DashboardClient() {
   ];
 
   useEffect(() => {
-    setIsLoading(true);
+    // This isLoading was likely for the "My Projects" section. 
+    // You might want to remove or adjust this if it's no longer relevant.
+    // For now, I'll keep its basic structure.
+    setIsLoading(true); 
     const timer = setTimeout(() => {
-      setAllReceivedNotifications([]);
+      setAllReceivedNotifications([]); // Example: clear notifications on load, or fetch them
       setIsLoading(false);
     }, 500);
     return () => clearTimeout(timer);
@@ -215,7 +222,7 @@ export default function DashboardClient() {
   const errorTextClasses = "text-red-500 text-xs mt-1";
   const charCountClasses = "text-xs text-gray-400 mt-1 text-right";
 
-  const isSubmitButtonDisabled = // Renamed for clarity
+  const isSubmitButtonDisabled = 
     !!topicError || 
     !!customEthnicityError || 
     !!customHairError || 
@@ -341,13 +348,12 @@ export default function DashboardClient() {
           </div>
         </div>
         
-        {/* Submission Status Message Display */}
         {submissionStatus.message && (
           <div 
             className={`mt-4 p-3 rounded-md text-sm ${
-              submissionStatus.type === 'success' ? 'bg-green-800/50 text-green-300 border border-green-700' : // Adjusted colors for dark theme
+              submissionStatus.type === 'success' ? 'bg-green-800/50 text-green-300 border border-green-700' :
               submissionStatus.type === 'error' ? 'bg-red-800/50 text-red-300 border border-red-700' :
-              'bg-blue-800/50 text-blue-300 border border-blue-700' // 'info'
+              'bg-blue-800/50 text-blue-300 border border-blue-700'
             }`}
           >
             {submissionStatus.message}
@@ -361,7 +367,7 @@ export default function DashboardClient() {
           <button 
             className="flex items-center space-x-1.5 px-4 py-2 bg-purple-600 hover:bg-purple-700 rounded-md text-white font-medium transition-colors disabled:opacity-50"
             onClick={handleAICreatePress} 
-            disabled={isSubmitButtonDisabled} // Use the renamed variable
+            disabled={isSubmitButtonDisabled}
           >
               <Sparkles size={16} />
               <span>{isSubmitting ? 'Processing...' : 'AI Create'}</span>
@@ -369,8 +375,26 @@ export default function DashboardClient() {
         </div>
       </section>
 
-      {/* ... Rest of the component (YouTube examples, My Projects, Notifications, Modal) remains the same ... */}
+      {/* Modals */}
+      <ConfirmationModal
+        isOpen={showConfirmModal}
+        onClose={() => setShowConfirmModal(false)}
+        onConfirm={() => {
+          setShowConfirmModal(false);
+          executeSubmitLogic(); 
+        }}
+        title="Confirm Podcast Creation"
+        message="Are you sure you want to proceed with creating this AI Baby Podcast?"
+        confirmButtonText="Yes, Create Now"
+        cancelButtonText="Cancel"
+      />
 
+      <InsufficientCreditsModal
+        isOpen={isCreditsModalOpen}
+        onClose={() => setIsCreditsModalOpen(false)}
+      />
+
+      {/* Explores & Examples Section */}
       <section>
         <h2 className="text-2xl font-semibold mb-4 text-white flex items-center">
           <SearchCode size={24} className="mr-3 text-purple-400" />
@@ -389,26 +413,15 @@ export default function DashboardClient() {
                   allowFullScreen
                 ></iframe>
               </div>
-              <h4 className="text-sm font-medium text-white truncate h-5"></h4>
+              <h4 className="text-sm font-medium text-white truncate h-5"></h4> {/* Empty title, as per original */}
             </div>
           ))}
         </div>
       </section>
 
-      <section>
-        <h2 className="text-2xl font-semibold mb-4 text-white flex items-center"><Film size={24} className="mr-3 text-purple-400"/> My Projects</h2>
-        <div className="bg-[#1c2128] p-6 rounded-lg shadow-lg min-h-[200px] flex flex-col items-center justify-center text-center">
-          {isLoading ? (
-            <p className="text-gray-400">Loading projects...</p>
-          ) : (
-            <>
-              <p className="text-gray-500">Your created video projects will be displayed here.</p>
-              <p className="text-gray-400 mt-1">Start creating your first Baby Podcast!</p>
-            </>
-          )}
-        </div>
-      </section>
+      {/* "My Projects" section has been removed */}
 
+      {/* Recent Notifications Section */}
       {allReceivedNotifications.length > 0 && !isLoading && (
         <section className="bg-[#1c2128] p-6 rounded-lg shadow-lg">
           <h3 className="text-xl font-semibold mb-4 text-white">Recent Notifications</h3>
@@ -430,25 +443,11 @@ export default function DashboardClient() {
         </section>
       )}
 
-      {isLoading && (
+      {/* Global Loading Overlay (might be for initial page load or other global loading states) */}
+      {isLoading && ( // This isLoading might need to be tied to a more specific loading state now
         <div className="fixed inset-0 bg-black/30 flex items-center justify-center z-50">
           <p className="text-white text-xl">Loading dashboard...</p>
         </div>
-      )}
-
-      {showConfirmModal && (
-        <ConfirmationModal
-          isOpen={showConfirmModal}
-          title="Create your AI Babypodcast"
-          message="Are you ready to start creating your AI baby podcast?"
-          confirmText="Confirm"
-          cancelText="Cancel"
-          onConfirm={() => {
-            setShowConfirmModal(false);
-            executeSubmitLogic(); 
-          }}
-          onCancel={() => setShowConfirmModal(false)}
-        />
       )}
     </div>
   );
