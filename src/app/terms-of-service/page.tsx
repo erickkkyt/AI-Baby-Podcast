@@ -190,7 +190,7 @@ export default function TermsOfServicePage() {
           12.1 These Terms are governed by and construed in accordance with the laws of [Jurisdiction], without regard to its conflict of law principles. Any disputes arising out of or in connection with these Terms shall be subject to the exclusive jurisdiction of the courts in [Jurisdiction].
         </p>
         <p className="mb-2">
-          12.2. Any controversy or dispute between you and us shall be firstly settled through friendly negotiations, fail which, you agree that such controversy or dispute may be submitted to the competent people's court at the place where you are permanently located.
+          12.2. Any controversy or dispute between you and us shall be firstly settled through friendly negotiations, fail which, you agree that such controversy or dispute may be submitted to the competent people&apos;s court at the place where you are permanently located.
         </p>
         <p className="mb-2">
           12.3. UNLESS YOU ARE A RESIDENT IN ANY PROVINCE, TERRITORY OR JURISDICTION WHERE SUCH CLAUSES OR WAIVERS ARE PROHIBITED, YOU AGREE THAT, YOU MAY BRING CLAIMS AGAINST THE OTHER ONLY ON AN INDIVIDUAL BASIS AND NOT ON A CLASS, REPRESENTATIVE, OR COLLECTIVE BASIS, AND YOU HEREBY WAIVES ALL RIGHTS TO HAVE ANY DISPUTE BE BROUGHT, HEARD, ADMINISTERED, RESOLVED, OR ARBITRATED ON A CLASS, COLLECTIVE, REPRESENTATIVE, OR MASS ACTION BASIS. ONLY INDIVIDUAL RELIEF IS AVAILABLE, AND DISPUTES OF MORE THAN ONE CUSTOMER OR USER CANNOT BE ARBITRATED OR CONSOLIDATED WITH THOSE OF ANY OTHER USER.
