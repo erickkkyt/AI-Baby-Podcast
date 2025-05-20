@@ -42,7 +42,7 @@ export default function Footer() {
                 <Link href="/#faq" className="text-gray-400 hover:text-white transition-colors">FAQ</Link>
               </li>
               <li>
-                <a href="mailto:support@aibabypodcast.com" className="text-gray-400 hover:text-white transition-colors">Contact Us</a>
+                <a href="mailto:m15905196940@163.com" className="text-gray-400 hover:text-white transition-colors">Contact Us</a>
               </li>
             </ul>
           </div>
@@ -51,10 +51,10 @@ export default function Footer() {
             <h3 className="text-lg font-semibold mb-6">About</h3>
             <ul className="space-y-4">
               <li>
-                <Link href="/privacy" className="text-gray-400 hover:text-white transition-colors">Privacy Policy</Link>
+                <Link href="/privacy-policy" className="text-gray-400 hover:text-white transition-colors">Privacy Policy</Link>
               </li>
               <li>
-                <Link href="/terms" className="text-gray-400 hover:text-white transition-colors">Terms of Service</Link>
+                <Link href="/terms-of-service" className="text-gray-400 hover:text-white transition-colors">Terms of Service</Link>
               </li>
             </ul>
           </div>
@@ -65,15 +65,9 @@ export default function Footer() {
             &copy; {new Date().getFullYear()} AI Baby Podcast. All rights reserved.
           </p>
           <div className="mt-4 md:mt-0">
-            <div className="flex items-center space-x-4">
-              <Link href="/privacy" className="text-xs text-gray-400 hover:text-white transition-colors">
-                Privacy Policy
-              </Link>
-              <span className="text-gray-600">|</span>
-              <Link href="/terms" className="text-xs text-gray-400 hover:text-white transition-colors">
-                Terms of Service
-              </Link>
-            </div>
+            <a href="mailto:m15905196940@163.com" className="text-xs text-gray-400 hover:text-white transition-colors">
+              Support Email: m15905196940@163.com
+            </a>
           </div>
         </div>
       </div>

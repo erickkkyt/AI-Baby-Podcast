@@ -190,6 +190,13 @@ AI-Baby-Podcast/
 *   **RPC 参数修复:** 根据数据库错误日志 (PGRST202)，修正了 `/api/submit-podcast-idea` 路由中调用 `deduct_credits_and_create_project` RPC 函数时传递的参数，确保与数据库函数签名一致 (添加 `p_credits_to_deduct`，移除 `p_user_id`)。
 *   **RPC 响应处理修复:** 调整了 `/api/submit-podcast-idea` 路由对 `deduct_credits_and_create_project` RPC 函数成功响应的处理逻辑，以适应 RPC 直接返回扁平项目对象而非嵌套对象的情况。同时确保了错误路径下的 `details` 字段为字符串，避免前端显示 `[object Object]`。
 *   **UI 文本更新:** 更新了 Projects 页面的处理中卡片和 Dashboard 创建成功后的提示信息，增加了预计等待时间 (约3分钟) 的描述，以改善用户体验。
+*   **法律页面创建与链接更新:**
+    *   创建了 `Privacy Policy` (`/privacy-policy`) 和 `Terms of Service` (`/terms-of-service`) 页面，内容基于提供的参考网页。
+    *   更新了页脚组件 (`src/components/Footer.tsx`)，移除了底部的重复链接，并将 "About" 部分的链接指向新的法律页面路由。
+*   **联系信息与日期更新:**
+    *   将所有法律页面和页脚中的联系邮箱更新为 `m15905196940@163.com`。
+    *   在页脚右下角添加了联系邮箱显示，并添加了 "Support Email: " 前缀。
+    *   将法律页面的 "Last updated" 日期统一更新为 `May 20, 2025`。
 
 ## ⚠️已知问题和注意事项
 
