@@ -15,6 +15,22 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="zh">
+      <head>
+        {/* Microsoft Clarity Tag */}
+        <Script
+          id="clarity-init"
+          strategy="afterInteractive" // Clarity 建议在 head 中，但 afterInteractive 也常用于不阻塞渲染的分析脚本
+          dangerouslySetInnerHTML={{
+            __html: `
+              (function(c,l,a,r,i,t,y){
+                  c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
+                  t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
+                  y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
+              })(window, document, "clarity", "script", "rn16gjya9t");
+            `,
+          }}
+        />
+      </head>
       {/* 应用新的字体变量到 body */}
       <body className="antialiased">
         {children}
