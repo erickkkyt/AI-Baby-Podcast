@@ -162,6 +162,9 @@ export default function PrivacyPolicyPage() {
           <strong>Email</strong>: <a href="mailto:support@babypodcast.pro" className="text-blue-600 hover:underline dark:text-blue-400">support@babypodcast.pro</a>
         </p>
       </section>
+      <Link href="/" className="fixed bottom-8 right-8 bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-6 rounded-lg shadow-lg transition-colors duration-200 z-50">
+        Back to Home
+      </Link>
     </div>
   );
 }

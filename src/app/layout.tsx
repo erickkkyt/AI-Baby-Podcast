@@ -14,10 +14,10 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="zh">
+    <html lang="en">
       <head>
-        <meta name="viewport" content="width=device-width, initial-scale=1.0" /> {/*  确保移动设备正确缩放  */}
-        {/* Microsoft Clarity Tag */}<Script
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <Script
           id="clarity-init"
           strategy="afterInteractive"
           dangerouslySetInnerHTML={{
