@@ -204,6 +204,7 @@ AI-Baby-Podcast/
 *   **页脚样式调整:** 将页脚中的电子邮件链接向左移动，并通过添加左边距（`md:ml-8`）解决了与版权信息过于接近的问题。
 *   **新增 Google 登录选项:** 在登录页面 (`src/app/login/page.tsx`) 添加了 "Sign in with Google" 按钮（包含 SVG 图标），并集成了 Supabase OAuth 功能。
 *   **添加 OAuth 回调路由:** 创建了 `src/app/auth/callback/route.ts` 用于处理包括 Google 登录在内的 OAuth 提供商回调，成功后将用户重定向到 `/dashboard`。
+*   **更新服务条款:** 在 `src/app/terms-of-service/page.tsx` 中添加了关于费用、支付、自动续订、取消和退款政策的新章节，并对后续章节重新编号。同时，在"联系我们"部分加入了开发者 KKKK 的介绍。
 
 ## ⚠️已知问题和注意事项
 

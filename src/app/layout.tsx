@@ -16,10 +16,10 @@ export default function RootLayout({
   return (
     <html lang="zh">
       <head>
-        {/* Microsoft Clarity Tag */}
-        <Script
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" /> {/*  确保移动设备正确缩放  */}
+        {/* Microsoft Clarity Tag */}<Script
           id="clarity-init"
-          strategy="afterInteractive" // Clarity 建议在 head 中，但 afterInteractive 也常用于不阻塞渲染的分析脚本
+          strategy="afterInteractive"
           dangerouslySetInnerHTML={{
             __html: `
               (function(c,l,a,r,i,t,y){
