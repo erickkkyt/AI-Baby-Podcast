@@ -60,13 +60,13 @@ export default function Footer() {
           </div>
         </div>
         
-        <div className="mt-12 pt-8 border-t border-gray-800 flex flex-col md:flex-row justify-between items-center">
+        <div className="mt-12 pt-8 border-t border-gray-800 flex flex-col md:flex-row justify-start items-center">
           <p className="text-gray-400 text-sm mb-4 md:mb-0">
             &copy; {new Date().getFullYear()} AI Baby Podcast. All rights reserved.
           </p>
-          <div className="mt-4 md:mt-0">
-            <a href="mailto:m15905196940@163.com" className="text-xs text-gray-400 hover:text-white transition-colors">
-              Support Email: m15905196940@163.com
+          <div className="mt-4 md:mt-0 md:ml-170">
+            <a href="mailto:support@babypodcast.pro" className="text-xs text-gray-400 hover:text-white transition-colors">
+              Email: support@babypodcast.pro
             </a>
           </div>
         </div>
