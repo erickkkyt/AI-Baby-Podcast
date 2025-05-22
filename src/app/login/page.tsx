@@ -171,9 +171,21 @@ export default function LoginPage() {
           type="button"
           onClick={handleGoogleSignIn}
           disabled={isPending}
-          className="group relative w-full flex justify-center py-2.5 px-4 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 disabled:opacity-60"
+          className="group relative w-full flex items-center justify-center py-2.5 px-4 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 disabled:opacity-60"
         >
-          {isPending ? 'Processing...' : 'Sign in with Google'}
+          {isPending ? (
+            'Processing...'
+          ) : (
+            <>
+              <svg className="mr-2 -ml-1 w-[18px] h-[18px]" width="18" height="18" viewBox="0 0 18 18" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false">
+                <path d="M17.64,9.20455c0-.63864-.05682-1.25682-.16818-1.85455H9V11.15909h4.845C13.65909,12.43182,12.81364,13.46136,11.61364,14.15455v2.36818h3.04091C16.58182,14.84091,17.64,12.27273,17.64,9.20455Z" fill="#4285F4"/>
+                <path d="M9,18c2.43182,0,4.46591-.80682,5.95455-2.18182l-3.04091-2.36818C11.14091,13.75,10.14545,14.09091,9,14.09091c-2.77273,0-5.12045-1.87273-5.95455-4.42045H0v2.45C1.47727,15.17727,4.96364,18,9,18Z" fill="#34A853"/>
+                <path d="M3.04545,10.90909c-.22273-.66818-.22273-1.39091,0-2.05909V6.4H0C-.622727,7.69091-1,9.13636-1,10.63636S-.622727,13.58182,0,14.87273l3.04545-2.45Z" fill="#FBBC05"/>
+                <path d="M9,3.54545c1.31364,0,2.51818,.45455,3.45909,1.36364l2.68636-2.68636C13.46136,.80227,11.43182,0,9,0,4.96364,0,1.47727,2.82273,0,6.4l3.04545,2.45C3.87955,5.41818,6.22727,3.54545,9,3.54545Z" fill="#EA4335"/>
+              </svg>
+              Sign in with Google
+            </>
+          )}
         </button>
         {/* ---结束新增部分--- */}
 
