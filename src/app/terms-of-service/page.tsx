@@ -3,10 +3,10 @@ import Link from 'next/link';
 
 export default function TermsOfServicePage() {
   return (
-    <div className="container mx-auto px-4 py-8 text-gray-800 dark:text-gray-200">
-      <header className="mb-8 text-center">
-        <h1 className="text-4xl font-bold text-blue-600 dark:text-blue-400">Terms of Service</h1>
-        <p className="text-gray-600 dark:text-gray-400 mt-2">Last updated: May 20, 2025</p>
+    <div className="container mx-auto max-w-3xl px-4 py-10 text-gray-800 dark:text-gray-200 font-sans">
+      <header className="mb-10 text-center">
+        <h1 className="text-5xl font-extrabold tracking-tight text-blue-700 dark:text-blue-300 drop-shadow-lg">Terms of Service</h1>
+        <p className="text-base text-gray-500 dark:text-gray-400 mt-3 italic">Last updated: May 20, 2025</p>
       </header>
 
       <section className="mb-8 p-6 bg-white dark:bg-gray-800 shadow-lg rounded-lg">
@@ -16,7 +16,7 @@ export default function TermsOfServicePage() {
       </section>
 
       <section className="mb-8 p-6 bg-white dark:bg-gray-800 shadow-lg rounded-lg">
-        <h2 className="text-2xl font-semibold mb-4 text-blue-500 dark:text-blue-300">1. Google Login Integration</h2>
+        <h2 className="text-2xl font-semibold mb-4 text-blue-500 dark:text-blue-300 border-l-4 border-blue-400 pl-3">1. Google Login Integration</h2>
         <p className="mb-2">
           1.1. To enhance your experience, <strong>AI Baby Podcast</strong> offers a third-party authentication service powered by Google Login. By using Google Login, you allow us to access certain information from your Google Account, including but not limited to:
         </p>
@@ -34,7 +34,7 @@ export default function TermsOfServicePage() {
       </section>
 
       <section className="mb-8 p-6 bg-white dark:bg-gray-800 shadow-lg rounded-lg">
-        <h2 className="text-2xl font-semibold mb-4 text-blue-500 dark:text-blue-300">2. Data Collection and Usage</h2>
+        <h2 className="text-2xl font-semibold mb-4 text-blue-500 dark:text-blue-300 border-l-4 border-blue-400 pl-3">2. Data Collection and Usage</h2>
         <p className="mb-2">
           2.1. By using Google Login, you consent to the collection and use of your Google Account information for the following purposes:
         </p>
@@ -49,7 +49,7 @@ export default function TermsOfServicePage() {
       </section>
 
       <section className="mb-8 p-6 bg-white dark:bg-gray-800 shadow-lg rounded-lg">
-        <h2 className="text-2xl font-semibold mb-4 text-blue-500 dark:text-blue-300">3. Access Tokens and Session Management</h2>
+        <h2 className="text-2xl font-semibold mb-4 text-blue-500 dark:text-blue-300 border-l-4 border-blue-400 pl-3">3. Access Tokens and Session Management</h2>
         <p className="mb-2">
           3.1. <strong>Access Tokens</strong>: When you log in using Google Login, we obtain an access token that enables us to authenticate you with Google. The access token is valid for a limited time, and we will refresh it using a secure refresh token as needed.
         </p>
@@ -62,7 +62,7 @@ export default function TermsOfServicePage() {
       </section>
 
       <section className="mb-8 p-6 bg-white dark:bg-gray-800 shadow-lg rounded-lg">
-        <h2 className="text-2xl font-semibold mb-4 text-blue-500 dark:text-blue-300">4. Privacy and Security</h2>
+        <h2 className="text-2xl font-semibold mb-4 text-blue-500 dark:text-blue-300 border-l-4 border-blue-400 pl-3">4. Privacy and Security</h2>
         <p className="mb-2">
           4.1. We take your privacy and security seriously. Please refer to our <Link href="/privacy-policy" className="text-blue-600 hover:underline dark:text-blue-400">Privacy Policy</Link> for detailed information on how we handle your personal information, including the data we access from Google Login.
         </p>
@@ -75,7 +75,7 @@ export default function TermsOfServicePage() {
       </section>
 
       <section className="mb-8 p-6 bg-white dark:bg-gray-800 shadow-lg rounded-lg">
-        <h2 className="text-2xl font-semibold mb-4 text-blue-500 dark:text-blue-300">5. User Responsibilities</h2>
+        <h2 className="text-2xl font-semibold mb-4 text-blue-500 dark:text-blue-300 border-l-4 border-blue-400 pl-3">5. User Responsibilities</h2>
         <p className="mb-2">
           5.1. By using Google Login, you agree to: Provide accurate and up-to-date information in your Google Account. Keep your Google account credentials and access tokens secure. Not use Google Login for any unlawful or fraudulent purposes.
         </p>
@@ -105,7 +105,7 @@ export default function TermsOfServicePage() {
       </section>
 
       <section className="mb-8 p-6 bg-white dark:bg-gray-800 shadow-lg rounded-lg">
-        <h2 className="text-2xl font-semibold mb-4 text-blue-500 dark:text-blue-300">6. Intellectual Property</h2>
+        <h2 className="text-2xl font-semibold mb-4 text-blue-500 dark:text-blue-300 border-l-4 border-blue-400 pl-3">6. Intellectual Property</h2>
         <p className="mb-2">
            6.1. All content, trademarks, and intellectual property related to the Service are owned by AI Baby Podcast or its licensors. You may not use or reproduce any content without permission.
         </p>
@@ -124,7 +124,7 @@ export default function TermsOfServicePage() {
       </section>
 
       <section className="mb-8 p-6 bg-white dark:bg-gray-800 shadow-lg rounded-lg">
-        <h2 className="text-2xl font-semibold mb-4 text-blue-500 dark:text-blue-300">7. Termination of Access</h2>
+        <h2 className="text-2xl font-semibold mb-4 text-blue-500 dark:text-blue-300 border-l-4 border-blue-400 pl-3">7. Termination of Access</h2>
         <p className="mb-2">
           7.1. We reserve the right to terminate or suspend your access to Google Login if we believe you are in violation of these Terms or our Privacy Policy. We may also suspend or terminate Google Login integration for any reason, at our discretion, with or without notice.
         </p>
@@ -134,7 +134,7 @@ export default function TermsOfServicePage() {
       </section>
 
       <section className="mb-8 p-6 bg-white dark:bg-gray-800 shadow-lg rounded-lg">
-        <h2 className="text-2xl font-semibold mb-4 text-blue-500 dark:text-blue-300">8. Disclaimer of Warranties</h2>
+        <h2 className="text-2xl font-semibold mb-4 text-blue-500 dark:text-blue-300 border-l-4 border-blue-400 pl-3">8. Disclaimer of Warranties</h2>
         <p className="mb-2">
           8.1. The Service is provided &quot;as is&quot; and &quot;as available.&quot; We disclaim all warranties, express or implied, including fitness for a particular purpose and non-infringement.
         </p>
@@ -147,7 +147,7 @@ export default function TermsOfServicePage() {
       </section>
 
       <section className="mb-8 p-6 bg-white dark:bg-gray-800 shadow-lg rounded-lg">
-        <h2 className="text-2xl font-semibold mb-4 text-blue-500 dark:text-blue-300">9. Liabilities and Indemnification</h2>
+        <h2 className="text-2xl font-semibold mb-4 text-blue-500 dark:text-blue-300 border-l-4 border-blue-400 pl-3">9. Liabilities and Indemnification</h2>
         <p className="mb-2">
           9.1. We reserve the right to investigate violations and take appropriate action regarding your breach of Terms, including but not limited to suspending or disabling access.
         </p>
@@ -162,7 +162,7 @@ export default function TermsOfServicePage() {
       </section>
 
       <section className="mb-8 p-6 bg-white dark:bg-gray-800 shadow-lg rounded-lg">
-        <h2 className="text-2xl font-semibold mb-4 text-blue-500 dark:text-blue-300">10. Limitation of Liability</h2>
+        <h2 className="text-2xl font-semibold mb-4 text-blue-500 dark:text-blue-300 border-l-4 border-blue-400 pl-3">10. Limitation of Liability</h2>
         <p className="mb-2">
           10.1. To the fullest extent permitted by law, <strong>AI Baby Podcast</strong> shall not be liable for any direct, indirect, incidental, consequential, or special damages arising from the use of Google Login, including any issues related to authentication, security breaches, or data loss.
         </p>
@@ -178,14 +178,14 @@ export default function TermsOfServicePage() {
       </section>
 
       <section className="mb-8 p-6 bg-white dark:bg-gray-800 shadow-lg rounded-lg">
-        <h2 className="text-2xl font-semibold mb-4 text-blue-500 dark:text-blue-300">11. Modifications to Terms of Use</h2>
+        <h2 className="text-2xl font-semibold mb-4 text-blue-500 dark:text-blue-300 border-l-4 border-blue-400 pl-3">11. Modifications to Terms of Use</h2>
         <p>
           We may update or modify these Terms of Use at any time, and such changes will be effective immediately upon posting on this page. It is your responsibility to review these Terms periodically for any changes. Continued use of the Service after any changes to these Terms constitutes acceptance of those changes.
         </p>
       </section>
 
       <section className="mb-8 p-6 bg-white dark:bg-gray-800 shadow-lg rounded-lg">
-        <h2 className="text-2xl font-semibold mb-4 text-blue-500 dark:text-blue-300">12. Governing Law and Dispute Resolution</h2>
+        <h2 className="text-2xl font-semibold mb-4 text-blue-500 dark:text-blue-300 border-l-4 border-blue-400 pl-3">12. Governing Law and Dispute Resolution</h2>
         <p className="mb-2">
           12.1 These Terms are governed by and construed in accordance with the laws of [Jurisdiction], without regard to its conflict of law principles. Any disputes arising out of or in connection with these Terms shall be subject to the exclusive jurisdiction of the courts in [Jurisdiction].
         </p>
@@ -201,7 +201,7 @@ export default function TermsOfServicePage() {
       </section>
 
       <section className="mb-8 p-6 bg-white dark:bg-gray-800 shadow-lg rounded-lg">
-        <h2 className="text-2xl font-semibold mb-4 text-blue-500 dark:text-blue-300">13. General Provisions</h2>
+        <h2 className="text-2xl font-semibold mb-4 text-blue-500 dark:text-blue-300 border-l-4 border-blue-400 pl-3">13. General Provisions</h2>
         <p className="mb-2">
           13.1. If any provision of these Terms is deemed unenforceable, the remainder shall remain in effect.
         </p>
@@ -217,14 +217,14 @@ export default function TermsOfServicePage() {
       </section>
 
       <section className="p-6 bg-white dark:bg-gray-800 shadow-lg rounded-lg">
-        <h2 className="text-2xl font-semibold mb-4 text-blue-500 dark:text-blue-300">14. Contact Us</h2>
+        <h2 className="text-2xl font-semibold mb-4 text-blue-500 dark:text-blue-300 border-l-4 border-blue-400 pl-3">14. Contact Us</h2>
         <p>
           If you have any questions or concerns regarding these Terms of Use, or if you identify any infringement upon your legitimate rights or interests during your use of the Service, please promptly contact us and provide us with legally valid supporting materials, including but not limited to identity certificate, ownership certificate, and description of specific infringement, so that we may take necessary measures to deal with such issue. In addition, if you identify any violation of laws or regulations or relevant rules on the Service hereunder during your use of the Service, please contact us at:
         </p>
         <p className="mt-2">
-          <strong>Email</strong>: <a href="mailto:m15905196940@163.com" className="text-blue-600 hover:underline dark:text-blue-400">m15905196940@163.com</a>
+          <strong>Email</strong>: <a href="mailto:support@babypodcast.pro" className="text-blue-600 hover:underline dark:text-blue-400">support@babypodcast.pro</a>
         </p>
       </section>
     </div>
   );
-} 
+}

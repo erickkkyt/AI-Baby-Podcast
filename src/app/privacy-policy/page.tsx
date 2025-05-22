@@ -3,10 +3,10 @@ import Link from 'next/link';
 
 export default function PrivacyPolicyPage() {
   return (
-    <div className="container mx-auto px-4 py-8 text-gray-800 dark:text-gray-200">
-      <header className="mb-8 text-center">
-        <h1 className="text-4xl font-bold text-blue-600 dark:text-blue-400">Privacy Policy</h1>
-        <p className="text-gray-600 dark:text-gray-400 mt-2">Last updated: May 20, 2025</p>
+    <div className="container mx-auto max-w-3xl px-4 py-10 text-gray-800 dark:text-gray-200 font-sans">
+      <header className="mb-10 text-center">
+        <h1 className="text-5xl font-extrabold tracking-tight text-blue-700 dark:text-blue-300 drop-shadow-lg">Privacy Policy</h1>
+        <p className="text-base text-gray-500 dark:text-gray-400 mt-3 italic">Last updated: May 20, 2025</p>
       </header>
 
       <section className="mb-8 p-6 bg-white dark:bg-gray-800 shadow-lg rounded-lg">
@@ -16,7 +16,7 @@ export default function PrivacyPolicyPage() {
       </section>
 
       <section className="mb-8 p-6 bg-white dark:bg-gray-800 shadow-lg rounded-lg">
-        <h2 className="text-2xl font-semibold mb-4 text-blue-500 dark:text-blue-300">1. Information We Collect</h2>
+        <h2 className="text-2xl font-semibold mb-4 text-blue-500 dark:text-blue-300 border-l-4 border-blue-400 pl-3">1. Information We Collect</h2>
         <p className="mb-4">
           We collect different types of information to provide, improve, and personalize your experience with our service. This includes:
         </p>
@@ -45,7 +45,7 @@ export default function PrivacyPolicyPage() {
       </section>
 
       <section className="mb-8 p-6 bg-white dark:bg-gray-800 shadow-lg rounded-lg">
-        <h2 className="text-2xl font-semibold mb-4 text-blue-500 dark:text-blue-300">2. How We Use Your Information</h2>
+        <h2 className="text-2xl font-semibold mb-4 text-blue-500 dark:text-blue-300 border-l-4 border-blue-400 pl-3">2. How We Use Your Information</h2>
         <p className="mb-4">
           We use the information we collect for the following purposes:
         </p>
@@ -66,7 +66,7 @@ export default function PrivacyPolicyPage() {
       </section>
 
       <section className="mb-8 p-6 bg-white dark:bg-gray-800 shadow-lg rounded-lg">
-        <h2 className="text-2xl font-semibold mb-4 text-blue-500 dark:text-blue-300">3. Sharing Your Information</h2>
+        <h2 className="text-2xl font-semibold mb-4 text-blue-500 dark:text-blue-300 border-l-4 border-blue-400 pl-3">3. Sharing Your Information</h2>
         <p className="mb-4">
           We may share your information with the following entities:
         </p>
@@ -84,7 +84,7 @@ export default function PrivacyPolicyPage() {
       </section>
 
       <section className="mb-8 p-6 bg-white dark:bg-gray-800 shadow-lg rounded-lg">
-        <h2 className="text-2xl font-semibold mb-4 text-blue-500 dark:text-blue-300">4. Data Security</h2>
+        <h2 className="text-2xl font-semibold mb-4 text-blue-500 dark:text-blue-300 border-l-4 border-blue-400 pl-3">4. Data Security</h2>
         <p className="mb-4">
           We take the security of your personal information seriously. We implement appropriate technical and organizational measures to protect your data from unauthorized access, disclosure, alteration, or destruction. However, no method of transmission over the internet or electronic storage is 100% secure, and we cannot guarantee absolute security.
         </p>
@@ -94,14 +94,14 @@ export default function PrivacyPolicyPage() {
       </section>
 
       <section className="mb-8 p-6 bg-white dark:bg-gray-800 shadow-lg rounded-lg">
-        <h2 className="text-2xl font-semibold mb-4 text-blue-500 dark:text-blue-300">5. International Data Transfers</h2>
+        <h2 className="text-2xl font-semibold mb-4 text-blue-500 dark:text-blue-300 border-l-4 border-blue-400 pl-3">5. International Data Transfers</h2>
         <p>
           Our service may involve the transfer of your personal data to countries outside your own, including to the United States or other locations where our servers or third-party service providers are based. By using our service, you consent to the transfer of your information across borders.
         </p>
       </section>
 
       <section className="mb-8 p-6 bg-white dark:bg-gray-800 shadow-lg rounded-lg">
-        <h2 className="text-2xl font-semibold mb-4 text-blue-500 dark:text-blue-300">6. Your Rights and Choices</h2>
+        <h2 className="text-2xl font-semibold mb-4 text-blue-500 dark:text-blue-300 border-l-4 border-blue-400 pl-3">6. Your Rights and Choices</h2>
         <p className="mb-4">
           Depending on your location, you may have the following rights concerning your personal information:
         </p>
@@ -120,19 +120,19 @@ export default function PrivacyPolicyPage() {
           </li>
         </ul>
         <p className="mt-4">
-          If you wish to exercise any of these rights or have questions about how we handle your data, please contact us at <a href="mailto:m15905196940@163.com" className="text-blue-600 hover:underline dark:text-blue-400">m15905196940@163.com</a>.
+          If you wish to exercise any of these rights or have questions about how we handle your data, please contact us at <a href="mailto:support@babypodcast.pro" className="text-blue-600 hover:underline dark:text-blue-400">support@babypodcast.pro</a>.
         </p>
       </section>
 
       <section className="mb-8 p-6 bg-white dark:bg-gray-800 shadow-lg rounded-lg">
-        <h2 className="text-2xl font-semibold mb-4 text-blue-500 dark:text-blue-300">7. Retention of Data</h2>
+        <h2 className="text-2xl font-semibold mb-4 text-blue-500 dark:text-blue-300 border-l-4 border-blue-400 pl-3">7. Retention of Data</h2>
         <p>
           We retain your personal information for as long as necessary to fulfill the purposes outlined in this Privacy Policy, or as required by law. When your data is no longer needed, we will securely delete it.
         </p>
       </section>
 
       <section className="mb-8 p-6 bg-white dark:bg-gray-800 shadow-lg rounded-lg">
-        <h2 className="text-2xl font-semibold mb-4 text-blue-500 dark:text-blue-300">8. Cookies and Tracking Technologies</h2>
+        <h2 className="text-2xl font-semibold mb-4 text-blue-500 dark:text-blue-300 border-l-4 border-blue-400 pl-3">8. Cookies and Tracking Technologies</h2>
         <p className="mb-4">
           We use cookies, web beacons, and similar technologies to enhance your experience. These technologies help us:
         </p>
@@ -147,21 +147,21 @@ export default function PrivacyPolicyPage() {
       </section>
 
       <section className="mb-8 p-6 bg-white dark:bg-gray-800 shadow-lg rounded-lg">
-        <h2 className="text-2xl font-semibold mb-4 text-blue-500 dark:text-blue-300">9. Changes to This Privacy Policy</h2>
+        <h2 className="text-2xl font-semibold mb-4 text-blue-500 dark:text-blue-300 border-l-4 border-blue-400 pl-3">9. Changes to This Privacy Policy</h2>
         <p>
           We may update our Privacy Policy from time to time. Any changes will be posted on this page, with an updated &quot;Last updated&quot; date. We encourage you to review this policy periodically to stay informed about how we are protecting your data.
         </p>
       </section>
 
-      <section className="p-6 bg-white dark:bg-gray-800 shadow-lg rounded-lg">
-        <h2 className="text-2xl font-semibold mb-4 text-blue-500 dark:text-blue-300">10. Contact Us</h2>
+      <section className="p-8 bg-white/90 dark:bg-gray-900/80 shadow-2xl rounded-2xl border border-blue-100 dark:border-blue-900 transition-all">
+        <h2 className="text-2xl font-bold mb-5 text-blue-600 dark:text-blue-300 border-l-4 border-blue-400 pl-3">10. Contact Us</h2>
         <p>
           If you have any questions or concerns about this Privacy Policy or our data practices, please contact us at:
         </p>
         <p className="mt-2">
-          <strong>Email</strong>: <a href="mailto:m15905196940@163.com" className="text-blue-600 hover:underline dark:text-blue-400">m15905196940@163.com</a>
+          <strong>Email</strong>: <a href="mailto:support@babypodcast.pro" className="text-blue-600 hover:underline dark:text-blue-400">support@babypodcast.pro</a>
         </p>
       </section>
     </div>
   );
-} 
+}
