@@ -201,6 +201,8 @@ AI-Baby-Podcast/
 *   **ESLint 错误修复 (Terms of Service):** 修复了 `src/app/terms-of-service/page.tsx` 中的 `react/no-unescaped-entities` ESLint 错误，将 JSX 中未转义的引号和撇号替换为相应的 HTML 实体，以解决 Vercel 构建错误。
 *   **添加 Google Analytics:** 将 Google Analytics (gtag.js) 代码添加到了根布局文件 `src/app/layout.tsx` 中，以便在所有页面上进行追踪。
 *   **添加 Microsoft Clarity:** 将 Microsoft Clarity 跟踪代码添加到了根布局文件 `src/app/layout.tsx` 的 `<head>` 部分。
+*   **页脚样式调整:** 将页脚中的电子邮件链接向左移动，并通过添加左边距（`md:ml-8`）解决了与版权信息过于接近的问题。
+*   **新增 Google 登录选项:** 在登录页面 (`src/app/login/page.tsx`) 添加了 "Sign in with Google" 按钮，并集成了 Supabase OAuth 功能。
 
 ## ⚠️已知问题和注意事项
 

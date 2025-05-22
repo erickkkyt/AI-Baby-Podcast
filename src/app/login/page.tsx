@@ -3,9 +3,11 @@
 import Link from 'next/link';
 import { useState, useTransition } from 'react'; // 导入 Hooks
 import { login, signup } from './actions'; // 导入 Server Actions
+import { createClient } from '@/utils/supabase/client'; // 更正：从项目工具类导入 Supabase 客户端创建函数
 
 // 不再需要 searchParams，因为消息通过 state 管理
 export default function LoginPage() {
+  const supabase = createClient(); // 更正：使用导入的函数创建 Supabase 客户端实例
   // const [email, setEmail] = useState(''); // 可以用 state 管理输入，但 FormData 也能工作
   // const [password, setPassword] = useState('');
   const [message, setMessage] = useState<string | null>(null); // 用于显示成功或错误消息
@@ -36,6 +38,26 @@ export default function LoginPage() {
     });
   };
 
+  // 新增：处理 Google 登录的函数
+  const handleGoogleSignIn = async () => {
+    setMessage(null); // 清除之前的消息
+    startTransition(async () => { // 使用 transition 来管理加载状态
+      const { error } = await supabase.auth.signInWithOAuth({
+        provider: 'google',
+        options: {
+          redirectTo: `${window.location.origin}/auth/callback`,
+          // 如果需要，可以在这里添加 scopes: 'email profile' 等
+        },
+      });
+      if (error) {
+        setMessage(`Google Sign-In Error: ${error.message}`);
+      }
+      // 成功时，用户会被重定向到 Google，然后重定向回 /auth/callback
+      // Supabase 会处理会话，然后通常重定向到主页或仪表盘
+      // 因此这里不需要显式的成功消息或重定向逻辑
+    });
+  };
+
   // 注意：如果 actions.ts 返回的错误消息是中文，这里的判断逻辑可能需要调整，或者 actions.ts 也需要国际化
   // 为简单起见，我们假设错误消息会包含 'failed' 或 'error'，或者可以根据后端实际返回的英文错误消息调整
   const isError = message && (
@@ -43,8 +65,8 @@ export default function LoginPage() {
     message.toLowerCase().includes('error') ||
     message.toLowerCase().includes('incorrect') ||
     message.toLowerCase().includes('invalid') ||
-    message.toLowerCase().includes('empty') || // 对应 “不能为空”
-    message.toLowerCase().includes('must')    // 对应 “必须”
+    message.toLowerCase().includes('empty') || // 对应 "不能为空"
+    message.toLowerCase().includes('must')    // 对应 "必须"
   );
   const isSuccess = message && !isError;
 
@@ -137,6 +159,23 @@ export default function LoginPage() {
             </button>
           </div>
         </form>
+        
+        {/* 新增：分隔线和 Google 登录按钮 */}
+        <div className="my-6 flex items-center justify-center">
+          <div className="flex-grow border-t border-gray-300"></div>
+          <span className="mx-4 flex-shrink text-gray-500 text-sm">OR</span>
+          <div className="flex-grow border-t border-gray-300"></div>
+        </div>
+
+        <button
+          type="button"
+          onClick={handleGoogleSignIn}
+          disabled={isPending}
+          className="group relative w-full flex justify-center py-2.5 px-4 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 disabled:opacity-60"
+        >
+          {isPending ? 'Processing...' : 'Sign in with Google'}
+        </button>
+        {/* ---结束新增部分--- */}
 
         <div className="text-center mt-6"> {/* 调整上边距 */}
           <Link href="/" className="text-sm font-medium text-indigo-600 hover:text-indigo-500">
