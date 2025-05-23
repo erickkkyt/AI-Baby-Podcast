@@ -8,6 +8,7 @@ export interface Project {
   status: 'pending' | 'processing' | 'completed' | 'failed';
   video_url?: string | null;
   job_id: string; // The ID from n8n
+  duration?: number | null; // Duration of the video in milliseconds
   credits_deducted: number; // Add this if you store it, useful for display or logs
   error_message?: string | null; // To store any error messages from n8n
 }

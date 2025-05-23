@@ -206,6 +206,7 @@ AI-Baby-Podcast/
 *   **添加 OAuth 回调路由:** 创建了 `src/app/auth/callback/route.ts` 用于处理包括 Google 登录在内的 OAuth 提供商回调，成功后将用户重定向到 `/dashboard`。
 *   **更新服务条款:** 在 `src/app/terms-of-service/page.tsx` 中添加了关于费用、支付、自动续订、取消和退款政策的新章节，并对后续章节重新编号。同时，在"联系我们"部分加入了开发者 KKKK 的介绍。
 *   **全局语言设置与导航优化:** 将 `src/app/layout.tsx` 中的全局语言从 `zh` 修改为 `en`。在隐私政策和服务条款页面右下角添加了"返回首页"按钮。
+*   **n8n Webhook 增强:** `/api/webhook/n8n-video-ready` 现在可以接收并存储视频的 `duration`（时长，以秒为单位）到 Supabase `projects` 表的 `duration` 列 (类型为 `numeric`)。如果 n8n 回调中未提供 `duration` 或任务失败，则数据库中该字段将为 `null`。
 
 ## ⚠️已知问题和注意事项
 

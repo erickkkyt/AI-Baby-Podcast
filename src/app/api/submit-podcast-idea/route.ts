@@ -17,7 +17,7 @@ export async function POST(request: Request) {
     const { ethnicity, hair, topic } = await request.json();
 
     const n8nApiKey = process.env.N8N_API_KEY;
-    const n8nWebhookUrl = process.env.N8N_WEBHOOK_URL || 'https://kkkkeric.app.n8n.cloud/webhook-test/7cb8c037-a100-4442-8cba-cf12a912c898'; 
+    const n8nWebhookUrl = process.env.N8N_WEBHOOK_URL || 'https://kkkkeric.app.n8n.cloud/webhook-test/1ef488b4-7772-4eca-9eed-c90662566cea'; 
 
     if (!n8nApiKey || !n8nWebhookUrl) {
       console.error('[Submit API] N8N_API_KEY or N8N_WEBHOOK_URL is not properly configured.');
@@ -31,29 +31,52 @@ export async function POST(request: Request) {
     const jobId = uuidv4();
     console.log(`[Submit API] Generated Job ID for RPC: ${jobId}`);
 
-    // Define the credits required for a project, matching the RPC's expected parameter
-    const REQUIRED_CREDITS_PER_PROJECT = 100; 
+    // 1. 获取用户当前积分
+    const { data: userProfile, error: profileError } = await supabaseUserClient
+      .from('user_profiles')
+      .select('credits')
+      .eq('user_id', user.id)
+      .single();
 
-    console.log(`[Submit API] Calling RPC 'deduct_credits_and_create_project' for job ${jobId} by user ${user.id}`);
-    const { data: rpcResponseData, error: rpcError } = await supabaseUserClient.rpc(
-      'deduct_credits_and_create_project', 
+    if (profileError) {
+      console.error(`[Submit API] Error fetching user profile for ${user.id}:`, profileError.message);
+      return NextResponse.json({ message: 'Failed to fetch user profile.', error_code: 'PROFILE_FETCH_FAILED' }, { status: 500 });
+    }
+
+    if (!userProfile || userProfile.credits === undefined) {
+      console.error(`[Submit API] User profile or credits not found for ${user.id}.`);
+      // 这可能意味着新用户触发器未正确设置，或者用户配置文件表有问题
+      return NextResponse.json({ message: 'User profile or credits information missing.', error_code: 'PROFILE_CREDITS_MISSING' }, { status: 500 });
+    }
+    
+    console.log(`[Submit API] User ${user.id} current credits: ${userProfile.credits}`);
+
+    // 2. 检查用户积分是否 > 0
+    if (userProfile.credits <= 0) {
+      console.warn(`[Submit API] User ${user.id} has insufficient credits (${userProfile.credits}) to create a new project.`);
+      return NextResponse.json({ 
+        message: "No credits left. Please check out the plan or wait for a top-up.", // 更通用的消息
+        error_code: 'INSUFFICIENT_CREDITS' 
+      }, { status: 402 }); // 402 Payment Required
+    }
+
+    console.log(`[Submit API] Calling RPC 'create_initial_project' for job ${jobId} by user ${user.id}`);
+    const { data: newProjectData, error: rpcError } = await supabaseUserClient.rpc(
+      'create_initial_project', 
       {
-        // Parameters as suggested by the database error hint
-        p_credits_to_deduct: REQUIRED_CREDITS_PER_PROJECT,
+        p_user_id: user.id, // 显式传递 user_id
         p_job_id: jobId,
         p_ethnicity: String(ethnicity),
         p_hair: String(hair),
         p_topic: String(topic)
-        // p_user_id is removed as the hint suggests it's not an explicit parameter
-        // and is likely derived from the authenticated session within the RPC function (auth.uid()).
       }
     );
 
     if (rpcError) {
-      console.error(`[Submit API] RPC call itself failed for job ${jobId}:`, rpcError);
+      console.error(`[Submit API] RPC call 'create_initial_project' failed for job ${jobId}:`, rpcError);
       // Ensure that what's passed in 'details' is serializable and informative, not the whole object
-      const errorDetailsString = typeof rpcError.details === 'string' ? rpcError.details : 
-                                 rpcError.message ? `${rpcError.message} (Code: ${rpcError.code || 'N/A'})` : 
+      const errorDetailsString = typeof rpcError.details === 'string' ? rpcError.details :
+                                 rpcError.message ? `${rpcError.message} (Code: ${rpcError.code || 'N/A'})` :
                                  JSON.stringify(rpcError); // Fallback to stringifying the whole rpcError if no better detail found
 
       return NextResponse.json({ 
@@ -64,45 +87,48 @@ export async function POST(request: Request) {
       }, { status: 500 });
     }
 
+    // Extract the actual project data, expecting an array with one element from RETURNS TABLE
+    const newProjectEntity = Array.isArray(newProjectData) && newProjectData.length > 0 ? newProjectData[0] : null;
+
     // New error handling based on RPC's { status: 'error', code: '...', message: '...' } structure
-    if (rpcResponseData && typeof rpcResponseData === 'object' && 'status' in rpcResponseData && rpcResponseData.status === 'error') {
-      console.warn(`[Submit API] RPC returned an application error for job ${jobId}: Code='${rpcResponseData.code}', Message='${rpcResponseData.message}', Details: '${rpcResponseData.details}'`);
-      if (rpcResponseData.code === 'insufficient_credits') {
+    // This typically applies if the RPC itself is designed to return an error object directly, not a PostgREST error
+    if (newProjectEntity && typeof newProjectEntity === 'object' && 'status' in newProjectEntity && newProjectEntity.status === 'error') {
+      console.warn(`[Submit API] RPC returned an application error for job ${jobId}: Code='${newProjectEntity.code}', Message='${newProjectEntity.message}', Details: '${newProjectEntity.details}'`);
+      if (newProjectEntity.code === 'insufficient_credits') {
         return NextResponse.json({ 
           message: "No credits left. Please check out the plan.",
           error_code: 'INSUFFICIENT_CREDITS',
         }, { status: 402 });
-      } else if (rpcResponseData.code === 'unauthorized') { 
+      } else if (newProjectEntity.code === 'unauthorized') { 
          return NextResponse.json({ 
-           message: rpcResponseData.message || 'Unauthorized to perform this action.', 
+           message: newProjectEntity.message || 'Unauthorized to perform this action.', 
            error_code: 'UNAUTHORIZED_RPC_ACTION'
          }, { status: 401 });
       }
       // Generic error message for other RPC logic errors defined in your RPC
       return NextResponse.json({ 
-        message: rpcResponseData.message || 'Failed to process project due to a transaction error.', 
-        error_code: rpcResponseData.code || 'RPC_LOGIC_ERROR', 
-        details: typeof rpcResponseData.details === 'string' ? rpcResponseData.details : JSON.stringify(rpcResponseData.details) 
+        message: newProjectEntity.message || 'Failed to process project due to a transaction error.', 
+        error_code: newProjectEntity.code || 'RPC_LOGIC_ERROR', 
+        details: typeof newProjectEntity.details === 'string' ? newProjectEntity.details : JSON.stringify(newProjectEntity.details) 
       }, { status: 500 });
     }
     
-    // Adjusted success check: RPC success means rpcResponseData contains the job_id
+    // Adjusted success check: RPC success means newProjectEntity contains the job_id
     // and is an object (not null, undefined, or a primitive)
-    if (!rpcResponseData || typeof rpcResponseData !== 'object' || !rpcResponseData.job_id || rpcResponseData.job_id !== jobId) {
-        console.error(`[Submit API] RPC for job ${jobId} did not return the expected project data (e.g., missing or mismatched job_id). Actual response:`, rpcResponseData);
+    if (!newProjectEntity || typeof newProjectEntity !== 'object' || !newProjectEntity.job_id || newProjectEntity.job_id !== jobId) {
+        console.error(`[Submit API] RPC 'create_initial_project' for job ${jobId} did not return the expected project data. Actual (processed) response:`, newProjectEntity, "Original RPC result:", newProjectData);
         
-        // Ensure details are stringified if rpcResponseData is an object but not in the expected shape
-        const responseDetailsString = typeof rpcResponseData === 'object' ? JSON.stringify(rpcResponseData) : String(rpcResponseData);
+        const responseDetailsString = typeof newProjectData === 'object' ? JSON.stringify(newProjectData) : String(newProjectData);
 
         return NextResponse.json({ 
-          message: 'Project creation acknowledged, but confirmation details from RPC were unexpected or missing critical data like job_id.', 
+          message: 'Project creation initiated, but confirmation details from RPC were unexpected or missing critical data.', 
           error_code: 'RPC_UNEXPECTED_RESPONSE_SHAPE',
           details: responseDetailsString 
         }, { status: 500 });
     }
 
-    // Log the project details (which is rpcResponseData itself)
-    console.log(`[Submit API] RPC success for job ${jobId}. Project created & credits deducted. Details:`, rpcResponseData);
+    // Log the project details
+    console.log(`[Submit API] RPC 'create_initial_project' success for job ${jobId}. Project created. Details:`, newProjectEntity);
 
     const requestBodyToN8n = { jobId, ethnicity: String(ethnicity), hair: String(hair), topic: String(topic) };
     console.log(`[Submit API] Sending POST request to n8n: ${n8nWebhookUrl} for job ${jobId}`);
@@ -127,12 +153,12 @@ export async function POST(request: Request) {
       console.error(`[Submit API] Network error calling n8n for job ${jobId}:`, networkErrorMessage);
     });
 
-    // Adjust final success response to use rpcResponseData directly as project details
+    // Adjust final success response to use newProjectEntity directly as project details
     return NextResponse.json({ 
-      message: 'Request received, project created, and processing started.', 
-      status: rpcResponseData.status || 'processing', // status is directly on rpcResponseData
-      jobId: rpcResponseData.job_id,                 // job_id is directly on rpcResponseData
-      projectDetails: rpcResponseData                // rpcResponseData is the project details
+      message: 'Request received, project creation initiated, and processing started.', 
+      status: newProjectEntity.status || 'processing', 
+      jobId: newProjectEntity.job_id,
+      projectDetails: newProjectEntity 
     });
 
   } catch (error: unknown) { 

@@ -69,6 +69,11 @@ export default function ProjectsClient({ projects }: ProjectsClientProps) {
                   {project.status === 'processing' && <Loader2 className="mr-1 h-2.5 w-2.5 animate-spin" />}
                   {project.status}
                 </span>
+                {project.status === 'completed' && typeof project.duration === 'number' && project.duration > 0 && (
+                  <p className="text-[0.65rem] text-slate-400 mt-1">
+                    Credits Used: {Math.ceil(project.duration / 1000)}
+                  </p>
+                )}
               </div>
               
               {project.status === 'completed' && project.video_url ? (

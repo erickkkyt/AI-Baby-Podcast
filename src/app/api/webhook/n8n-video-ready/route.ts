@@ -18,6 +18,7 @@ interface N8nCallbackBody {
   jobId: string;
   videoUrl?: string;
   fileName?: string; // Kept for potential future use, but not directly used for storage path now
+  duration?: number; // 新增 duration 字段，假设为秒数
   status: 'completed' | 'failed';
   errorMessage?: string; // errorMessage from n8n is received but not stored in the DB
 }
@@ -60,7 +61,7 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ message: 'Bad Request: Invalid JSON body.' }, { status: 400 });
   }
 
-  const { jobId, videoUrl, status, errorMessage } = body;
+  const { jobId, videoUrl, status, errorMessage, duration } = body;
 
   // Basic body validation
   if (!jobId || !status) {
@@ -80,46 +81,73 @@ export async function POST(request: NextRequest) {
 
   // 3. Process based on status
   if (status === 'completed') {
-    if (!videoUrl) {
-      console.error(`[N8N Webhook] Status is 'completed' but videoUrl is missing for jobId: ${jobId}. Marking as failed.`);
+    if (!videoUrl || duration === undefined || duration === null) {
+      console.error(`[N8N Webhook] Status is 'completed' but videoUrl or duration is missing for jobId: ${jobId}. Marking as failed.`);
       try {
         const { error: dbError } = await supabaseAdmin
           .from('projects')
           .update({
             status: 'failed',
             updated_at: new Date().toISOString(),
-            video_url: null, // Ensure video_url is cleared
+            video_url: null,
+            duration: null, 
           })
           .eq('job_id', jobId);
         if (dbError) {
-          console.error(`[N8N Webhook] DB error updating project ${jobId} to 'failed' (due to missing URL):`, dbError.message);
+          console.error(`[N8N Webhook] DB error updating project ${jobId} to 'failed' (due to missing URL/duration):`, dbError.message);
         } else {
-          console.log(`[N8N Webhook] Project ${jobId} marked as 'failed' in DB due to missing videoUrl from n8n.`);
+          console.log(`[N8N Webhook] Project ${jobId} marked as 'failed' in DB due to missing videoUrl/duration from n8n.`);
         }
       } catch (e: unknown) {
         const message = e instanceof Error ? e.message : String(e);
-        console.error(`[N8N Webhook] Exception while updating project ${jobId} to 'failed' (missing URL):`, message);
+        console.error(`[N8N Webhook] Exception while updating project ${jobId} to 'failed' (missing URL/duration):`, message);
       }
-      return NextResponse.json({ message: 'Bad Request: videoUrl is required for completed status.' }, { status: 400 });
+      return NextResponse.json({ message: 'Bad Request: videoUrl and duration are required for completed status.' }, { status: 400 });
     }
 
-    console.log(`[N8N Webhook] Processing COMPLETED video for jobId: ${jobId}. Provided videoUrl: ${videoUrl}`);
+    console.log(`[N8N Webhook] Processing COMPLETED video for jobId: ${jobId}. Provided videoUrl: ${videoUrl}, duration: ${duration}ms`);
+    
+    // 首先，尝试扣除积分
+    if (duration > 0) {
+        console.log(`[N8N Webhook] Calling RPC 'deduct_credits_by_duration' for job ${jobId} with duration ${duration}ms.`);
+        const { data: creditsDeductedData, error: creditsDeductedError } = await supabaseAdmin.rpc(
+            'deduct_credits_by_duration',
+            {
+                p_job_id: jobId,
+                p_duration_ms: duration
+            }
+        );
+
+        if (creditsDeductedError) {
+            console.error(`[N8N Webhook] RPC 'deduct_credits_by_duration' failed for job ${jobId}:`, creditsDeductedError.message);
+            // 即使扣费失败（例如函数本身错误），我们仍然尝试更新项目状态为 completed
+        } else if (creditsDeductedData && creditsDeductedData.success === false) {
+            console.warn(`[N8N Webhook] RPC 'deduct_credits_by_duration' indicated an issue for job ${jobId}:`, creditsDeductedData.message);
+            // 同样，记录警告但继续
+        } else {
+            console.log(`[N8N Webhook] RPC 'deduct_credits_by_duration' successful for job ${jobId}. Response:`, JSON.stringify(creditsDeductedData));
+        }
+    } else {
+        console.log(`[N8N Webhook] Duration for job ${jobId} is ${duration}ms. No credits will be deducted.`);
+    }
+
+    // 然后，更新项目状态和视频信息
     try {
       const { error: dbUpdateError } = await supabaseAdmin
         .from('projects')
         .update({
           status: 'completed',
-          video_url: videoUrl, // Store the n8n-provided video URL directly
+          video_url: videoUrl, 
+          duration: duration, // 存储ms单位的duration
           updated_at: new Date().toISOString(),
         })
         .eq('job_id', jobId);
 
       if (dbUpdateError) {
         console.error(`[N8N Webhook] DB error updating project ${jobId} to 'completed':`, dbUpdateError.message);
-        // Inform n8n that callback was received but internal processing failed.
         return NextResponse.json({ message: 'Callback processed, but a server-side error occurred during database update. Please check server logs.' }, { status: 500 }); 
       } else {
-        console.log(`[N8N Webhook] Project ${jobId} successfully updated in DB: status='completed', videoUrl stored.`);
+        console.log(`[N8N Webhook] Project ${jobId} successfully updated in DB: status='completed', videoUrl and duration stored.`);
         return NextResponse.json({ message: 'Callback for completed job processed successfully and database updated.' });
       }
     } catch (e: unknown) {
@@ -136,7 +164,8 @@ export async function POST(request: NextRequest) {
         .update({
           status: 'failed',
           updated_at: new Date().toISOString(),
-          video_url: null, // Ensure video_url is cleared on failure
+          video_url: null, 
+          duration: null, // 失败时清除 duration
         })
         .eq('job_id', jobId);
 
@@ -154,7 +183,6 @@ export async function POST(request: NextRequest) {
     }
   }
 
-  // This part should ideally not be reached if status validation is robust
   console.error(`[N8N Webhook] Reached end of POST handler with unhandled status for jobId: ${jobId}. Status: ${status}`);
   return NextResponse.json({ message: 'Bad Request: Unknown or unhandled status.' }, { status: 400 });
 }
