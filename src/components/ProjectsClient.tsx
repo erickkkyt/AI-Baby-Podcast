@@ -1,7 +1,7 @@
 'use client';
 
 import type { Project } from '@/types/project';
-import { Video, Download, AlertTriangle, Loader2 } from 'lucide-react';
+import { Video, Download, AlertTriangle, Loader2, Clock } from 'lucide-react';
 import { format } from 'date-fns';
 import { enUS } from 'date-fns/locale'; // For English date formatting
 
@@ -39,10 +39,10 @@ export default function ProjectsClient({ projects }: ProjectsClientProps) {
   return (
     <>
       {/* Global warning for video link expiration */}
-      <div className="mb-5 p-3 bg-yellow-900/40 border border-yellow-700/60 rounded-md">
-        <p className="text-xs text-yellow-300 flex items-center justify-center">
-          <AlertTriangle className="inline h-4 w-4 mr-2 flex-shrink-0" /> 
-          <span className="leading-tight">Video links may expire in 10 minutes. Please download your completed videos soon.</span>
+      <div className="mb-5 p-3 bg-blue-900/40 border border-blue-700/60 rounded-md">
+        <p className="text-xs text-blue-300 flex items-center justify-center">
+          <Clock className="inline h-4 w-4 mr-2 flex-shrink-0" />
+          <span className="leading-tight">Processing usually takes about 3 minutes. Please wait for the task to complete.</span>
         </p>
       </div>
 

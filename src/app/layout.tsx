@@ -34,6 +34,7 @@ export default function RootLayout({
       {/* 应用新的字体变量到 body */}
       <body className="antialiased">
         {children}
+        <div id="portal-root"></div>
         {/* Google tag (gtag.js) */}
         <Script
           strategy="afterInteractive"

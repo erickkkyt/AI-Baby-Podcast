@@ -22,7 +22,7 @@ interface YouTubeVideo {
 
 const MAX_TOPIC_LENGTH = 100;
 const MAX_CUSTOM_FIELD_LENGTH = 50;
-const REQUIRED_CREDITS_PER_PROJECT = 100;
+const REQUIRED_CREDITS_PER_PROJECT = 0;
 
 export default function DashboardClient({ currentCredits }: { currentCredits: number }) {
   const router = useRouter(); // Initialize useRouter
@@ -191,7 +191,7 @@ export default function DashboardClient({ currentCredits }: { currentCredits: nu
 
   const handleAICreatePress = () => {
     setSubmissionStatus({ message: '', type: null }); 
-    if (currentCredits < REQUIRED_CREDITS_PER_PROJECT) {
+    if (currentCredits <= REQUIRED_CREDITS_PER_PROJECT) {
       setIsCreditsModalOpen(true);
       return; 
     }

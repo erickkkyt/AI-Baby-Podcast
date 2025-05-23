@@ -4,7 +4,8 @@ import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { createClient } from '@/utils/supabase/client';
 import { type User } from '@supabase/supabase-js';
-import { LayoutDashboard, PlusSquare, Bell, LogOut, Zap, Layers, Home as HomeIcon } from 'lucide-react';
+import { LayoutDashboard, PlusSquare, Bell, LogOut, Zap, Layers, Home as HomeIcon, Mail, X } from 'lucide-react';
+import Portal from './Portal';
 
 // Define a type for the profile to expect `credits`
 interface UserProfile {
@@ -17,6 +18,7 @@ export default function DashboardSidebar() {
   const [loading, setLoading] = useState(true);
   const [credits, setCredits] = useState<number>(0); // Initialize credits to 0
   const [activeTab, setActiveTab] = useState<'create' | 'projects'>('create');
+  const [isContactModalOpen, setIsContactModalOpen] = useState(false); // State for contact modal
   const supabase = createClient();
 
   useEffect(() => {
@@ -168,6 +170,13 @@ export default function DashboardSidebar() {
             <HomeIcon size={20} />
             <span className="font-medium">Home</span>
           </Link>
+          {/* MOVED: Contact Creator Button - now below Home */}
+          <button
+            onClick={() => setIsContactModalOpen(true)}
+            className={`flex items-center space-x-3 py-2.5 px-3 rounded-lg transition-all duration-200 ease-in-out text-gray-400 hover:bg-gray-700/60 hover:text-gray-200 w-full text-left`}>
+            <Mail size={20} />
+            <span className="font-medium">Contact</span>
+          </button>
         </nav>
       </div>
 
@@ -184,11 +193,8 @@ export default function DashboardSidebar() {
             </Link>
         </div>
 
-        {/* Notification Link */}
-        <Link href="/dashboard/notifications" className={`flex items-center space-x-3 py-2.5 px-3 rounded-lg transition-all duration-200 ease-in-out text-gray-400 hover:bg-gray-700/60 hover:text-gray-200`}>
-          <Bell size={20} />
-          <span className="font-medium">Notification</span>
-        </Link>
+        {/* Notification Link -  REMOVED AND REPLACED BY CONTACT CREATOR BUTTON ABOVE */}
+        {/* <button ... Contact Creator button was here ... /> */}
 
         {/* User Info and Sign Out */}
         {loading ? (
@@ -217,6 +223,39 @@ export default function DashboardSidebar() {
           </Link>
         )}
       </div>
+
+      {/* Contact Creator Modal - Now wrapped in Portal */}
+      {isContactModalOpen && (
+        <Portal>
+          <div className="fixed inset-0 bg-black/70 backdrop-blur-sm flex items-center justify-center z-[9999] p-4">
+            <div className="bg-slate-800 border border-slate-700 p-6 rounded-lg shadow-xl max-w-md w-full relative">
+              <button 
+                onClick={() => setIsContactModalOpen(false)} 
+                className="absolute top-3 right-3 text-slate-400 hover:text-slate-200 transition-colors"
+                aria-label="Close modal"
+              >
+                <X size={20} />
+              </button>
+              <div className="flex items-center mb-4">
+                <Mail size={24} className="text-purple-400 mr-3" />
+                <h2 className="text-xl font-semibold text-white">Contact Creator</h2>
+              </div>
+              <p className="text-slate-300 mb-4 text-sm leading-relaxed">
+                Have questions, feedback, or need assistance? I&rsquo;m here to help! Please feel free to reach out, and I&rsquo;ll do my best to address your concerns promptly and patiently.
+              </p>
+              <p className="text-slate-300 text-sm mb-6">
+                You can reach me at: <a href="mailto:support@babypodcast.pro" className="text-purple-400 hover:underline">support@babypodcast.pro</a>
+              </p>
+              <button
+                onClick={() => setIsContactModalOpen(false)}
+                className="w-full bg-purple-600 hover:bg-purple-700 text-white font-medium py-2 px-4 rounded-md transition-colors duration-150 text-sm"
+              >
+                Close
+              </button>
+            </div>
+          </div>
+        </Portal>
+      )}
     </aside>
   );
 }

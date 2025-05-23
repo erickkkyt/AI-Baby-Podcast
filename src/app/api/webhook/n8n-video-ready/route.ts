@@ -79,6 +79,38 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ message: 'Server configuration error: Database client not available for webhook processing.' }, { status: 500 });
   }
 
+  // <<<< START IDEMPOTENCY CHECK >>>>
+  // Only perform full processing if the job hasn't been marked 'completed' already by a previous callback
+  // For 'failed' status, we might allow an update from 'pending' or 'processing' to 'failed'.
+  // If n8n sends 'completed' status first, then 'failed', this logic will ignore the 'failed'.
+  // This assumes 'completed' is a final state that shouldn't be overwritten by a 'failed' status later for the same job.
+  if (status === 'completed') { // Idempotency check primarily for 'completed' status
+    try {
+      const { data: existingProject, error: fetchError } = await supabaseAdmin
+        .from('projects')
+        .select('status')
+        .eq('job_id', jobId)
+        .single();
+
+      if (fetchError && fetchError.code !== 'PGRST116') { // PGRST116: "Zero rows returned" - project might not exist yet if this webhook is very fast
+        console.error(`[N8N Webhook] Error fetching project ${jobId} for idempotency check:`, fetchError.message);
+        return NextResponse.json({ message: 'Server error during idempotency check.' }, { status: 500 });
+      }
+
+      if (existingProject && existingProject.status === 'completed') {
+        console.log(`[N8N Webhook] Job ${jobId} has already been processed and marked as 'completed'. Ignoring duplicate 'completed' callback.`);
+        // It's important to return a success response to n8n so it doesn't keep retrying.
+        return NextResponse.json({ message: 'Callback for already completed job ignored.' });
+      }
+      // If project doesn't exist (existingProject is null) or status is not 'completed', proceed.
+    } catch (e: unknown) {
+      const message = e instanceof Error ? e.message : String(e);
+      console.error(`[N8N Webhook] Exception during idempotency check for job ${jobId}:`, message);
+      return NextResponse.json({ message: 'Server error during idempotency check.' }, { status: 500 });
+    }
+  }
+  // <<<< END IDEMPOTENCY CHECK >>>>
+
   // 3. Process based on status
   if (status === 'completed') {
     if (!videoUrl || duration === undefined || duration === null) {
@@ -158,6 +190,13 @@ export async function POST(request: NextRequest) {
 
   } else if (status === 'failed') {
     console.warn(`[N8N Webhook] Processing FAILED job notification from n8n for jobId: ${jobId}. Reported error (not stored in DB): ${errorMessage || 'Not provided'}`);
+    
+    // OPTIONAL: Add idempotency for 'failed' status as well, e.g., don't update if already 'completed'.
+    // For now, it will update to 'failed' regardless of previous state unless it was 'completed' and handled by the above block.
+    // However, the current idempotency check for 'completed' status might prevent this 'failed' block from running
+    // if a 'completed' callback for the same job_id was processed first.
+    // If 'failed' can overwrite other states (except 'completed'), that logic would be more complex or need adjustment here.
+
     try {
       const { error: dbUpdateError } = await supabaseAdmin
         .from('projects')

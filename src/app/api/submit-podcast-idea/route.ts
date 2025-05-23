@@ -17,7 +17,7 @@ export async function POST(request: Request) {
     const { ethnicity, hair, topic } = await request.json();
 
     const n8nApiKey = process.env.N8N_API_KEY;
-    const n8nWebhookUrl = process.env.N8N_WEBHOOK_URL || 'https://kkkkeric.app.n8n.cloud/webhook-test/1ef488b4-7772-4eca-9eed-c90662566cea'; 
+    const n8nWebhookUrl = process.env.N8N_WEBHOOK_URL || 'https://kkkkeric.app.n8n.cloud/webhook/1ef488b4-7772-4eca-9eed-c90662566cea'; 
 
     if (!n8nApiKey || !n8nWebhookUrl) {
       console.error('[Submit API] N8N_API_KEY or N8N_WEBHOOK_URL is not properly configured.');
@@ -50,6 +50,28 @@ export async function POST(request: Request) {
     }
     
     console.log(`[Submit API] User ${user.id} current credits: ${userProfile.credits}`);
+
+    // ++++ START CHECK FOR EXISTING PROCESSING PROJECT ++++
+    const { data: existingProcessingProject, error: existingProjectError } = await supabaseUserClient
+      .from('projects')
+      .select('id, status')
+      .eq('user_id', user.id)
+      .eq('status', 'processing')
+      .maybeSingle(); // Use maybeSingle as we expect 0 or 1
+
+    if (existingProjectError) {
+      console.error(`[Submit API] Error checking for existing processing projects for user ${user.id}:`, existingProjectError.message);
+      return NextResponse.json({ message: 'Failed to check for existing projects. Please try again.', error_code: 'EXISTING_PROJECT_CHECK_FAILED' }, { status: 500 });
+    }
+
+    if (existingProcessingProject) {
+      console.warn(`[Submit API] User ${user.id} already has a project with status 'processing' (ID: ${existingProcessingProject.id}). New project submission denied.`);
+      return NextResponse.json({
+        message: 'There is a task currently in progress. Please wait for it to complete before starting a new one.',
+        error_code: 'ACTIVE_PROJECT_LIMIT_REACHED'
+      }, { status: 409 }); // 409 Conflict is appropriate here
+    }
+    // ++++ END CHECK FOR EXISTING PROCESSING PROJECT ++++
 
     // 2. 检查用户积分是否 > 0
     if (userProfile.credits <= 0) {
