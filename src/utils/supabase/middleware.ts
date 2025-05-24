@@ -80,9 +80,15 @@ export async function updateSession(request: NextRequest) {
     } else {
       console.log(`Middleware: supabase.auth.getUser() successful. User ID: ${user?.id || 'No user'}`);
     }
-  } catch (e: any) {
+  } catch (e: unknown) {
     // 捕获 getUser() 本身可能抛出的、未被 Supabase 包装的异常
-    console.error('Middleware: Critical exception during supabase.auth.getUser():', e);
+    let errorMessage = 'An unknown error occurred';
+    if (e instanceof Error) {
+      errorMessage = e.message;
+      console.error('Middleware: Critical exception during supabase.auth.getUser():', errorMessage, e.stack);
+    } else {
+      console.error('Middleware: Critical non-Error exception during supabase.auth.getUser():', e);
+    }
     // 即使这里发生异常，为了调试，我们暂时也让它返回原始响应
     // 在生产中，这里可能需要返回一个错误页面或重定向
     // return new NextResponse('Internal Server Error in middleware', { status: 500 });
