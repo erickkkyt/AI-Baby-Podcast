@@ -16,10 +16,10 @@ interface PaymentCallbackData {
 
 // 产品ID和积分映射（与create-checkout保持一致）
 const CREDITS_MAPPING: Record<string, number> = {
-  'prod_6eeURkU2kMXz310aX31lVC': 200,  // starter
+  'prod_6V2hzzvfpKZHjbMVS4giOx': 200,  // starter
   'prod_QfFn8arVJqIqFXno17kHO': 550,   // pro
   'prod_5p2W6HFtwvbySKA7cMhl82': 1200,  // creator
-  'prod_7jfpNnI9Ai5sjnKZ1FENBD': 50,    // small_pack
+  'prod_7Jkxt1uHPrQ5J9iUfgkSvh': 50,    // small_pack
   'prod_4uFIYCBAyGJqXsXceRKigM': 150,  // medium_pack
   'prod_7mh6y58x32SJBQiwKUGjD8': 400   // large_pack
 };

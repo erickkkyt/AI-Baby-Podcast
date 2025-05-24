@@ -8,7 +8,7 @@ interface CheckoutRequest {
 }
 
 // 产品ID和积分映射
-const PRODUCT_MAPPING = {  starter: {    productId: 'prod_6eeURkU2kMXz310aX31lVC',    credits: 200,    amount: 19.9  },  pro: {    productId: 'prod_QfFn8arVJqIqFXno17kHO',    credits: 550,    amount: 49.9  },  creator: {    productId: 'prod_5p2W6HFtwvbySKA7cMhl82',    credits: 1200,    amount: 99.9  },  small_pack: {    productId: 'prod_7jfpNnI9Ai5sjnKZ1FENBD',    credits: 50,    amount: 5.9  },  medium_pack: {    productId: 'prod_4uFIYCBAyGJqXsXceRKigM',    credits: 150,    amount: 16.9  },  large_pack: {    productId: 'prod_7mh6y58x32SJBQiwKUGjD8',    credits: 400,    amount: 39.9  }};
+const PRODUCT_MAPPING = {  starter: {    productId: 'prod_6V2hzzvfpKZHjbMVS4giOx',    credits: 200,    amount: 19.9  },  pro: {    productId: 'prod_QfFn8arVJqIqFXno17kHO',    credits: 550,    amount: 49.9  },  creator: {    productId: 'prod_5p2W6HFtwvbySKA7cMhl82',    credits: 1200,    amount: 99.9  },  small_pack: {    productId: 'prod_7Jkxt1uHPrQ5J9iUfgkSvh',    credits: 50,    amount: 5.9  },  medium_pack: {    productId: 'prod_4uFIYCBAyGJqXsXceRKigM',    credits: 150,    amount: 16.9  },  large_pack: {    productId: 'prod_7mh6y58x32SJBQiwKUGjD8',    credits: 400,    amount: 39.9  }};
 
 export async function POST(request: NextRequest) {
   try {
