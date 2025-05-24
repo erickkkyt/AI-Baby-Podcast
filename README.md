@@ -65,6 +65,7 @@ AI Baby Podcast 是一个基于 Next.js 的全栈Web应用，允许用户通过A
 - **图片生成**: Flux.1-Pro Image Generation API
 - **视频制作**: Hedra.com AI Video API
 - **工作流**: n8n.io 自动化编排
+- **支付网关**: Creem Payment Gateway
 - **HTTP客户端**: Axios 1.9.0
 - **UUID生成**: uuid 11.1.0
 - **分析工具**: Google Analytics + Microsoft Clarity
@@ -219,6 +220,11 @@ SUPABASE_SERVICE_ROLE_KEY=your_service_role_key
 N8N_WEBHOOK_URL=your_n8n_trigger_webhook_url
 N8N_API_KEY=your_shared_secret_key
 
+# Creem 支付配置
+CREEM_API_URL=https://test-api.creem.io # Creem API 基础 URL (测试环境，生产环境请使用 https://api.creem.io)
+X_API_KEY=your_creem_api_key # Creem API 密钥
+NEXT_PUBLIC_BASE_URL=http://localhost:3000 # 应用的基础 URL，用于构建支付回调地址 (生产环境请替换为实际域名)
+
 # Analytics (可选)
 NEXT_PUBLIC_GA_ID=G-GPGTE9VHDR
 ```
@@ -229,6 +235,42 @@ NEXT_PUBLIC_GA_ID=G-GPGTE9VHDR
 - RPC函数 (`handle_new_user`, `create_initial_project`, `deduct_credits_by_duration`)
 - RLS安全策略
 - 数据库触发器
+
+### 💳 Creem 支付集成配置
+
+本项目集成了 Creem 作为支付网关，用于处理用户购买积分套餐和积分包的支付流程。
+
+**核心流程：**
+1. 用户在前端选择套餐/积分包并发起支付请求到 `/api/payment/create-checkout`。
+2. 后端API验证用户并调用 Creem API 创建一个 checkout session。
+3. 用户被重定向到 Creem 提供的 `checkout_url` 进行支付。
+4. 支付成功后，用户被重定向回应用内的 `/payment/success` 页面。
+5. `/payment/success` 页面将 Creem 回调的参数（通过URL查询参数传递）POST到后端的 `/api/payment/process` API。
+6. `/api/payment/process` API 负责：
+    - 验证 Creem 回调签名的有效性（基于回调URL中实际存在的参数和 `X_API_KEY`）。
+    - 检查重复支付。
+    - 调用 Supabase RPC 函数 (`add_credits`) 为用户增加相应积分。
+    - 在 `payments`, `payment_intents`, `subscriptions` 表中记录支付和订阅信息。
+
+**产品ID配置：**
+
+产品ID需要在以下两个文件中进行配置，确保两处一致：
+- `src/app/api/payment/create-checkout/route.ts` (在 `PRODUCT_MAPPING` 常量中)
+- `src/app/api/payment/process/route.ts` (在 `CREDITS_MAPPING` 常量中)
+
+当前的测试产品ID示例（请根据您的实际测试ID调整或在上线前替换为生产ID）：
+- **Starter Plan**: `prod_6V2hzzvfpKZHjbMVS4giOx` (200 积分) (之前测试用的 `prod_6eeURkU2kMXz310aX31lVC`)
+- **Small Pack**: `prod_7Jkxt1uHPrQ5J9iUfgkSvh` (50 积分) (之前测试用的 `prod_7jfpNnI9Ai5sjnKZ1FENBD`)
+
+*注意：上线前务必将这些测试ID替换为在 Creem **生产环境**中创建的实际产品ID。*
+
+**数据库操作权限：**
+
+为了确保对支付相关表（`payments`, `payment_intents`, `subscriptions`）的写入操作以及调用 `add_credits` RPC 函数具有足够的权限（绕过或满足RLS策略），后端支付API (`create-checkout` 和 `process`) 中涉及这些操作的部分使用了通过 `SUPABASE_SERVICE_ROLE_KEY` 初始化的 `supabaseAdmin` 客户端。
+
+**签名验证：**
+
+Creem 回调的签名验证逻辑位于 `/api/payment/process/route.ts` 的 `verifyCreemSignature` 函数中。该函数会严格按照 Creem 在回调 URL 中实际提供的参数（按 `request_id`, `checkout_id`, `order_id`, `customer_id`, `subscription_id` (如果存在), `product_id` 的顺序），拼接字符串并加上 `salt=X_API_KEY`，然后使用 SHA256 哈希与 Creem 提供的签名进行比对。
 
 ### 4. n8n工作流配置
 

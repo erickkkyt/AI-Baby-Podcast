@@ -32,7 +32,7 @@ export default function Pricing() {
         'Credits never expire'
       ],
       cta: 'Get Starter Plan',
-      ctaLink: isLoggedIn ? '/dashboard?plan=basic' : '/login',
+      ctaLink: '/pricing',
       highlight: false,
     },
     {
@@ -50,7 +50,7 @@ export default function Pricing() {
         'Online customer support'
       ],
       cta: 'Get Pro Plan',
-      ctaLink: isLoggedIn ? '/dashboard?plan=pro' : '/login',
+      ctaLink: '/pricing',
       highlight: true,
     },
     {
@@ -68,7 +68,7 @@ export default function Pricing() {
         'Custom requirements support'
       ],
       cta: 'Get Creator Plan',
-      ctaLink: isLoggedIn ? '/dashboard?plan=creator' : '/login',
+      ctaLink: '/pricing',
       highlight: false,
     },
   ];
