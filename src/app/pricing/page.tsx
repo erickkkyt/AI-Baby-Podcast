@@ -3,12 +3,11 @@
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { createClient } from '@/utils/supabase/client';
-import Header from '@/components/Header'; // 标准 Header
-import Footer from '@/components/Footer'; // 标准 Footer (假设存在)
-// import { type User } from '@supabase/supabase-js'; // 如果 User 类型被 Pricing 逻辑使用 (看起来没有直接使用)
+import Header from '@/components/Header';
+import Footer from '@/components/Footer';
 
 export default function PricingPage() {
-  const [annual, setAnnual] = useState(true);
+
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const supabase = createClient();
 
@@ -20,99 +19,71 @@ export default function PricingPage() {
     checkLogin();
   }, [supabase]);
 
-  const plans = [
+  const subscriptionPlans = [
     {
       name: 'Starter Plan',
-      description: 'Perfect for new BabyPodcast creators',
-      monthlyPrice: '0',
-      annualPrice: '0',
-      features: [
-        'Basic baby avatar templates',
-        'Limited voice options',
-        'Standard animation quality',
-        'Up to 720p export resolution',
-      ],
-      cta: isLoggedIn ? 'Start Creating' : 'Login/Sign Up',
-      ctaLink: isLoggedIn ? '/dashboard' : '/login',
+      description: 'Perfect for individual creators getting started',
+      monthlyPrice: '19.9',
+      annualPrice: '15.9', // 年付8折优惠
+      credits: 200,
+      bonusCredits: 0,
+      totalCredits: 200,
+            features: [        '200 credits/month',        'No watermark output',         'Standard baby avatar templates',        'Email support',        'Credits never expire'      ],
+      cta: 'Get Starter Plan',
+      ctaLink: isLoggedIn ? '/dashboard?plan=basic' : '/login',
       highlight: false,
     },
     {
-      name: 'Creator Plan',
-      description: 'For serious content creators',
-      monthlyPrice: '39',
-      annualPrice: '29',
-      features: [
-        'Advanced baby avatar customization',
-        'Premium voice library access',
-        'HD animation quality',
-        'Multi-platform export formats',
-        'Script template library',
-      ],
-      cta: 'Select Creator Plan',
-      ctaLink: '/subscribe?plan=creator', // 你可能需要一个订阅页面或逻辑
+      name: 'Pro Plan',
+      description: 'For content creators who need more videos',
+      monthlyPrice: '49.9',
+      annualPrice: '39.9', // 年付8折优惠
+      credits: 500,
+      bonusCredits: 50,
+      totalCredits: 550,
+            features: [        '550 credits/month (10% extra)',        '+50 bonus credits (10% extra)',        'Priority processing queue',        'Advanced avatar customization',        'Online customer support'      ],
+      cta: 'Get Pro Plan',
+      ctaLink: isLoggedIn ? '/dashboard?plan=pro' : '/login',
       highlight: true,
     },
     {
-      name: 'Pro Plan',
-      description: 'For professional content studios',
-      monthlyPrice: '99',
-      annualPrice: '79',
-      features: [
-        'Unlimited avatar customization',
-        'Full voice library with effects',
-        '4K animation quality',
-        'All platform export formats',
-        'Advanced lip-sync technology',
-        'Priority rendering',
-        'White-label exports',
-      ],
-      cta: 'Select Pro Plan',
-      ctaLink: '/subscribe?plan=pro', // 你可能需要一个订阅页面或逻辑
+      name: 'Creator Plan',
+      description: 'For professional creators and small studios',
+      monthlyPrice: '99.9',
+      annualPrice: '79.9', // 年付8折优惠
+      credits: 1000,
+      bonusCredits: 200,
+      totalCredits: 1200,
+            features: [        '1200 credits/month (20% extra)',        '+200 bonus credits (20% extra)',        'Commercial use license',        'Premium avatar collection',        'Custom requirements support'      ],
+      cta: 'Get Creator Plan',
+      ctaLink: isLoggedIn ? '/dashboard?plan=creator' : '/login',
       highlight: false,
     },
   ];
 
-  const switchBg = annual ? 'bg-blue-600' : 'bg-gray-200';
-  const switchTranslate = annual ? 'translate-x-6' : 'translate-x-1';
+     const creditPacks = [     {       name: 'Small Pack',       credits: 50,       price: '5.9',       description: 'Perfect for testing or occasional use',       cta: 'Get Small Pack'     },     {       name: 'Medium Pack',        credits: 150,       price: '16.9',       description: 'Great for regular content creation',       cta: 'Get Medium Pack',       highlight: true     },     {       name: 'Large Pack',       credits: 400,        price: '39.9',       description: 'Best value for high-volume creators',       cta: 'Get Large Pack'     }   ];
+
+  
 
   return (
     <div className="flex flex-col min-h-screen bg-gray-50">
       <Header />
-      <main className="flex-grow pt-16 md:pt-20"> {/* Adjust pt to match Header height */}
-        {/* This is the main content from your Pricing.tsx component */}
-        <section id="pricing" className="py-12 md:py-20"> {/* Adjusted padding */}
+      <main className="flex-grow pt-16 md:pt-20">
+        {/* Hero Section */}
+        <section className="py-12 md:py-20">
           <div className="container mx-auto px-4 sm:px-6 lg:px-8">
             <div className="text-center mb-12 md:mb-16">
-              <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
-                BabyPodcast Creation Plans
-              </h2>
-              <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-                Choose the right plan to create viral BabyPodcast content that drives views and generates revenue.
-              </p>
+              <h1 className="text-4xl md:text-5xl font-bold text-gray-900 mb-6">
+                AI Baby Podcast Pricing
+              </h1>
+                             <p className="text-xl text-gray-600 max-w-3xl mx-auto mb-8">                 Create personalized AI baby podcast videos with our credit-based system.                  <br />                 Choose your plan or buy credits as needed.               </p>
               
-              <div className="mt-8 flex items-center justify-center">
-                <span className={`mr-3 text-sm ${annual ? 'text-gray-900 font-medium' : 'text-gray-500'}`}>
-                  Annual
-                </span>
-                <button 
-                  onClick={() => setAnnual(!annual)} 
-                  className={`relative inline-flex h-8 w-14 items-center rounded-full transition-colors duration-200 ease-in-out focus:outline-none ${switchBg}`}
-                >
-                  <span className={`inline-block h-6 w-6 transform rounded-full bg-white shadow transition duration-200 ease-in-out ${switchTranslate}`}></span>
-                </button>
-                <span className={`ml-3 text-sm ${!annual ? 'text-gray-900 font-medium' : 'text-gray-500'}`}>
-                  Monthly
-                </span>
-                {annual && (
-                  <span className="ml-2 rounded-full bg-green-100 px-2 py-0.5 text-xs font-medium text-green-800">
-                    Save 20%
-                  </span>
-                )}
-              </div>
+              
             </div>
 
-            <div className="grid md:grid-cols-3 gap-8">
-              {plans.map((plan, index) => (
+            {/* Subscription Plans */}
+            <div className="grid md:grid-cols-3 gap-8 mb-20">
+              {subscriptionPlans.map((plan, index) => (
                 <div 
                   key={index} 
                   className={`bg-white rounded-2xl shadow-sm border overflow-hidden flex flex-col ${plan.highlight ? 'border-blue-600 relative shadow-lg ring-2 ring-blue-500' : 'border-gray-200'}`}
@@ -123,27 +94,15 @@ export default function PricingPage() {
                     </div>
                   )}
                   
-                  <div className={`pt-8 ${plan.highlight ? 'pb-6' : 'pb-8'} px-6 ${plan.highlight ? 'pt-12' : ''} text-center`}>
+                  <div className={`pt-8 ${plan.highlight ? 'pb-6 pt-12' : 'pb-8'} px-6 text-center`}>
                     <h3 className="text-xl font-bold text-gray-900 mb-2">{plan.name}</h3>
-                    <p className="text-gray-500 mb-6 h-12 md:h-10">{plan.description}</p> {/* Adjusted height for consistency */}
-                    <div className="mt-4 flex items-baseline justify-center">
-                      <span className="text-4xl font-extrabold tracking-tight text-gray-900">
-                        ${annual ? plan.annualPrice : plan.monthlyPrice}
-                      </span>
-                      <span className="ml-1 text-xl font-semibold text-gray-500">/mo</span>
-                    </div>
-                    {annual && plan.annualPrice !== plan.monthlyPrice && parseInt(plan.annualPrice) > 0 && (
-                      <p className="mt-1 text-sm text-gray-500">
-                        Annual billing ${parseInt(plan.annualPrice, 10) * 12}
-                      </p>
-                    )}
-                    {plan.monthlyPrice === '0' && (
-                       <p className="mt-1 text-sm text-gray-500">Forever Free</p>
-                    )}
+                    <p className="text-gray-500 mb-6 h-12">{plan.description}</p>
+                    
+                                         <div className="mt-4 flex items-baseline justify-center">                       <span className="text-4xl font-extrabold tracking-tight text-gray-900">                         ${plan.monthlyPrice}                       </span>                       <span className="ml-1 text-xl font-semibold text-gray-500">/month</span>                     </div>
                   </div>
                   
-                  <div className="border-t border-gray-100 bg-gray-50 px-6 py-6 flex-grow flex flex-col justify-between"> {/* Added flex-grow and justify-between */}
-                    <ul className="space-y-4 mb-8 h-48 md:h-52"> {/* Adjusted height for features list */}
+                  <div className="border-t border-gray-100 bg-gray-50 px-6 py-6 flex-grow flex flex-col justify-between">
+                    <ul className="space-y-4 mb-8">
                       {plan.features.map((feature, featureIndex) => (
                         <li key={featureIndex} className="flex items-start">
                           <svg className="h-5 w-5 flex-shrink-0 text-green-500 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -153,15 +112,13 @@ export default function PricingPage() {
                         </li>
                       ))}
                     </ul>
-                    <div className="mt-auto"> {/* Pushes button to the bottom */}
+                    <div className="mt-auto">
                       <Link 
                         href={plan.ctaLink}
                         className={`w-full block text-center py-3 px-6 rounded-lg font-medium transition-colors ${
                           plan.highlight 
                             ? 'bg-blue-600 text-white hover:bg-blue-700' 
-                            : plan.monthlyPrice === '0' 
-                              ? 'bg-blue-500 text-white hover:bg-blue-600' 
-                              : 'bg-white text-blue-600 border border-blue-600 hover:bg-blue-50'
+                            : 'bg-white text-blue-600 border border-blue-600 hover:bg-blue-50'
                         }`}
                       >
                         {plan.cta}
@@ -170,6 +127,67 @@ export default function PricingPage() {
                   </div>
                 </div>
               ))}
+            </div>
+
+            {/* Credit Packs Section */}
+            <div className="text-center mb-12">
+              <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
+                Buy Credits On-Demand
+              </h2>
+              <p className="text-xl text-gray-600 max-w-2xl mx-auto">
+                Need extra credits? Purchase additional credits. Credits never expire.
+              </p>
+            </div>
+
+            <div className="grid md:grid-cols-3 gap-8">
+              {creditPacks.map((pack, index) => (
+                <div 
+                  key={index} 
+                  className={`bg-white rounded-2xl shadow-sm border p-6 text-center ${pack.highlight ? 'border-blue-600 ring-2 ring-blue-500' : 'border-gray-200'}`}
+                >
+                  {pack.highlight && (
+                    <div className="mb-4">
+                      <span className="inline-block bg-blue-600 text-white text-xs font-medium px-2 py-1 rounded-full">
+                        Best Value
+                      </span>
+                    </div>
+                  )}
+                  
+                  <h3 className="text-xl font-bold text-gray-900 mb-2">{pack.name}</h3>
+                  <p className="text-gray-500 mb-4">{pack.description}</p>
+                  
+                                     <div className="mb-4">                     <div className="text-3xl font-extrabold text-gray-900">${pack.price}</div>                     <div className="text-lg text-gray-600">{pack.credits} credits</div>                   </div>
+                  
+                  <Link 
+                    href={isLoggedIn ? `/dashboard?credits=${pack.credits}` : '/login'}
+                    className={`w-full block py-3 px-6 rounded-lg font-medium transition-colors ${
+                      pack.highlight 
+                        ? 'bg-blue-600 text-white hover:bg-blue-700' 
+                        : 'bg-white text-blue-600 border border-blue-600 hover:bg-blue-50'
+                    }`}
+                  >
+                    {pack.cta}
+                  </Link>
+                </div>
+              ))}
+            </div>
+
+            {/* FAQ or Info Section */}
+            <div className="mt-20 text-center">
+              <div className="bg-blue-50 rounded-2xl p-8">
+                <h3 className="text-2xl font-bold text-gray-900 mb-4">How Credits Work</h3>
+                <div className="grid md:grid-cols-3 gap-6 text-left">
+                                     <div>                     <h4 className="font-semibold text-gray-900 mb-2">🎬 1 Credit = 1 Second</h4>                     <p className="text-gray-600 text-sm">A 15-second baby podcast video (540P) costs 15 credits</p>                   </div>
+                  <div>
+                    <h4 className="font-semibold text-gray-900 mb-2">♾️ Never Expire</h4>
+                    <p className="text-gray-600 text-sm">Your credits roll over month to month, no waste</p>
+                  </div>
+                  <div>
+                    <h4 className="font-semibold text-gray-900 mb-2">🎁 Bonus Credits</h4>
+                    <p className="text-gray-600 text-sm">Higher plans get extra credits as a bonus</p>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
         </section>
