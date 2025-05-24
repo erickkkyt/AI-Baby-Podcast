@@ -154,7 +154,7 @@ export async function POST(request: Request) {
 
     const requestBodyToN8n = { jobId, ethnicity: String(ethnicity), hair: String(hair), topic: String(topic) };
     // === BEGINNING OF N8N CALL MODIFICATIONS AND LOGGING ===
-    const actualN8nApiHeaderName = 'N8N-API-KEY'; // Corrected Header Name
+    const actualN8nApiHeaderName = 'N8N_API_KEY'; // CORRECTED back to underscore
 
     console.log('[Submit API Vercel N8N] Attempting to call N8N webhook.');
     console.log('[Submit API Vercel N8N] Target URL:', n8nWebhookUrl);
@@ -169,32 +169,33 @@ export async function POST(request: Request) {
     if (actualN8nApiHeaderName && n8nApiKey) {
         headersForN8n[actualN8nApiHeaderName] = n8nApiKey;
     } else {
-        // This log helps confirm if the key or header name was unexpectedly empty
         console.warn('[Submit API Vercel N8N] N8N API Key or the defined Header Name is missing/empty. Auth header will not be correctly set.');
     }
     console.log('[Submit API Vercel N8N] Request Headers being sent to N8N:', JSON.stringify(headersForN8n));
     
-    // Fire-and-forget n8n webhook call
-    fetch(n8nWebhookUrl, {
-      method: 'POST',
-      headers: headersForN8n, // Use the constructed headers
-      body: JSON.stringify(requestBodyToN8n),
-    }).then(async response => {
-      const responseText = await response.text(); 
-      // Log N8N's response status and full text body for debugging
-      console.log(`[Submit API Vercel N8N] N8N Response Status for job ${jobId}: ${response.status}`);
-      console.log(`[Submit API Vercel N8N] N8N Response Text for job ${jobId}:`, responseText);
+    // MODIFIED TO AWAIT FETCH FOR DEBUGGING
+    try {
+      console.log(`[Submit API Vercel N8N DEBUG] About to AWAIT fetch call to n8n for job ${jobId}.`);
+      const n8nResponse = await fetch(n8nWebhookUrl!, { // Using await, n8nWebhookUrl should be non-null due to earlier checks
+        method: 'POST',
+        headers: headersForN8n,
+        body: JSON.stringify(requestBodyToN8n),
+      });
 
-      if (!response.ok) {
-        console.error(`[Submit API Vercel N8N] Error submitting job ${jobId} to n8n. Status: ${response.status}. (Full Response Text logged above)`);
+      const responseText = await n8nResponse.text();
+      console.log(`[Submit API Vercel N8N DEBUG] N8N Response Status (after await) for job ${jobId}: ${n8nResponse.status}`);
+      console.log(`[Submit API Vercel N8N DEBUG] N8N Response Text (after await) for job ${jobId}:`, responseText);
+
+      if (!n8nResponse.ok) {
+        console.error(`[Submit API Vercel N8N DEBUG] Error submitting job ${jobId} to n8n (after await). Status: ${n8nResponse.status}. (Full Response Text logged above)`);
       } else {
-        console.log(`[Submit API Vercel N8N] Job ${jobId} successfully submitted to n8n. Status: ${response.status}. (Full Response Text logged above)`);
+        console.log(`[Submit API Vercel N8N DEBUG] Job ${jobId} successfully submitted to n8n (after await). Status: ${n8nResponse.status}. (Full Response Text logged above)`);
       }
-    }).catch(error => {
+    } catch (error) {
       const networkErrorMessage = error instanceof Error ? error.message : String(error);
-      // Log the full error object for more details on network failures
-      console.error(`[Submit API Vercel N8N] Network error calling n8n for job ${jobId}:`, networkErrorMessage, error);
-    });
+      console.error(`[Submit API Vercel N8N DEBUG] Network error or other exception during awaited fetch for job ${jobId}:`, networkErrorMessage, error);
+    }
+    console.log(`[Submit API Vercel N8N DEBUG] Finished awaiting fetch (or caught error) for job ${jobId}.`);
     // === END OF N8N CALL MODIFICATIONS AND LOGGING ===
 
     // Adjust final success response to use newProjectEntity directly as project details
