@@ -153,27 +153,49 @@ export async function POST(request: Request) {
     console.log(`[Submit API] RPC 'create_initial_project' success for job ${jobId}. Project created. Details:`, newProjectEntity);
 
     const requestBodyToN8n = { jobId, ethnicity: String(ethnicity), hair: String(hair), topic: String(topic) };
-    console.log(`[Submit API] Sending POST request to n8n: ${n8nWebhookUrl} for job ${jobId}`);
+    // === BEGINNING OF N8N CALL MODIFICATIONS AND LOGGING ===
+    const actualN8nApiHeaderName = 'N8N-API-KEY'; // Corrected Header Name
+
+    console.log('[Submit API Vercel N8N] Attempting to call N8N webhook.');
+    console.log('[Submit API Vercel N8N] Target URL:', n8nWebhookUrl);
+    console.log('[Submit API Vercel N8N] API Key (first 5 chars):', n8nApiKey ? n8nApiKey.substring(0, 5) + '...' : 'Not Set or Empty');
+    console.log('[Submit API Vercel N8N] Actual API Key Header Name being used:', actualN8nApiHeaderName);
+    console.log(`[Submit API Vercel N8N] Sending POST request to n8n for job ${jobId}. Payload:`, JSON.stringify(requestBodyToN8n));
+
+    const headersForN8n: HeadersInit = {
+      'Content-Type': 'application/json',
+    };
+
+    if (actualN8nApiHeaderName && n8nApiKey) {
+        headersForN8n[actualN8nApiHeaderName] = n8nApiKey;
+    } else {
+        // This log helps confirm if the key or header name was unexpectedly empty
+        console.warn('[Submit API Vercel N8N] N8N API Key or the defined Header Name is missing/empty. Auth header will not be correctly set.');
+    }
+    console.log('[Submit API Vercel N8N] Request Headers being sent to N8N:', JSON.stringify(headersForN8n));
     
     // Fire-and-forget n8n webhook call
     fetch(n8nWebhookUrl, {
       method: 'POST',
-      headers: {
-        'N8N_API_KEY': n8nApiKey, 
-        'Content-Type': 'application/json',
-      },
+      headers: headersForN8n, // Use the constructed headers
       body: JSON.stringify(requestBodyToN8n),
     }).then(async response => {
       const responseText = await response.text(); 
+      // Log N8N's response status and full text body for debugging
+      console.log(`[Submit API Vercel N8N] N8N Response Status for job ${jobId}: ${response.status}`);
+      console.log(`[Submit API Vercel N8N] N8N Response Text for job ${jobId}:`, responseText);
+
       if (!response.ok) {
-        console.error(`[Submit API] Error submitting job ${jobId} to n8n. Status: ${response.status}. Response:`, responseText);
+        console.error(`[Submit API Vercel N8N] Error submitting job ${jobId} to n8n. Status: ${response.status}. (Full Response Text logged above)`);
       } else {
-        console.log(`[Submit API] Job ${jobId} successfully submitted to n8n. Status: ${response.status}. Response:`, responseText);
+        console.log(`[Submit API Vercel N8N] Job ${jobId} successfully submitted to n8n. Status: ${response.status}. (Full Response Text logged above)`);
       }
     }).catch(error => {
       const networkErrorMessage = error instanceof Error ? error.message : String(error);
-      console.error(`[Submit API] Network error calling n8n for job ${jobId}:`, networkErrorMessage);
+      // Log the full error object for more details on network failures
+      console.error(`[Submit API Vercel N8N] Network error calling n8n for job ${jobId}:`, networkErrorMessage, error);
     });
+    // === END OF N8N CALL MODIFICATIONS AND LOGGING ===
 
     // Adjust final success response to use newProjectEntity directly as project details
     return NextResponse.json({ 
