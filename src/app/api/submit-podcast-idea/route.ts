@@ -153,7 +153,10 @@ export async function POST(request: Request) {
     console.log(`[Submit API] RPC 'create_initial_project' success for job ${jobId}. Project created. Details:`, newProjectEntity);
 
     const requestBodyToN8n = { jobId, ethnicity: String(ethnicity), hair: String(hair), topic: String(topic) };
-    console.log(`[Submit API] Sending POST request to n8n: ${n8nWebhookUrl} for job ${jobId}`);
+    // 在Vercel上，明确打印出将要使用的N8N_WEBHOOK_URL，以确认环境变量是否正确加载
+    console.log(`[Submit API Vercel Check] Target N8N Webhook URL: ${n8nWebhookUrl}`);
+    console.log(`[Submit API Vercel Check] N8N API Key used: ${n8nApiKey ? 'Key Present (masked for security)' : 'Key MISSING!'}`);
+    console.log(`[Submit API Vercel Check] Sending POST request to n8n for job ${jobId}. Payload:`, JSON.stringify(requestBodyToN8n));
     
     // Fire-and-forget n8n webhook call
     fetch(n8nWebhookUrl, {
@@ -164,15 +167,38 @@ export async function POST(request: Request) {
       },
       body: JSON.stringify(requestBodyToN8n),
     }).then(async response => {
-      const responseText = await response.text(); 
-      if (!response.ok) {
-        console.error(`[Submit API] Error submitting job ${jobId} to n8n. Status: ${response.status}. Response:`, responseText);
-      } else {
-        console.log(`[Submit API] Job ${jobId} successfully submitted to n8n. Status: ${response.status}. Response:`, responseText);
+      let responseBodyText = '';
+      try {
+        responseBodyText = await response.text();
+      } catch (textError: unknown) {
+        const textErrorMessage = textError instanceof Error ? textError.message : String(textError);
+        console.warn(`[Submit API Vercel Check] Could not read response text from n8n for job ${jobId}. Error: ${textErrorMessage}`);
       }
-    }).catch(error => {
+
+      if (!response.ok) {
+        console.error(`[Submit API Vercel Check] Error submitting job ${jobId} to n8n. Status: ${response.status} ${response.statusText}. Response Body:`, responseBodyText);
+      } else {
+        console.log(`[Submit API Vercel Check] Job ${jobId} successfully submitted to n8n. Status: ${response.status} ${response.statusText}. Response Body:`, responseBodyText);
+      }
+    }).catch((error: unknown) => { // 修正此处的语法
       const networkErrorMessage = error instanceof Error ? error.message : String(error);
-      console.error(`[Submit API] Network error calling n8n for job ${jobId}:`, networkErrorMessage);
+      const networkErrorStack = error instanceof Error ? error.stack : undefined;
+      console.error(`[Submit API Vercel Check] Network or fetch setup error when calling n8n for job ${jobId}:`, networkErrorMessage, networkErrorStack);
+      
+      if (error && typeof error === 'object') {
+        const additionalErrorDetails: Record<string, unknown> = {};
+        for (const key in error) { 
+          if (Object.prototype.hasOwnProperty.call(error, key)) {
+            additionalErrorDetails[key] = (error as Record<string, unknown>)[key];
+          }
+        }
+        try {
+          console.error('[Submit API Vercel Check] Additional error details:', JSON.stringify(additionalErrorDetails, null, 2));
+        } catch (stringifyError) {
+          console.error('[Submit API Vercel Check] Could not stringify additional error details:', stringifyError);
+          console.error('[Submit API Vercel Check] Raw additional error object:', additionalErrorDetails);
+        }
+      }
     });
 
     // Adjust final success response to use newProjectEntity directly as project details
