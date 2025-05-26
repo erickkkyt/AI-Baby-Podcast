@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import Image from 'next/image';
 import { Settings2, Sparkles, Film, SearchCode, ChevronDown } from 'lucide-react'; // Film might be unused now
 import { ConfirmationModal } from './modals/ConfirmationModal';
 import InsufficientCreditsModal from './modals/InsufficientCreditsModal';
@@ -20,9 +21,14 @@ interface YouTubeVideo {
   title: string;
 }
 
+// Define a type for the profile to expect `credits`
+// interface UserProfile {  // This seems to be commented out or unused, check if needed
+//   credits: number;
+// }
+
 const MAX_TOPIC_LENGTH = 100;
 const MAX_CUSTOM_FIELD_LENGTH = 50;
-const REQUIRED_CREDITS_PER_PROJECT = 0;
+const REQUIRED_CREDITS_PER_PROJECT = 0; // Assuming this is correct, check if credits apply to custom uploads too
 
 export default function DashboardClient({ currentCredits }: { currentCredits: number }) {
   const router = useRouter(); // Initialize useRouter
@@ -47,6 +53,24 @@ export default function DashboardClient({ currentCredits }: { currentCredits: nu
   const [isCreditsModalOpen, setIsCreditsModalOpen] = useState(false);
   
   const [submissionStatus, setSubmissionStatus] = useState<{ message: string; type: 'info' | 'success' | 'error' | null }>({ message: '', type: null });
+
+  // New state variables for creation mode and custom image upload
+  const [creationMode, setCreationMode] = useState<'generate' | 'upload'>('generate');
+  const [customImageFile, setCustomImageFile] = useState<File | null>(null);
+  const [customImagePreview, setCustomImagePreview] = useState<string | null>(null);
+  const [customImageError, setCustomImageError] = useState<string>('');
+  const [videoResolution, setVideoResolution] = useState<'540p' | '720p'>('540p');
+  const [aspectRatio, setAspectRatio] = useState<'1:1' | '16:9' | '9:16'>('9:16');
+
+  const handleRemoveCustomImage = () => {
+    setCustomImageFile(null);
+    setCustomImagePreview(null);
+    setCustomImageError('');
+    const fileInput = document.getElementById('custom-baby-image-input') as HTMLInputElement | null;
+    if (fileInput) {
+      fileInput.value = '';
+    }
+  };
 
   const ethnicityOptions = [
     { value: 'asian', label: 'Asian' },
@@ -144,38 +168,161 @@ export default function DashboardClient({ currentCredits }: { currentCredits: nu
     }
   };
 
+  // Handler for creation mode change
+  const handleCreationModeChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const newMode = event.target.value as 'generate' | 'upload';
+    setCreationMode(newMode);
+    setSubmissionStatus({ message: '', type: null }); // Clear previous submission status
+
+    if (newMode === 'generate') {
+      setCustomImageFile(null);
+      setCustomImagePreview(null);
+      setCustomImageError('');
+      // Reset feature fields to avoid carrying over state if user switches back and forth
+      // setSelectedEthnicity(''); 
+      // setCustomEthnicity('');
+      // setIsEthnicityOther(false);
+      // setCustomEthnicityError('');
+      // setSelectedHair('');
+      // setCustomHair('');
+      // setIsHairOther(false);
+      // setCustomHairError('');
+    } else { // 'upload' mode
+      // Clear feature-specific fields when switching to upload mode
+      setSelectedEthnicity(''); 
+      setCustomEthnicity('');
+      setIsEthnicityOther(false);
+      setCustomEthnicityError('');
+      setSelectedHair('');
+      setCustomHair('');
+      setIsHairOther(false);
+      setCustomHairError('');
+    }
+  };
+
+  // Handler for custom image file change
+  const MAX_FILE_SIZE_MB = 5;
+  const ALLOWED_IMAGE_TYPES = ['image/jpeg', 'image/png', 'image/webp'];
+
+  const handleCustomImageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setSubmissionStatus({ message: '', type: null });
+    const file = event.target.files?.[0];
+
+    if (file) {
+      if (!ALLOWED_IMAGE_TYPES.includes(file.type)) {
+        setCustomImageError(`Invalid file type. Please upload a JPEG, PNG, or WebP image.`);
+        setCustomImageFile(null);
+        setCustomImagePreview(null);
+        event.target.value = ''; // Clear the input
+        return;
+      }
+
+      if (file.size > MAX_FILE_SIZE_MB * 1024 * 1024) {
+        setCustomImageError(`File is too large. Maximum size is ${MAX_FILE_SIZE_MB}MB.`);
+        setCustomImageFile(null);
+        setCustomImagePreview(null);
+        event.target.value = ''; // Clear the input
+        return;
+      }
+
+      setCustomImageFile(file);
+      setCustomImageError('');
+
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setCustomImagePreview(reader.result as string);
+      };
+      reader.readAsDataURL(file);
+    } else {
+      setCustomImageFile(null);
+      setCustomImagePreview(null);
+      setCustomImageError('');
+    }
+  };
+
+  const handleVideoResolutionChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setVideoResolution(event.target.value as '540p' | '720p');
+    setSubmissionStatus({ message: '', type: null });
+  };
+
+  const handleAspectRatioChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setAspectRatio(event.target.value as '1:1' | '16:9' | '9:16');
+    setSubmissionStatus({ message: '', type: null });
+  };
+
   const executeSubmitLogic = async () => {
     setIsSubmitting(true);
     setSubmissionStatus({ message: '✨ Processing your request...', type: 'info' }); 
 
-    const ethnicityValue = isEthnicityOther ? customEthnicity : selectedEthnicity;
-    const hairValue = isHairOther ? customHair : selectedHair;
-    const topicPayload = topicOfBabyPodcast;
-
     try {
-      const response = await fetch('/api/submit-podcast-idea', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          ethnicity: ethnicityValue,
-          hair: hairValue,
-          topic: topicPayload,
-        }),
-      });
+      let response;
+      let result;
 
-      const result = await response.json();
+      if (creationMode === 'generate') {
+        const ethnicityValue = isEthnicityOther ? customEthnicity : selectedEthnicity;
+        const hairValue = isHairOther ? customHair : selectedHair;
+        const topicPayload = topicOfBabyPodcast;
 
+        response = await fetch('/api/submit-podcast-idea', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            ethnicity: ethnicityValue,
+            hair: hairValue,
+            topic: topicPayload,
+            videoResolution: videoResolution,
+            aspectRatio: aspectRatio,
+          }),
+        });
+        result = await response.json();
+
+      } else { // creationMode === 'upload'
+        if (!customImageFile) {
+          setSubmissionStatus({ message: '⚠️ Please select an image to upload.', type: 'error' });
+          setIsSubmitting(false);
+          return;
+        }
+
+        const formData = new FormData();
+        formData.append('topic', topicOfBabyPodcast);
+        formData.append('customBabyImage', customImageFile);
+        formData.append('videoResolution', videoResolution);
+        formData.append('aspectRatio', aspectRatio);
+
+        response = await fetch('/api/submit-podcast-idea/upload-custom-image', { 
+          method: 'POST',
+          body: formData,
+        });
+        result = await response.json();
+      }
+      
       if (response.ok) {
         setSubmissionStatus({ 
-          message: '✅ Your AI baby podcast is now being generated. You can check "My Projects" later for updates. This usually takes about 3 minutes.', 
+          message: `✅ Your AI baby podcast request has been submitted. ${creationMode === 'generate' ? 'It is now being generated.' : 'The custom image has been processed.'} You can check "My Projects" later for updates. This usually takes about 3 minutes.`, 
           type: 'success' 
         });
-        router.refresh(); // Refresh server-side data, including credits
+        router.refresh(); 
+        // Reset form fields
+        setTopicOfBabyPodcast('');
+        setSelectedEthnicity('');
+        setCustomEthnicity('');
+        setIsEthnicityOther(false);
+        setCustomEthnicityError('');
+        setSelectedHair('');
+        setCustomHair('');
+        setIsHairOther(false);
+        setCustomHairError('');
+        setCustomImageFile(null);
+        setCustomImagePreview(null);
+        setCustomImageError('');
+        setVideoResolution('540p');
+        setAspectRatio('9:16');
+        // Consider resetting creationMode to 'generate' or leave as is based on desired UX
+        // setCreationMode('generate'); 
       } else {
         setSubmissionStatus({ 
-          // Use the message from the API response (which we customized)
           message: `⚠️ ${result.message || 'Unknown server error'}. ${result.details || ''}`, 
           type: 'error' 
         });
@@ -223,15 +370,21 @@ export default function DashboardClient({ currentCredits }: { currentCredits: nu
   const charCountClasses = "text-xs text-gray-400 mt-1 text-right";
 
   const isSubmitButtonDisabled = 
-    !!topicError || 
-    !!customEthnicityError || 
-    !!customHairError || 
-    !topicOfBabyPodcast.trim() || 
-    (isEthnicityOther && !customEthnicity.trim()) || 
-    (isHairOther && !customHair.trim()) || 
-    (!isEthnicityOther && !selectedEthnicity) || 
-    (!isHairOther && !selectedHair) ||
-    isSubmitting;
+    isSubmitting ||
+    !!topicError ||
+    !topicOfBabyPodcast.trim() ||
+    (creationMode === 'generate' && (
+      !!customEthnicityError || 
+      !!customHairError || 
+      (isEthnicityOther && !customEthnicity.trim()) || 
+      (isHairOther && !customHair.trim()) || 
+      (!isEthnicityOther && !selectedEthnicity) || 
+      (!isHairOther && !selectedHair)
+    )) ||
+    (creationMode === 'upload' && (
+      !customImageFile ||
+      !!customImageError
+    ));
 
   return (
     <div className="space-y-8">
@@ -239,91 +392,172 @@ export default function DashboardClient({ currentCredits }: { currentCredits: nu
         
         <div>
           <h3 className={sectionTitleClasses}>Baby&apos;s Appearance</h3>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-x-4 gap-y-4">
-            <div>
-              <label htmlFor="babyEthnicity" className="block text-sm font-medium text-gray-300 mb-1.5">
-                Ethnicity of the baby
+          
+          {/* Creation Mode Selector */}
+          <div className="mb-6 mt-4"> {/* Added mt-4 for spacing */}
+            <span className="block text-sm font-medium text-gray-300 mb-2">Creation Mode:</span>
+            <div className="flex items-center space-x-4">
+              <label htmlFor="generateMode" className="flex items-center cursor-pointer">
+                <input
+                  type="radio"
+                  id="generateMode"
+                  name="creationModeOption"
+                  value="generate"
+                  checked={creationMode === 'generate'}
+                  onChange={handleCreationModeChange}
+                  className="form-radio h-4 w-4 text-purple-600 border-gray-600 focus:ring-purple-500 bg-gray-700"
+                />
+                <span className="ml-2 text-sm text-gray-200">Generate with Features</span>
               </label>
-              <div className="relative">
-                {isEthnicityOther ? (
-                  <>
-                    <input
-                      type="text"
-                      id="customBabyEthnicity"
-                      placeholder="Please specify ethnicity"
-                      value={customEthnicity}
-                      onChange={handleCustomEthnicityChange}
-                      onBlur={handleCustomEthnicityBlur}
-                      className={`${inputBaseClasses} ${customEthnicityError ? 'border-red-500' : 'border-gray-700'}`}
-                      autoFocus
-                    />
-                    <div className={charCountClasses}>
-                      {customEthnicity.length}/{MAX_CUSTOM_FIELD_LENGTH}
-                    </div>
-                    {customEthnicityError && <p className={errorTextClasses}>{customEthnicityError}</p>}
-                  </>
-                ) : (
-                  <>
-                    <select
-                      id="babyEthnicity"
-                      name="babyEthnicity"
-                      value={selectedEthnicity}
-                      onChange={handleEthnicityChange}
-                      className={`${selectBaseClasses} appearance-none`}
-                    >
-                      <option value="" disabled>Select ethnicity...</option>
-                      {ethnicityOptions.map(option => (
-                        <option key={option.value} value={option.value}>{option.label}</option>
-                      ))}
-                    </select>
-                    <ChevronDown className="absolute right-2.5 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400 pointer-events-none" />
-                  </>
-                )}
-              </div>
-            </div>
-
-            <div>
-              <label htmlFor="babyHair" className="block text-sm font-medium text-gray-300 mb-1.5">
-                Baby hair
+              <label htmlFor="uploadMode" className="flex items-center cursor-pointer">
+                <input
+                  type="radio"
+                  id="uploadMode"
+                  name="creationModeOption"
+                  value="upload"
+                  checked={creationMode === 'upload'}
+                  onChange={handleCreationModeChange}
+                  className="form-radio h-4 w-4 text-purple-600 border-gray-600 focus:ring-purple-500 bg-gray-700"
+                />
+                <span className="ml-2 text-sm text-gray-200">Upload Custom Image</span>
               </label>
-              <div className="relative">
-                {isHairOther ? (
-                  <>
-                    <input
-                      type="text"
-                      id="customBabyHair"
-                      placeholder="Please specify hair type"
-                      value={customHair}
-                      onChange={handleCustomHairChange}
-                      onBlur={handleCustomHairBlur}
-                      className={`${inputBaseClasses} ${customHairError ? 'border-red-500' : 'border-gray-700'}`}
-                      autoFocus
-                    />
-                    <div className={charCountClasses}>
-                      {customHair.length}/{MAX_CUSTOM_FIELD_LENGTH}
-                    </div>
-                    {customHairError && <p className={errorTextClasses}>{customHairError}</p>}
-                  </>
-                ) : (
-                  <>
-                    <select
-                      id="babyHair"
-                      name="babyHair"
-                      value={selectedHair}
-                      onChange={handleHairChange}
-                      className={`${selectBaseClasses} appearance-none`}
-                    >
-                      <option value="" disabled>Select hair type...</option>
-                      {hairOptions.map(option => (
-                        <option key={option.value} value={option.value}>{option.label}</option>
-                      ))}
-                    </select>
-                    <ChevronDown className="absolute right-2.5 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400 pointer-events-none" />
-                  </>
-                )}
-              </div>
             </div>
           </div>
+
+          {/* Conditional Rendering based on creationMode */}
+          {creationMode === 'generate' && (
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-x-4 gap-y-4">
+              <div>
+                <label htmlFor="babyEthnicity" className="block text-sm font-medium text-gray-300 mb-1.5">
+                  Ethnicity of the baby
+                </label>
+                <div className="relative">
+                  {isEthnicityOther ? (
+                    <>
+                      <input
+                        id="customBabyEthnicity"
+                        type="text"
+                        value={customEthnicity}
+                        onChange={handleCustomEthnicityChange}
+                        onBlur={handleCustomEthnicityBlur}
+                        placeholder="Enter custom ethnicity"
+                        className={`${inputBaseClasses} ${customEthnicityError ? 'border-red-500' : 'border-gray-700'}`}
+                        maxLength={MAX_CUSTOM_FIELD_LENGTH + 1} // Allow one extra for error check
+                      />
+                      {customEthnicityError && <p className={errorTextClasses}>{customEthnicityError}</p>}
+                      <p className={charCountClasses}>{customEthnicity.length}/{MAX_CUSTOM_FIELD_LENGTH}</p>
+                    </>
+                  ) : (
+                    <select
+                      id="babyEthnicity"
+                      value={selectedEthnicity}
+                      onChange={handleEthnicityChange}
+                      className={selectBaseClasses}
+                    >
+                      <option value="" disabled>Select ethnicity...</option>
+                      {ethnicityOptions.map((option) => (
+                        <option key={option.value} value={option.value}>
+                          {option.label}
+                        </option>
+                      ))}
+                    </select>
+                  )}
+                </div>
+              </div>
+              <div>
+                <label htmlFor="babyHair" className="block text-sm font-medium text-gray-300 mb-1.5">
+                  Baby hair
+                </label>
+                <div className="relative">
+                  {isHairOther ? (
+                     <>
+                      <input
+                        id="customBabyHair"
+                        type="text"
+                        value={customHair}
+                        onChange={handleCustomHairChange}
+                        onBlur={handleCustomHairBlur}
+                        placeholder="Enter custom hair type"
+                        className={`${inputBaseClasses} ${customHairError ? 'border-red-500' : 'border-gray-700'}`}
+                        maxLength={MAX_CUSTOM_FIELD_LENGTH + 1} // Allow one extra for error check
+                      />
+                      {customHairError && <p className={errorTextClasses}>{customHairError}</p>}
+                      <p className={charCountClasses}>{customHair.length}/{MAX_CUSTOM_FIELD_LENGTH}</p>
+                    </>
+                  ) : (
+                    <select
+                      id="babyHair"
+                      value={selectedHair}
+                      onChange={handleHairChange}
+                      className={selectBaseClasses}
+                    >
+                      <option value="" disabled>Select hair type...</option>
+                      {hairOptions.map((option) => (
+                        <option key={option.value} value={option.value}>
+                          {option.label}
+                        </option>
+                      ))}
+                    </select>
+                  )}
+                </div>
+              </div>
+            </div>
+          )}
+
+          {creationMode === 'upload' && (
+            <div className="space-y-4">
+              <div>
+                <label htmlFor="custom-baby-image" className="block text-sm font-medium text-gray-300 mb-1">
+                  Upload Baby Image
+                </label>
+                <div className="mt-1 flex items-center">
+                  <label
+                    htmlFor="custom-baby-image-input"
+                    className="cursor-pointer bg-purple-600 hover:bg-purple-700 text-white font-semibold py-2 px-4 rounded-md transition-colors duration-150 ease-in-out mr-3"
+                  >
+                    Choose File
+                  </label>
+                  <input
+                    type="file"
+                    id="custom-baby-image-input"
+                    name="customBabyImage"
+                    accept="image/jpeg,image/png,image/webp"
+                    onChange={handleCustomImageChange}
+                    className="sr-only" // Hidden visually, triggered by the custom label
+                  />
+                  <span className="text-sm text-gray-400">
+                    {customImageFile ? customImageFile.name : 'No file chosen'}
+                  </span>
+                </div>
+                {customImageError && <p className={errorTextClasses}>{customImageError}</p>}
+              </div>
+
+              {customImagePreview && (
+                <div className="mt-4"> 
+                  <p className="block text-sm font-medium text-gray-300 mb-1.5">Image Preview:</p>
+                  <div className="flex items-end space-x-2">
+                    <div className="inline-block">
+                      <Image
+                        src={customImagePreview}
+                        alt="Custom baby preview"
+                        width={192} 
+                        height={192}
+                        className="rounded-md border border-gray-700 object-contain"
+                      />
+                    </div>
+                    <button
+                      type="button"
+                      onClick={handleRemoveCustomImage}
+                      className="text-sm text-red-500 hover:text-red-400 px-3 py-1 border border-red-500 hover:border-red-400 rounded-md transition-colors"
+                      aria-label="Remove uploaded image"
+                    >
+                      Remove
+                    </button>
+                  </div>
+                </div>
+              )}
+            </div>
+          )}
         </div>
 
         <div>
@@ -345,6 +579,88 @@ export default function DashboardClient({ currentCredits }: { currentCredits: nu
               {topicOfBabyPodcast.length}/{MAX_TOPIC_LENGTH}
             </div>
             {topicError && <p className={errorTextClasses}>{topicError}</p>}
+          </div>
+
+          {/* Combined Video Resolution and Aspect Ratio Section */}
+          <div className="mt-4 grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-4">
+            {/* Video Resolution Selector */}
+            <div>
+              <label className="block text-sm font-medium text-gray-300 mb-1.5">
+                Video Resolution
+              </label>
+              <div className="flex items-center space-x-4">
+                <label htmlFor="resolution540p" className="flex items-center cursor-pointer">
+                  <input
+                    type="radio"
+                    id="resolution540p"
+                    name="videoResolutionOption"
+                    value="540p"
+                    checked={videoResolution === '540p'}
+                    onChange={handleVideoResolutionChange}
+                    className="form-radio h-4 w-4 text-purple-600 border-gray-600 focus:ring-purple-500 bg-gray-700"
+                  />
+                  <span className="ml-2 text-sm text-gray-200">540p</span>
+                </label>
+                <label htmlFor="resolution720p" className="flex items-center cursor-pointer">
+                  <input
+                    type="radio"
+                    id="resolution720p"
+                    name="videoResolutionOption"
+                    value="720p"
+                    checked={videoResolution === '720p'}
+                    onChange={handleVideoResolutionChange}
+                    className="form-radio h-4 w-4 text-purple-600 border-gray-600 focus:ring-purple-500 bg-gray-700"
+                  />
+                  <span className="ml-2 text-sm text-gray-200">720p</span>
+                  <span className="ml-1 text-xs text-yellow-400">(Consumes 2x credits)</span>
+                </label>
+              </div>
+            </div>
+
+            {/* Aspect Ratio Selector */}
+            <div>
+              <label className="block text-sm font-medium text-gray-300 mb-1.5">
+                Aspect Ratio
+              </label>
+              <div className="flex items-center space-x-4">
+                <label htmlFor="aspect9to16" className="flex items-center cursor-pointer">
+                  <input
+                    type="radio"
+                    id="aspect9to16"
+                    name="aspectRatioOption"
+                    value="9:16"
+                    checked={aspectRatio === '9:16'}
+                    onChange={handleAspectRatioChange}
+                    className="form-radio h-4 w-4 text-purple-600 border-gray-600 focus:ring-purple-500 bg-gray-700"
+                  />
+                  <span className="ml-2 text-sm text-gray-200">9:16</span>
+                </label>
+                <label htmlFor="aspect1to1" className="flex items-center cursor-pointer">
+                  <input
+                    type="radio"
+                    id="aspect1to1"
+                    name="aspectRatioOption"
+                    value="1:1"
+                    checked={aspectRatio === '1:1'}
+                    onChange={handleAspectRatioChange}
+                    className="form-radio h-4 w-4 text-purple-600 border-gray-600 focus:ring-purple-500 bg-gray-700"
+                  />
+                  <span className="ml-2 text-sm text-gray-200">1:1</span>
+                </label>
+                <label htmlFor="aspect16to9" className="flex items-center cursor-pointer">
+                  <input
+                    type="radio"
+                    id="aspect16to9"
+                    name="aspectRatioOption"
+                    value="16:9"
+                    checked={aspectRatio === '16:9'}
+                    onChange={handleAspectRatioChange}
+                    className="form-radio h-4 w-4 text-purple-600 border-gray-600 focus:ring-purple-500 bg-gray-700"
+                  />
+                  <span className="ml-2 text-sm text-gray-200">16:9</span>
+                </label>
+              </div>
+            </div>
           </div>
         </div>
         

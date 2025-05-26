@@ -14,11 +14,25 @@ export async function POST(request: Request) {
   console.log(`[Submit API] Authenticated User ID: ${user.id}`);
 
   try {
-    const { ethnicity, hair, topic } = await request.json();
+    const { 
+      ethnicity, 
+      hair, 
+      topic, 
+      videoResolution, 
+      aspectRatio 
+    } = await request.json();
 
     const n8nApiKey = process.env.N8N_API_KEY;
     const n8nWebhookUrl = process.env.N8N_WEBHOOK_URL || 'https://kkkkeric.app.n8n.cloud/webhook/1ef488b4-7772-4eca-9eed-c90662566cea'; 
 
+    // Validation for new parameters
+    if (!videoResolution || !['540p', '720p'].includes(videoResolution)) {
+        return NextResponse.json({ message: 'Missing or invalid field: videoResolution. Must be "540p" or "720p".' }, { status: 400 });
+    }
+    if (!aspectRatio || !['1:1', '16:9', '9:16'].includes(aspectRatio)) {
+        return NextResponse.json({ message: 'Missing or invalid field: aspectRatio. Must be "1:1", "16:9", or "9:16".' }, { status: 400 });
+    }
+    
     if (!n8nApiKey || !n8nWebhookUrl) {
       console.error('[Submit API] N8N_API_KEY or N8N_WEBHOOK_URL is not properly configured.');
       return NextResponse.json({ message: 'Server configuration error: N8N integration details missing.' }, { status: 500 });
@@ -82,15 +96,19 @@ export async function POST(request: Request) {
       }, { status: 402 }); // 402 Payment Required
     }
 
-    console.log(`[Submit API] Calling RPC 'create_initial_project' for job ${jobId} by user ${user.id}`);
+    console.log(`[Submit API] Calling RPC 'create_initial_project' for job ${jobId} by user ${user.id} with resolution: ${videoResolution}, aspect ratio: ${aspectRatio}`);
     const { data: newProjectData, error: rpcError } = await supabaseUserClient.rpc(
       'create_initial_project', 
       {
-        p_user_id: user.id, // 显式传递 user_id
+        p_user_id: user.id, 
         p_job_id: jobId,
         p_ethnicity: String(ethnicity),
         p_hair: String(hair),
-        p_topic: String(topic)
+        p_topic: String(topic),
+        p_creation_type: 'features',
+        p_image_url: null,
+        p_video_resolution: videoResolution,
+        p_aspect_ratio: aspectRatio 
       }
     );
 
@@ -152,7 +170,14 @@ export async function POST(request: Request) {
     // Log the project details
     console.log(`[Submit API] RPC 'create_initial_project' success for job ${jobId}. Project created. Details:`, newProjectEntity);
 
-    const requestBodyToN8n = { jobId, ethnicity: String(ethnicity), hair: String(hair), topic: String(topic) };
+    const requestBodyToN8n = { 
+        jobId: newProjectEntity.job_id, 
+        ethnicity: String(ethnicity), 
+        hair: String(hair), 
+        topic: String(topic),
+        videoResolution: videoResolution,
+        aspectRatio: aspectRatio
+    };
     // === BEGINNING OF N8N CALL MODIFICATIONS AND LOGGING ===
     const actualN8nApiHeaderName = 'N8N_API_KEY'; // CORRECTED back to underscore
 
