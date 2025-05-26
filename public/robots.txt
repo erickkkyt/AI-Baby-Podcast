@@ -1,0 +1,22 @@
+User-agent: *
+Allow: /$
+Allow: /pricing$
+Allow: /pricing/$
+Allow: /privacy-policy$
+Allow: /privacy-policy/$
+Allow: /terms-of-service$
+Allow: /terms-of-service/$
+
+Disallow: /api/
+Disallow: /dashboard/
+Disallow: /login/
+Disallow: /auth/
+Disallow: /payment/
+Disallow: /_next/ # Disallow Next.js internal build artifacts, except static assets
+
+# Allow specific static assets if needed, though generally _next/static is crawlable by default if not disallowed.
+# Next.js typically handles serving static assets correctly.
+# Example: Allow: /_next/static/css/
+# Example: Allow: /_next/static/media/
+
+Sitemap: https://www.babypodcast.pro/sitemap.xml 

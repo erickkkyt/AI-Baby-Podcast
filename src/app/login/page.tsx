@@ -1,17 +1,30 @@
 'use client' // *** 添加这一行，将组件转换为客户端组件 ***
 
 import Link from 'next/link';
-import { useState, useTransition } from 'react'; // 导入 Hooks
+import { useState, useTransition, useEffect } from 'react'; // 导入 Hooks
+import { useSearchParams } from 'next/navigation'; // 导入 useSearchParams
 import { login, signup } from './actions'; // 导入 Server Actions
 import { createClient } from '@/utils/supabase/client'; // 更正：从项目工具类导入 Supabase 客户端创建函数
 
 // 不再需要 searchParams，因为消息通过 state 管理
 export default function LoginPage() {
   const supabase = createClient(); // 更正：使用导入的函数创建 Supabase 客户端实例
+  const searchParams = useSearchParams(); // 获取 searchParams
   // const [email, setEmail] = useState(''); // 可以用 state 管理输入，但 FormData 也能工作
   // const [password, setPassword] = useState('');
   const [message, setMessage] = useState<string | null>(null); // 用于显示成功或错误消息
   const [isPending, startTransition] = useTransition(); // 用于处理异步操作状态
+
+  useEffect(() => {
+    const urlMessage = searchParams.get('message');
+    if (urlMessage) {
+      setMessage(decodeURIComponent(urlMessage));
+    }
+    const urlError = searchParams.get('error'); // 也检查常见的 error 参数
+    if (urlError) {
+      setMessage(decodeURIComponent(urlError));
+    }
+  }, [searchParams]); // 当 searchParams 改变时重新运行
 
   // 处理登录的函数 (注意：login 成功时会 redirect)
   const handleLogin = (formData: FormData) => {

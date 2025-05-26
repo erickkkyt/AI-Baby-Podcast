@@ -1,5 +1,15 @@
 import { Suspense } from 'react';
 import PaymentSuccessClient from './PaymentSuccessClient'; // 假设客户端逻辑组件
+import type { Metadata } from 'next'; // Added Metadata import
+
+// Added metadata export for noindex
+export const metadata: Metadata = {
+  robots: {
+    index: false,
+    follow: false, // Usually no need to follow links from a success page
+  },
+  title: 'Payment Successful - Baby Podcast Pro', // Title for browser tab
+};
 
 // 定义一个简单的加载回退UI
 function LoadingPaymentStatus() {

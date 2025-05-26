@@ -1,5 +1,38 @@
 import React from 'react';
 import Link from 'next/link';
+import type { Metadata } from 'next';
+
+export const metadata: Metadata = {
+  title: 'Privacy Policy - AI Baby Podcast Generator',
+  description: 'Learn how AI Baby Podcast Generator collects, uses, and protects your personal information. Your privacy is important to us.',
+  alternates: {
+    canonical: 'https://www.babypodcast.pro/privacy-policy',
+  },
+  openGraph: {
+    title: 'Privacy Policy - AI Baby Podcast Generator',
+    description: 'Learn how AI Baby Podcast Generator collects, uses, and protects your personal information.',
+    url: 'https://www.babypodcast.pro/privacy-policy',
+    // Uses default social share image from root layout unless a specific one is set here
+    // images: [
+    //   {
+    //     url: '/social-share-privacy.png', 
+    //     width: 1200,
+    //     height: 630,
+    //     alt: 'Privacy Policy - AI Baby Podcast Generator',
+    //   },
+    // ],
+    type: 'website',
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Privacy Policy - AI Baby Podcast Generator',
+    description: 'Learn how AI Baby Podcast Generator collects, uses, and protects your personal information.',
+    // Uses default social share image from root layout unless a specific one is set here
+    // images: ['/social-share-privacy.png'], 
+    // creator: '@YourTwitterHandle',
+  },
+  // If other metadata properties exist, they should be preserved.
+};
 
 export default function PrivacyPolicyPage() {
   return (

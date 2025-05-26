@@ -19,7 +19,8 @@ export default async function DashboardPage() {
 
   if (authError || !user) {
     console.error('Auth Error or No User, redirecting to login:', authError);
-    redirect('/login?message=请先登录以访问控制台');
+    const message = 'Please log in to access the dashboard.';
+    redirect(`/login?message=${encodeURIComponent(message)}`);
   }
 
   // Fetch user credits

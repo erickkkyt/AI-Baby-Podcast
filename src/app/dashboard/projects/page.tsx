@@ -14,7 +14,8 @@ export default async function ProjectsPage() {
 
   if (authError || !user) {
     console.error('Auth Error or No User on ProjectsPage, redirecting to login:', authError?.message);
-    redirect('/login?message=请先登录以访问项目页面');
+    const message = 'Please log in to access your projects.';
+    redirect(`/login?message=${encodeURIComponent(message)}`);
     // For server components, redirect() should halt execution.
     // If not, you might need to return null or throw an error from next/navigation.
   }

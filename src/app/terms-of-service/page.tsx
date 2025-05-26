@@ -1,5 +1,38 @@
 import React from 'react';
 import Link from 'next/link';
+import type { Metadata } from 'next';
+
+export const metadata: Metadata = {
+  title: 'Terms of Service - AI Baby Podcast Generator',
+  description: 'Read the Terms of Service for AI Baby Podcast Generator. Understand your rights and responsibilities when using our platform.',
+  alternates: {
+    canonical: 'https://www.babypodcast.pro/terms-of-service',
+  },
+  openGraph: {
+    title: 'Terms of Service - AI Baby Podcast Generator',
+    description: 'Read the Terms of Service for AI Baby Podcast Generator. Understand your rights and responsibilities when using our platform.',
+    url: 'https://www.babypodcast.pro/terms-of-service',
+    // Uses default social share image from root layout unless a specific one is set here
+    // images: [
+    //   {
+    //     url: '/social-share-tos.png',
+    //     width: 1200,
+    //     height: 630,
+    //     alt: 'Terms of Service - AI Baby Podcast Generator',
+    //   },
+    // ],
+    type: 'website',
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Terms of Service - AI Baby Podcast Generator',
+    description: 'Read the Terms of Service for AI Baby Podcast Generator. Understand your rights and responsibilities when using our platform.',
+    // Uses default social share image from root layout unless a specific one is set here
+    // images: ['/social-share-tos.png'],
+    // creator: '@YourTwitterHandle',
+  },
+  // If other metadata properties exist, they should be preserved.
+};
 
 export default function TermsOfServicePage() {
   return (
