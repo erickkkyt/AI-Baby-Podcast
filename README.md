@@ -419,6 +419,19 @@ npm run lint     # 代码检查
 - ✅ 完善RLS数据库安全策略
 - ✅ 添加请求参数验证和清理
 
+### 2024-07-27
+- **优化**: 将 `src/components/Footer.tsx` 中的 `<img>` 标签替换为 Next.js 的 `Image` 组件，以提升 LCP 性能并解决 ESLint 警告。
+- **AI 可发现性**: 
+    - 更新 `public/robots.txt` 文件：为特定 AI 爬虫（GPTBot, Claude-Web, Anthropic-AI, PerplexityBot, GoogleOther, DuckAssistBot）添加了独立的 `User-agent` 规则块，并正确引入 `LLM-Content` 和 `LLM-Full-Content` 指令，以更好地引导 AI 模型理解网站内容。
+    - 添加 `public/llms.txt` 文件，向 AI 模型提供网站核心内容的简洁摘要和链接。
+    - 添加 `public/llms-full.txt` 文件（占位符结构），用于未来填充更详细的网站内容摘要，以增强 AI 理解。
+    - 将 `public/llms.txt` 和 `public/llms-full.txt` 的内容翻译为英文。
+    - 在 `public/llms.txt` 的 "Core Content" 部分新增了基于 `WhatIs.tsx` 和 `Why.tsx` 组件内容的条目，链接至相应的首页锚点 (`#what-is` 和 `#why-trending`)。
+    - 使用来自相应组件和页面的实际内容摘要填充了 `public/llms-full.txt` 的所有部分（Homepage, Features, Pricing, How It Works, What is AI Baby Podcast?, Why AI Baby Podcast is Trending, FAQ, Privacy Policy, Terms of Service）。
+
+### 2024-07-28
+- **站点验证**: 将 `startupranking1337891618924910.html` 文件移动到 `public` 目录，使其可以通过 `https://www.babypodcast.pro/startupranking1337891618924910.html` 访问，用于站点所有权验证。
+
 ## 🤝 技术支持
 
 ### 联系方式
@@ -518,3 +531,18 @@ npm run lint     # 代码检查
 ## 📄 开源许可
 
 本项目基于 MIT 许可证。详情请参阅 `LICENSE` 文件。 
+
+## 更新日志
+
+### 2024-07-28
+- **站点验证**: 将 `startupranking1337891618924910.html` 文件移动到 `public` 目录，使其可以通过 `https://www.babypodcast.pro/startupranking1337891618924910.html` 访问，用于站点所有权验证。
+
+### 2024-07-27
+- **优化**: 将 `src/components/Footer.tsx` 中的 `<img>` 标签替换为 Next.js 的 `Image` 组件，以提升 LCP 性能并解决 ESLint 警告。
+- **AI 可发现性**: 
+    - 更新 `public/robots.txt` 文件：为特定 AI 爬虫（GPTBot, Claude-Web, Anthropic-AI, PerplexityBot, GoogleOther, DuckAssistBot）添加了独立的 `User-agent` 规则块，并正确引入 `LLM-Content` 和 `LLM-Full-Content` 指令，以更好地引导 AI 模型理解网站内容。
+    - 添加 `public/llms.txt` 文件，向 AI 模型提供网站核心内容的简洁摘要和链接。
+    - 添加 `public/llms-full.txt` 文件（占位符结构），用于未来填充更详细的网站内容摘要，以增强 AI 理解。
+    - 将 `public/llms.txt` 和 `public/llms-full.txt` 的内容翻译为英文。
+    - 在 `public/llms.txt` 的 "Core Content" 部分新增了基于 `WhatIs.tsx` 和 `Why.tsx` 组件内容的条目，链接至相应的首页锚点 (`#what-is` 和 `#why-trending`)。
+    - 使用来自相应组件和页面的实际内容摘要填充了 `public/llms-full.txt` 的所有部分（Homepage, Features, Pricing, How It Works, What is AI Baby Podcast?, Why AI Baby Podcast is Trending, FAQ, Privacy Policy, Terms of Service）。 

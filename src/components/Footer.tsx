@@ -2,6 +2,7 @@
 
 import React from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 
 export default function Footer() {
   return (
@@ -18,7 +19,7 @@ export default function Footer() {
             </p>
             <div className="mt-4 mb-6">
               <a href="https://fazier.com" target="_blank" rel="noopener noreferrer">
-                <img src="https://fazier.com/api/v1//public/badges/launch_badges.svg?badge_type=launched&theme=light" width={120} alt="Fazier badge" />
+                <Image src="https://fazier.com/api/v1//public/badges/launch_badges.svg?badge_type=launched&theme=light" width={120} height={32} alt="Fazier badge" />
               </a>
             </div>
             <div className="flex space-x-4">
