@@ -545,4 +545,27 @@ npm run lint     # 代码检查
     - 添加 `public/llms-full.txt` 文件（占位符结构），用于未来填充更详细的网站内容摘要，以增强 AI 理解。
     - 将 `public/llms.txt` 和 `public/llms-full.txt` 的内容翻译为英文。
     - 在 `public/llms.txt` 的 "Core Content" 部分新增了基于 `WhatIs.tsx` 和 `Why.tsx` 组件内容的条目，链接至相应的首页锚点 (`#what-is` 和 `#why-trending`)。
-    - 使用来自相应组件和页面的实际内容摘要填充了 `public/llms-full.txt` 的所有部分（Homepage, Features, Pricing, How It Works, What is AI Baby Podcast?, Why AI Baby Podcast is Trending, FAQ, Privacy Policy, Terms of Service）。 
+    - 使用来自相应组件和页面的实际内容摘要填充了 `public/llms-full.txt` 的所有部分（Homepage, Features, Pricing, How It Works, What is AI Baby Podcast?, Why AI Baby Podcast is Trending, FAQ, Privacy Policy, Terms of Service）。
+
+## 🔐 安全加固与漏洞修复
+
+### Clickjacking 防护 (重要 - 待审查)
+- **日期**: 2024-07-28
+- **描述**: 为了防止 Clickjacking (UI Redress Attack) 攻击，已在 `next.config.mjs` 中为所有路径配置了以下 HTTP 安全头部：
+  - `X-Frame-Options: DENY`
+  - `Content-Security-Policy: frame-ancestors 'none';`
+- **影响**: 此配置将禁止任何域名 (包括本站自身) 将网站页面嵌入到 `<frame>`, `<iframe>`, `<embed>`, 或 `<object>` 中。
+- **审查建议**: 请确认此全局设置不会影响任何预期的嵌入行为。如果未来有合法的跨域嵌入需求，需要调整 `Content-Security-Policy` 的 `frame-ancestors` 指令 (例如 `frame-ancestors 'self' https://trusted-domain.com;`)。
+
+### Webhook安全
+- ✅ n8n回调使用共享密钥验证
+
+### API安全
+- ✅ 所有API端点都有认证检查
+
+### 数据库安全
+- ✅ 完善RLS数据库安全策略
+- ✅ 添加请求参数验证和清理
+
+### 2024-07-28
+- **站点验证**: 将 `startupranking1337891618924910.html` 文件移动到 `public` 目录，使其可以通过 `https://www.babypodcast.pro/startupranking1337891618924910.html` 访问，用于站点所有权验证。 
