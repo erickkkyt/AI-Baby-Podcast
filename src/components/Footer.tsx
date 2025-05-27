@@ -16,6 +16,11 @@ export default function Footer() {
             <p className="text-gray-400 mb-6 max-w-md">
               Create viral videos featuring baby hosts who talk like adults, transforming ordinary content into engaging social media sensations.
             </p>
+            <div className="mt-4 mb-6">
+              <a href="https://fazier.com" target="_blank" rel="noopener noreferrer">
+                <img src="https://fazier.com/api/v1//public/badges/launch_badges.svg?badge_type=launched&theme=light" width={120} alt="Fazier badge" />
+              </a>
+            </div>
             <div className="flex space-x-4">
             </div>
           </div>
