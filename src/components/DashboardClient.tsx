@@ -584,7 +584,7 @@ export default function DashboardClient({ currentCredits }: { currentCredits: nu
           {/* Conditional Rendering based on appearanceCreationMode */} 
           {appearanceCreationMode === 'features' && (
             <div className="grid grid-cols-1 md:grid-cols-2 gap-x-4 gap-y-4 mb-6">
-              <p className="md:col-span-2 text-sm text-gray-400 mb-3">Select the baby's ethnicity and hair features for AI generation.</p>
+              <p className="md:col-span-2 text-sm text-gray-400 mb-3">Select the baby&apos;s ethnicity and hair features for AI generation.</p>
               <div>
                 <label htmlFor="babyEthnicity" className="block text-sm font-medium text-gray-300 mb-1.5">
                   Baby&apos;s Ethnicity
