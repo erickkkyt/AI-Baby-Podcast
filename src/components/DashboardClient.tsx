@@ -28,13 +28,19 @@ interface YouTubeVideo {
 
 const MAX_TOPIC_LENGTH = 100;
 const MAX_CUSTOM_FIELD_LENGTH = 50;
-const REQUIRED_CREDITS_PER_PROJECT = 0; // Assuming this is correct, check if credits apply to custom uploads too
+const MAX_TEXT_SCRIPT_LENGTH = 500; // Changed from 5000 to 500
+const REQUIRED_CREDITS_PER_PROJECT = 0; 
+const MAX_FILE_SIZE_MB = 3; // Changed from 5 to 3
 
 export default function DashboardClient({ currentCredits }: { currentCredits: number }) {
   const router = useRouter(); // Initialize useRouter
   const [allReceivedNotifications, setAllReceivedNotifications] = useState<Notification[]>([]);
   const [isLoading, setIsLoading] = useState(true); // This might need to be re-evaluated if My Projects is gone
 
+  // --- States for Module 1: Baby's Appearance --- 
+  const [appearanceCreationMode, setAppearanceCreationMode] = useState<'features' | 'custom_image' | 'portrait_to_baby'>('features');
+  
+  // Option 1.1: Generate with Features
   const [selectedEthnicity, setSelectedEthnicity] = useState('');
   const [customEthnicity, setCustomEthnicity] = useState('');
   const [isEthnicityOther, setIsEthnicityOther] = useState(false);
@@ -45,28 +51,60 @@ export default function DashboardClient({ currentCredits }: { currentCredits: nu
   const [isHairOther, setIsHairOther] = useState(false);
   const [customHairError, setCustomHairError] = useState('');
 
-  const [topicOfBabyPodcast, setTopicOfBabyPodcast] = useState('');
-  const [topicError, setTopicError] = useState('');
-
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const [showConfirmModal, setShowConfirmModal] = useState(false);
-  const [isCreditsModalOpen, setIsCreditsModalOpen] = useState(false);
-  
-  const [submissionStatus, setSubmissionStatus] = useState<{ message: string; type: 'info' | 'success' | 'error' | null }>({ message: '', type: null });
-
-  // New state variables for creation mode and custom image upload
-  const [creationMode, setCreationMode] = useState<'generate' | 'upload'>('generate');
+  // Option 1.2: Upload Custom Baby Image
   const [customImageFile, setCustomImageFile] = useState<File | null>(null);
   const [customImagePreview, setCustomImagePreview] = useState<string | null>(null);
   const [customImageError, setCustomImageError] = useState<string>('');
+
+  // Option 1.3: Portrait to Baby
+  const [originalPortraitFile, setOriginalPortraitFile] = useState<File | null>(null);
+  const [originalPortraitPreview, setOriginalPortraitPreview] = useState<string | null>(null);
+  const [originalPortraitError, setOriginalPortraitError] = useState<string>('');
+
+  // --- States for Module 2: Podcast Content ---
+  const [contentCreationMode, setContentCreationMode] = useState<'generate_from_topic' | 'audio_script' | 'direct_text_input'>('generate_from_topic');
+  
+  // Option 2.1: Generate from Topic
+  const [topicOfBabyPodcast, setTopicOfBabyPodcast] = useState('');
+  const [topicError, setTopicError] = useState('');
+
+  // Option 2.2: Upload Audio Script
+  const [audioScriptFile, setAudioScriptFile] = useState<File | null>(null);
+  const [audioScriptError, setAudioScriptError] = useState<string>('');
+
+  // Option 2.3: Direct Text Input
+  const [textScriptDirectInput, setTextScriptDirectInput] = useState('');
+  const [textScriptDirectInputError, setTextScriptDirectInputError] = useState('');
+
+  // --- States for Video Output Settings ---
   const [videoResolution, setVideoResolution] = useState<'540p' | '720p'>('540p');
   const [aspectRatio, setAspectRatio] = useState<'1:1' | '16:9' | '9:16'>('9:16');
+
+  // --- General Form States ---
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [showConfirmModal, setShowConfirmModal] = useState(false);
+  const [isCreditsModalOpen, setIsCreditsModalOpen] = useState(false);
+  const [submissionStatus, setSubmissionStatus] = useState<{ message: string; type: 'info' | 'success' | 'error' | null }>({ message: '', type: null });
+
+  // Constants for file uploads
+  const ALLOWED_IMAGE_TYPES = ['image/jpeg', 'image/png', 'image/webp'];
+  const ALLOWED_AUDIO_TYPES = ['audio/mpeg', 'audio/wav', 'audio/mp4', 'audio/x-m4a']; // Example audio types
 
   const handleRemoveCustomImage = () => {
     setCustomImageFile(null);
     setCustomImagePreview(null);
     setCustomImageError('');
     const fileInput = document.getElementById('custom-baby-image-input') as HTMLInputElement | null;
+    if (fileInput) {
+      fileInput.value = '';
+    }
+  };
+
+  const handleRemoveOriginalPortrait = () => {
+    setOriginalPortraitFile(null);
+    setOriginalPortraitPreview(null);
+    setOriginalPortraitError('');
+    const fileInput = document.getElementById('original-portrait-input') as HTMLInputElement | null;
     if (fileInput) {
       fileInput.value = '';
     }
@@ -152,6 +190,17 @@ export default function DashboardClient({ currentCredits }: { currentCredits: nu
     }
   };
 
+  const handleTextScriptDirectInputChange = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
+    const value = event.target.value;
+    setTextScriptDirectInput(value);
+    setSubmissionStatus({ message: '', type: null });
+    if (value.length > MAX_TEXT_SCRIPT_LENGTH) {
+      setTextScriptDirectInputError(`Exceeded ${MAX_TEXT_SCRIPT_LENGTH} characters. Please shorten.`);
+    } else {
+      setTextScriptDirectInputError('');
+    }
+  };
+
   const handleCustomEthnicityBlur = () => {
     if (!customEthnicity.trim() && isEthnicityOther) {
         setIsEthnicityOther(false); 
@@ -168,27 +217,14 @@ export default function DashboardClient({ currentCredits }: { currentCredits: nu
     }
   };
 
-  // Handler for creation mode change
-  const handleCreationModeChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const newMode = event.target.value as 'generate' | 'upload';
-    setCreationMode(newMode);
-    setSubmissionStatus({ message: '', type: null }); // Clear previous submission status
+  // Handler for creation mode change - RENAME to handleAppearanceModeChange
+  const handleAppearanceModeChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const newMode = event.target.value as 'features' | 'custom_image' | 'portrait_to_baby';
+    setAppearanceCreationMode(newMode);
+    setSubmissionStatus({ message: '', type: null }); 
 
-    if (newMode === 'generate') {
-      setCustomImageFile(null);
-      setCustomImagePreview(null);
-      setCustomImageError('');
-      // Reset feature fields to avoid carrying over state if user switches back and forth
-      // setSelectedEthnicity(''); 
-      // setCustomEthnicity('');
-      // setIsEthnicityOther(false);
-      // setCustomEthnicityError('');
-      // setSelectedHair('');
-      // setCustomHair('');
-      // setIsHairOther(false);
-      // setCustomHairError('');
-    } else { // 'upload' mode
-      // Clear feature-specific fields when switching to upload mode
+    // Reset fields from other appearance modes
+    if (newMode !== 'features') {
       setSelectedEthnicity(''); 
       setCustomEthnicity('');
       setIsEthnicityOther(false);
@@ -198,12 +234,40 @@ export default function DashboardClient({ currentCredits }: { currentCredits: nu
       setIsHairOther(false);
       setCustomHairError('');
     }
+    if (newMode !== 'custom_image') {
+      setCustomImageFile(null);
+      setCustomImagePreview(null);
+      setCustomImageError('');
+    }
+    if (newMode !== 'portrait_to_baby') {
+      setOriginalPortraitFile(null);
+      setOriginalPortraitPreview(null);
+      setOriginalPortraitError('');
+    }
+  };
+
+  const handleContentModeChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const newMode = event.target.value as 'generate_from_topic' | 'audio_script' | 'direct_text_input';
+    setContentCreationMode(newMode);
+    setSubmissionStatus({ message: '', type: null });
+
+    // Reset fields from other content modes
+    if (newMode !== 'generate_from_topic') {
+      // Topic is now exclusively for 'generate_from_topic'
+      // setTopicOfBabyPodcast(''); // Keep if it serves as a general title regardless of content mode
+      // setTopicError('');
+    }
+    if (newMode !== 'audio_script') {
+      setAudioScriptFile(null);
+      setAudioScriptError('');
+    }
+    if (newMode !== 'direct_text_input') {
+      setTextScriptDirectInput('');
+      setTextScriptDirectInputError('');
+    }
   };
 
   // Handler for custom image file change
-  const MAX_FILE_SIZE_MB = 5;
-  const ALLOWED_IMAGE_TYPES = ['image/jpeg', 'image/png', 'image/webp'];
-
   const handleCustomImageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setSubmissionStatus({ message: '', type: null });
     const file = event.target.files?.[0];
@@ -240,6 +304,67 @@ export default function DashboardClient({ currentCredits }: { currentCredits: nu
     }
   };
 
+  const handleOriginalPortraitChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setSubmissionStatus({ message: '', type: null });
+    const file = event.target.files?.[0];
+
+    if (file) {
+      if (!ALLOWED_IMAGE_TYPES.includes(file.type)) {
+        setOriginalPortraitError(`Invalid file type. Please upload a JPEG, PNG, or WebP image.`);
+        setOriginalPortraitFile(null);
+        setOriginalPortraitPreview(null);
+        event.target.value = ''; // Clear the input
+        return;
+      }
+
+      if (file.size > MAX_FILE_SIZE_MB * 1024 * 1024) {
+        setOriginalPortraitError(`File is too large. Maximum size is ${MAX_FILE_SIZE_MB}MB.`);
+        setOriginalPortraitFile(null);
+        setOriginalPortraitPreview(null);
+        event.target.value = ''; // Clear the input
+        return;
+      }
+
+      setOriginalPortraitFile(file);
+      setOriginalPortraitError('');
+
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setOriginalPortraitPreview(reader.result as string);
+      };
+      reader.readAsDataURL(file);
+    } else {
+      setOriginalPortraitFile(null);
+      setOriginalPortraitPreview(null);
+      setOriginalPortraitError('');
+    }
+  };
+
+  const handleAudioScriptChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setSubmissionStatus({ message: '', type: null });
+    const file = event.target.files?.[0];
+
+    if (file) {
+      if (!ALLOWED_AUDIO_TYPES.includes(file.type)) {
+        setAudioScriptError(`Invalid file type. Allowed: ${ALLOWED_AUDIO_TYPES.join(', ')}.`);
+        setAudioScriptFile(null);
+        event.target.value = '';
+        return;
+      }
+      if (file.size > MAX_FILE_SIZE_MB * 1024 * 1024) { 
+        setAudioScriptError(`File is too large. Maximum size is ${MAX_FILE_SIZE_MB}MB.`);
+        setAudioScriptFile(null);
+        event.target.value = '';
+        return;
+      }
+      setAudioScriptFile(file);
+      setAudioScriptError('');
+    } else {
+      setAudioScriptFile(null);
+      setAudioScriptError('');
+    }
+  };
+
   const handleVideoResolutionChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setVideoResolution(event.target.value as '540p' | '720p');
     setSubmissionStatus({ message: '', type: null });
@@ -254,58 +379,61 @@ export default function DashboardClient({ currentCredits }: { currentCredits: nu
     setIsSubmitting(true);
     setSubmissionStatus({ message: '✨ Processing your request...', type: 'info' }); 
 
+    const formData = new FormData();
+
+    // Append mode selections
+    formData.append('appearanceCreationMode', appearanceCreationMode);
+    formData.append('contentCreationMode', contentCreationMode);
+
+    // Append video settings
+    formData.append('videoResolution', videoResolution);
+    formData.append('aspectRatio', aspectRatio);
+
+    // Append data based on Appearance Mode
+    if (appearanceCreationMode === 'features') {
+      formData.append('ethnicity', isEthnicityOther ? customEthnicity : selectedEthnicity);
+      formData.append('hair', isHairOther ? customHair : selectedHair);
+    } else if (appearanceCreationMode === 'custom_image' && customImageFile) {
+      formData.append('customBabyImageFile', customImageFile);
+    } else if (appearanceCreationMode === 'portrait_to_baby' && originalPortraitFile) {
+      formData.append('originalPortraitFile', originalPortraitFile);
+    }
+
+    // Append data based on Content Mode
+    if (contentCreationMode === 'generate_from_topic') {
+      formData.append('topic', topicOfBabyPodcast);
+    } else if (contentCreationMode === 'audio_script' && audioScriptFile) {
+      formData.append('audioScriptFile', audioScriptFile);
+      // If topic is still desired as optional metadata for audio/text, append it here if filled
+      // if (topicOfBabyPodcast.trim()) formData.append('topic', topicOfBabyPodcast);
+    } else if (contentCreationMode === 'direct_text_input') {
+      formData.append('textScriptDirectInput', textScriptDirectInput);
+      // if (topicOfBabyPodcast.trim()) formData.append('topic', topicOfBabyPodcast);
+    }
+    
+    // As per the latest request, topic is only primary for 'generate_from_topic'.
+    // If it exists and is NOT 'generate_from_topic' mode, it might be sent as general metadata.
+    // For RPC designed according to 5.28.md v2, p_topic is only used when p_content_creation_mode = 'generate_from_topic'.
+    // So, we only *need* to send it then. However, sending it always if filled won't break that specific RPC.
+    // Let's keep it simple: if topicOfBabyPodcast has a value, and the primary content source is not topic,
+    // it is currently not being explicitly appended to FormData.
+    // The `topic` field will only be populated in FormData if contentCreationMode === 'generate_from_topic'.
+
     try {
-      let response;
-      let result;
-
-      if (creationMode === 'generate') {
-        const ethnicityValue = isEthnicityOther ? customEthnicity : selectedEthnicity;
-        const hairValue = isHairOther ? customHair : selectedHair;
-        const topicPayload = topicOfBabyPodcast;
-
-        response = await fetch('/api/submit-podcast-idea', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
-            ethnicity: ethnicityValue,
-            hair: hairValue,
-            topic: topicPayload,
-            videoResolution: videoResolution,
-            aspectRatio: aspectRatio,
-          }),
-        });
-        result = await response.json();
-
-      } else { // creationMode === 'upload'
-        if (!customImageFile) {
-          setSubmissionStatus({ message: '⚠️ Please select an image to upload.', type: 'error' });
-          setIsSubmitting(false);
-          return;
-        }
-
-        const formData = new FormData();
-        formData.append('topic', topicOfBabyPodcast);
-        formData.append('customBabyImage', customImageFile);
-        formData.append('videoResolution', videoResolution);
-        formData.append('aspectRatio', aspectRatio);
-
-        response = await fetch('/api/submit-podcast-idea/upload-custom-image', { 
-          method: 'POST',
-          body: formData,
-        });
-        result = await response.json();
-      }
+      const response = await fetch('/api/submit-podcast-idea', { 
+        method: 'POST',
+        body: formData, 
+      });
+      const result = await response.json();
       
       if (response.ok) {
         setSubmissionStatus({ 
-          message: `✅ Your AI baby podcast request has been submitted. ${creationMode === 'generate' ? 'It is now being generated.' : 'The custom image has been processed.'} You can check "My Projects" later for updates. This usually takes about 3 minutes.`, 
+          message: `✅ Your AI baby podcast request has been submitted and is being processed. You can check "My Projects" later for updates. This usually takes about 3 minutes.`, 
           type: 'success' 
         });
         router.refresh(); 
         // Reset form fields
-        setTopicOfBabyPodcast('');
+        setAppearanceCreationMode('features');
         setSelectedEthnicity('');
         setCustomEthnicity('');
         setIsEthnicityOther(false);
@@ -317,10 +445,21 @@ export default function DashboardClient({ currentCredits }: { currentCredits: nu
         setCustomImageFile(null);
         setCustomImagePreview(null);
         setCustomImageError('');
+        setOriginalPortraitFile(null);
+        setOriginalPortraitPreview(null);
+        setOriginalPortraitError('');
+        
+        setContentCreationMode('generate_from_topic');
+        setTopicOfBabyPodcast('');
+        setTopicError('');
+        setAudioScriptFile(null);
+        setAudioScriptError('');
+        setTextScriptDirectInput('');
+        setTextScriptDirectInputError('');
+
         setVideoResolution('540p');
         setAspectRatio('9:16');
-        // Consider resetting creationMode to 'generate' or leave as is based on desired UX
-        // setCreationMode('generate'); 
+        
       } else {
         setSubmissionStatus({ 
           message: `⚠️ ${result.message || 'Unknown server error'}. ${result.details || ''}`, 
@@ -371,9 +510,8 @@ export default function DashboardClient({ currentCredits }: { currentCredits: nu
 
   const isSubmitButtonDisabled = 
     isSubmitting ||
-    !!topicError ||
-    !topicOfBabyPodcast.trim() ||
-    (creationMode === 'generate' && (
+    // Validation for Appearance Mode 'features'
+    (appearanceCreationMode === 'features' && (
       !!customEthnicityError || 
       !!customHairError || 
       (isEthnicityOther && !customEthnicity.trim()) || 
@@ -381,55 +519,75 @@ export default function DashboardClient({ currentCredits }: { currentCredits: nu
       (!isEthnicityOther && !selectedEthnicity) || 
       (!isHairOther && !selectedHair)
     )) ||
-    (creationMode === 'upload' && (
-      !customImageFile ||
-      !!customImageError
-    ));
+    // Validation for Appearance Mode 'custom_image'
+    (appearanceCreationMode === 'custom_image' && (!customImageFile || !!customImageError)) ||
+    // Validation for Appearance Mode 'portrait_to_baby'
+    (appearanceCreationMode === 'portrait_to_baby' && (!originalPortraitFile || !!originalPortraitError)) ||
+    
+    // Validation for Content Mode 'generate_from_topic'
+    (contentCreationMode === 'generate_from_topic' && (!topicOfBabyPodcast.trim() || !!topicError)) ||
+    // Validation for Content Mode 'audio_script'
+    (contentCreationMode === 'audio_script' && (!audioScriptFile || !!audioScriptError)) ||
+    // Validation for Content Mode 'direct_text_input'
+    (contentCreationMode === 'direct_text_input' && (!textScriptDirectInput.trim() || !!textScriptDirectInputError));
 
   return (
     <div className="space-y-8">
       <section className="bg-[#161b22] p-6 rounded-lg shadow-md space-y-6">
         
+        {/* --- MODULE 1: Baby's Appearance --- */}
         <div>
           <h3 className={sectionTitleClasses}>Baby&apos;s Appearance</h3>
+          <p className="text-sm text-gray-400 mb-3">Choose how to generate the baby&apos;s appearance.</p>
           
-          {/* Creation Mode Selector */}
-          <div className="mb-6 mt-4"> {/* Added mt-4 for spacing */}
-            <span className="block text-sm font-medium text-gray-300 mb-2">Creation Mode:</span>
-            <div className="flex items-center space-x-4">
-              <label htmlFor="generateMode" className="flex items-center cursor-pointer">
+          <div className="mb-6 mt-4">
+            <div className="flex flex-col space-y-2 sm:flex-row sm:space-y-0 sm:space-x-4">
+              <label htmlFor="appearanceFeatures" className="flex items-center cursor-pointer">
                 <input
                   type="radio"
-                  id="generateMode"
-                  name="creationModeOption"
-                  value="generate"
-                  checked={creationMode === 'generate'}
-                  onChange={handleCreationModeChange}
+                  id="appearanceFeatures"
+                  name="appearanceCreationModeOption"
+                  value="features"
+                  checked={appearanceCreationMode === 'features'}
+                  onChange={handleAppearanceModeChange}
                   className="form-radio h-4 w-4 text-purple-600 border-gray-600 focus:ring-purple-500 bg-gray-700"
                 />
                 <span className="ml-2 text-sm text-gray-200">Generate with Features</span>
               </label>
-              <label htmlFor="uploadMode" className="flex items-center cursor-pointer">
+              <label htmlFor="appearanceCustomImage" className="flex items-center cursor-pointer">
                 <input
                   type="radio"
-                  id="uploadMode"
-                  name="creationModeOption"
-                  value="upload"
-                  checked={creationMode === 'upload'}
-                  onChange={handleCreationModeChange}
+                  id="appearanceCustomImage"
+                  name="appearanceCreationModeOption"
+                  value="custom_image"
+                  checked={appearanceCreationMode === 'custom_image'}
+                  onChange={handleAppearanceModeChange}
                   className="form-radio h-4 w-4 text-purple-600 border-gray-600 focus:ring-purple-500 bg-gray-700"
                 />
-                <span className="ml-2 text-sm text-gray-200">Upload Custom Image</span>
+                <span className="ml-2 text-sm text-gray-200">Upload Custom Baby Image</span>
+              </label>
+              <label htmlFor="appearancePortraitToBaby" className="flex items-center cursor-pointer">
+                <input
+                  type="radio"
+                  id="appearancePortraitToBaby"
+                  name="appearanceCreationModeOption"
+                  value="portrait_to_baby"
+                  checked={appearanceCreationMode === 'portrait_to_baby'}
+                  onChange={handleAppearanceModeChange}
+                  className="form-radio h-4 w-4 text-purple-600 border-gray-600 focus:ring-purple-500 bg-gray-700"
+                />
+                <span className="ml-2 text-sm text-gray-200">Convert Portrait to Baby Image (needs extra 1-2 minutes processing time)</span>
               </label>
             </div>
           </div>
 
-          {/* Conditional Rendering based on creationMode */}
-          {creationMode === 'generate' && (
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-x-4 gap-y-4">
+          {/* Conditional Rendering based on appearanceCreationMode */} 
+          {appearanceCreationMode === 'features' && (
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-x-4 gap-y-4 mb-6">
+              <p className="md:col-span-2 text-sm text-gray-400 mb-3">Select the baby's ethnicity and hair features for AI generation.</p>
               <div>
                 <label htmlFor="babyEthnicity" className="block text-sm font-medium text-gray-300 mb-1.5">
-                  Ethnicity of the baby
+                  Baby&apos;s Ethnicity
                 </label>
                 <div className="relative">
                   {isEthnicityOther ? (
@@ -442,7 +600,7 @@ export default function DashboardClient({ currentCredits }: { currentCredits: nu
                         onBlur={handleCustomEthnicityBlur}
                         placeholder="Enter custom ethnicity"
                         className={`${inputBaseClasses} ${customEthnicityError ? 'border-red-500' : 'border-gray-700'}`}
-                        maxLength={MAX_CUSTOM_FIELD_LENGTH + 1} // Allow one extra for error check
+                        maxLength={MAX_CUSTOM_FIELD_LENGTH + 1} 
                       />
                       {customEthnicityError && <p className={errorTextClasses}>{customEthnicityError}</p>}
                       <p className={charCountClasses}>{customEthnicity.length}/{MAX_CUSTOM_FIELD_LENGTH}</p>
@@ -466,7 +624,7 @@ export default function DashboardClient({ currentCredits }: { currentCredits: nu
               </div>
               <div>
                 <label htmlFor="babyHair" className="block text-sm font-medium text-gray-300 mb-1.5">
-                  Baby hair
+                  Baby&apos;s Hair
                 </label>
                 <div className="relative">
                   {isHairOther ? (
@@ -479,7 +637,7 @@ export default function DashboardClient({ currentCredits }: { currentCredits: nu
                         onBlur={handleCustomHairBlur}
                         placeholder="Enter custom hair type"
                         className={`${inputBaseClasses} ${customHairError ? 'border-red-500' : 'border-gray-700'}`}
-                        maxLength={MAX_CUSTOM_FIELD_LENGTH + 1} // Allow one extra for error check
+                        maxLength={MAX_CUSTOM_FIELD_LENGTH + 1} 
                       />
                       {customHairError && <p className={errorTextClasses}>{customHairError}</p>}
                       <p className={charCountClasses}>{customHair.length}/{MAX_CUSTOM_FIELD_LENGTH}</p>
@@ -504,11 +662,11 @@ export default function DashboardClient({ currentCredits }: { currentCredits: nu
             </div>
           )}
 
-          {creationMode === 'upload' && (
-            <div className="space-y-4">
+          {appearanceCreationMode === 'custom_image' && (
+            <div className="space-y-4 mb-6">
               <div>
-                <label htmlFor="custom-baby-image" className="block text-sm font-medium text-gray-300 mb-1">
-                  Upload Baby Image
+                <label htmlFor="custom-baby-image-input" className="block text-sm font-medium text-gray-300 mb-1">
+                  Upload Baby Image <span className="text-xs text-gray-400">(Upload your baby image. This image will be used directly.)</span>
                 </label>
                 <div className="mt-1 flex items-center">
                   <label
@@ -520,10 +678,10 @@ export default function DashboardClient({ currentCredits }: { currentCredits: nu
                   <input
                     type="file"
                     id="custom-baby-image-input"
-                    name="customBabyImage"
+                    name="customBabyImageFile"
                     accept="image/jpeg,image/png,image/webp"
                     onChange={handleCustomImageChange}
-                    className="sr-only" // Hidden visually, triggered by the custom label
+                    className="sr-only"
                   />
                   <span className="text-sm text-gray-400">
                     {customImageFile ? customImageFile.name : 'No file chosen'}
@@ -558,110 +716,268 @@ export default function DashboardClient({ currentCredits }: { currentCredits: nu
               )}
             </div>
           )}
+
+          {appearanceCreationMode === 'portrait_to_baby' && (
+            <div className="space-y-4 mb-6">
+              <div>
+                <label htmlFor="original-portrait-input" className="block text-sm font-medium text-gray-300 mb-1">
+                  Upload Your Portrait Photo <span className="text-xs text-gray-400">(Upload a portrait photo, and the AI will transform it into a baby image.)</span>
+                </label>
+                <div className="mt-1 flex items-center">
+                  <label
+                    htmlFor="original-portrait-input"
+                    className="cursor-pointer bg-purple-600 hover:bg-purple-700 text-white font-semibold py-2 px-4 rounded-md transition-colors duration-150 ease-in-out mr-3"
+                  >
+                    Choose File
+                  </label>
+                  <input
+                    type="file"
+                    id="original-portrait-input"
+                    name="originalPortraitFile"
+                    accept="image/jpeg,image/png,image/webp"
+                    onChange={handleOriginalPortraitChange}
+                    className="sr-only"
+                  />
+                  <span className="text-sm text-gray-400">
+                    {originalPortraitFile ? originalPortraitFile.name : 'No file chosen'}
+                  </span>
+                </div>
+                {originalPortraitError && <p className={errorTextClasses}>{originalPortraitError}</p>}
+              </div>
+
+              {originalPortraitPreview && (
+                <div className="mt-4"> 
+                  <p className="block text-sm font-medium text-gray-300 mb-1.5">Image Preview:</p>
+                  <div className="flex items-end space-x-2">
+                    <div className="inline-block">
+                      <Image
+                        src={originalPortraitPreview}
+                        alt="Original portrait preview"
+                        width={192} 
+                        height={192}
+                        className="rounded-md border border-gray-700 object-contain"
+                      />
+                    </div>
+                    <button
+                      type="button"
+                      onClick={handleRemoveOriginalPortrait}
+                      className="text-sm text-red-500 hover:text-red-400 px-3 py-1 border border-red-500 hover:border-red-400 rounded-md transition-colors"
+                      aria-label="Remove uploaded image"
+                    >
+                      Remove
+                    </button>
+                  </div>
+                </div>
+              )}
+            </div>
+          )}
         </div>
 
-        <div>
-          <h3 className={sectionTitleClasses}>Topic of Baby Podcast</h3>
-          <div>
-            <label htmlFor="topicOfBabyPodcast" className="block text-sm font-medium text-gray-300 mb-1.5">
-              Topic of Baby Podcast
-            </label>
-            <input
-              type="text"
-              id="topicOfBabyPodcast"
-              name="topicOfBabyPodcast"
-              placeholder="Enter the topic for the podcast..."
-              value={topicOfBabyPodcast}
-              onChange={handleTopicChange}
-              className={`${inputBaseClasses} ${topicError ? 'border-red-500' : 'border-gray-700'}`}
-            />
-            <div className={charCountClasses}>
-              {topicOfBabyPodcast.length}/{MAX_TOPIC_LENGTH}
+        {/* --- MODULE 2: Podcast Content --- */}
+        <div className="mt-6 pt-6 border-t border-gray-700">
+          <h3 className={sectionTitleClasses}>Podcast Content</h3>
+          <p className="text-sm text-gray-400 mb-3">Choose how to generate the podcast content.</p>
+
+          <div className="mb-6 mt-4">
+            <div className="flex flex-col space-y-2 sm:flex-row sm:space-y-0 sm:space-x-4">
+              <label htmlFor="contentGenerateTopic" className="flex items-center cursor-pointer">
+                <input
+                  type="radio"
+                  id="contentGenerateTopic"
+                  name="contentCreationModeOption"
+                  value="generate_from_topic"
+                  checked={contentCreationMode === 'generate_from_topic'}
+                  onChange={handleContentModeChange}
+                  className="form-radio h-4 w-4 text-purple-600 border-gray-600 focus:ring-purple-500 bg-gray-700"
+                />
+                <span className="ml-2 text-sm text-gray-200">Generate with Topic</span>
+              </label>
+              <label htmlFor="contentAudioScript" className="flex items-center cursor-pointer">
+                <input
+                  type="radio"
+                  id="contentAudioScript"
+                  name="contentCreationModeOption"
+                  value="audio_script"
+                  checked={contentCreationMode === 'audio_script'}
+                  onChange={handleContentModeChange}
+                  className="form-radio h-4 w-4 text-purple-600 border-gray-600 focus:ring-purple-500 bg-gray-700"
+                />
+                <span className="ml-2 text-sm text-gray-200">Upload Custom Audio Script</span>
+              </label>
+              <label htmlFor="contentDirectTextInput" className="flex items-center cursor-pointer">
+                <input
+                  type="radio"
+                  id="contentDirectTextInput"
+                  name="contentCreationModeOption"
+                  value="direct_text_input"
+                  checked={contentCreationMode === 'direct_text_input'}
+                  onChange={handleContentModeChange}
+                  className="form-radio h-4 w-4 text-purple-600 border-gray-600 focus:ring-purple-500 bg-gray-700"
+                />
+                <span className="ml-2 text-sm text-gray-200">Direct Podcast Content Input</span>
+              </label>
             </div>
-            {topicError && <p className={errorTextClasses}>{topicError}</p>}
           </div>
 
-          {/* Combined Video Resolution and Aspect Ratio Section */}
-          <div className="mt-4 grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-4">
-            {/* Video Resolution Selector */}
-            <div>
-              <label className="block text-sm font-medium text-gray-300 mb-1.5">
-                Video Resolution
+          {/* Conditional Rendering based on contentCreationMode */} 
+          {contentCreationMode === 'generate_from_topic' && (
+            <div className="mb-6">
+              <label htmlFor="topicOfBabyPodcast" className="block text-sm font-medium text-gray-300 mb-1.5">
+                What is the podcast topic? <span className="text-xs text-gray-400">(Enter a topic, and the AI will generate a podcast script based on it.)</span>
               </label>
-              <div className="flex items-center space-x-4">
-                <label htmlFor="resolution540p" className="flex items-center cursor-pointer">
-                  <input
-                    type="radio"
-                    id="resolution540p"
-                    name="videoResolutionOption"
-                    value="540p"
-                    checked={videoResolution === '540p'}
-                    onChange={handleVideoResolutionChange}
-                    className="form-radio h-4 w-4 text-purple-600 border-gray-600 focus:ring-purple-500 bg-gray-700"
-                  />
-                  <span className="ml-2 text-sm text-gray-200">540p</span>
-                </label>
-                <label htmlFor="resolution720p" className="flex items-center cursor-pointer">
-                  <input
-                    type="radio"
-                    id="resolution720p"
-                    name="videoResolutionOption"
-                    value="720p"
-                    checked={videoResolution === '720p'}
-                    onChange={handleVideoResolutionChange}
-                    className="form-radio h-4 w-4 text-purple-600 border-gray-600 focus:ring-purple-500 bg-gray-700"
-                  />
-                  <span className="ml-2 text-sm text-gray-200">720p</span>
-                  <span className="ml-1 text-xs text-yellow-400">(Consumes 2x credits)</span>
-                </label>
+              <input
+                type="text"
+                id="topicOfBabyPodcast"
+                name="topicOfBabyPodcast"
+                placeholder="E.g. Politics, Economics, Trade, Global events..."
+                value={topicOfBabyPodcast}
+                onChange={handleTopicChange}
+                className={`${inputBaseClasses} ${topicError ? 'border-red-500' : 'border-gray-700'}`}
+                maxLength={MAX_TOPIC_LENGTH +1 }
+              />
+              <div className={charCountClasses}>
+                {topicOfBabyPodcast.length}/{MAX_TOPIC_LENGTH}
               </div>
+              {topicError && <p className={errorTextClasses}>{topicError}</p>}
             </div>
+          )}
 
-            {/* Aspect Ratio Selector */}
-            <div>
-              <label className="block text-sm font-medium text-gray-300 mb-1.5">
-                Aspect Ratio
-              </label>
-              <div className="flex items-center space-x-4">
-                <label htmlFor="aspect9to16" className="flex items-center cursor-pointer">
-                  <input
-                    type="radio"
-                    id="aspect9to16"
-                    name="aspectRatioOption"
-                    value="9:16"
-                    checked={aspectRatio === '9:16'}
-                    onChange={handleAspectRatioChange}
-                    className="form-radio h-4 w-4 text-purple-600 border-gray-600 focus:ring-purple-500 bg-gray-700"
-                  />
-                  <span className="ml-2 text-sm text-gray-200">9:16</span>
+          {contentCreationMode === 'audio_script' && (
+            <div className="space-y-4 mb-6">
+              <div>
+                <label htmlFor="audio-script-input" className="block text-sm font-medium text-gray-300 mb-1">
+                  Upload Audio File <span className="text-xs text-gray-400">(Upload your pre-recorded audio script. The AI will process this audio.)</span>
                 </label>
-                <label htmlFor="aspect1to1" className="flex items-center cursor-pointer">
+                <div className="mt-1 flex items-center">
+                  <label
+                    htmlFor="audio-script-input"
+                    className="cursor-pointer bg-purple-600 hover:bg-purple-700 text-white font-semibold py-2 px-4 rounded-md transition-colors duration-150 ease-in-out mr-3"
+                  >
+                    Choose File
+                  </label>
                   <input
-                    type="radio"
-                    id="aspect1to1"
-                    name="aspectRatioOption"
-                    value="1:1"
-                    checked={aspectRatio === '1:1'}
-                    onChange={handleAspectRatioChange}
-                    className="form-radio h-4 w-4 text-purple-600 border-gray-600 focus:ring-purple-500 bg-gray-700"
+                    type="file"
+                    id="audio-script-input"
+                    name="audioScriptFile"
+                    accept={ALLOWED_AUDIO_TYPES.join(',')}
+                    onChange={handleAudioScriptChange}
+                    className="sr-only"
                   />
-                  <span className="ml-2 text-sm text-gray-200">1:1</span>
-                </label>
-                <label htmlFor="aspect16to9" className="flex items-center cursor-pointer">
-                  <input
-                    type="radio"
-                    id="aspect16to9"
-                    name="aspectRatioOption"
-                    value="16:9"
-                    checked={aspectRatio === '16:9'}
-                    onChange={handleAspectRatioChange}
-                    className="form-radio h-4 w-4 text-purple-600 border-gray-600 focus:ring-purple-500 bg-gray-700"
-                  />
-                  <span className="ml-2 text-sm text-gray-200">16:9</span>
-                </label>
+                  <span className="text-sm text-gray-400">
+                    {audioScriptFile ? audioScriptFile.name : 'No file chosen'}
+                  </span>
+                </div>
+                {audioScriptError && <p className={errorTextClasses}>{audioScriptError}</p>}
               </div>
             </div>
-          </div>
+          )}
+
+          {contentCreationMode === 'direct_text_input' && (
+            <div className="mb-6">
+              <label htmlFor="textScriptDirectInput" className="block text-sm font-medium text-gray-300 mb-1.5">
+                Type or paste your script here <span className="text-xs text-gray-400">(Directly type or paste your complete podcast script here.)</span>
+              </label>
+              <textarea
+                id="textScriptDirectInput"
+                name="textScriptDirectInput"
+                rows={8}
+                placeholder="Enter your podcast script (max 500 characters)..."
+                value={textScriptDirectInput}
+                onChange={handleTextScriptDirectInputChange}
+                className={`${inputBaseClasses} min-h-[150px] ${textScriptDirectInputError ? 'border-red-500' : 'border-gray-700'}`}
+                maxLength={MAX_TEXT_SCRIPT_LENGTH + 1}
+              />
+              <div className={charCountClasses}>
+                {textScriptDirectInput.length}/{MAX_TEXT_SCRIPT_LENGTH}
+              </div>
+              {textScriptDirectInputError && <p className={errorTextClasses}>{textScriptDirectInputError}</p>}
+            </div>
+          )}
+        </div>
+
+        {/* --- MODULE 3: Video Output Settings --- */}
+        <div className="mt-6 pt-6 border-t border-gray-700">
+            <h3 className={sectionTitleClasses}>Video Output Settings</h3>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-4">
+                 {/* Video Resolution Selector */}
+                 <div>
+                   <label className="block text-sm font-medium text-gray-300 mb-1.5">
+                     Video Resolution
+                   </label>
+                   <div className="flex items-center space-x-4">
+                     <label htmlFor="resolution540p" className="flex items-center cursor-pointer">
+                       <input
+                         type="radio"
+                         id="resolution540p"
+                         name="videoResolutionOption"
+                         value="540p"
+                         checked={videoResolution === '540p'}
+                         onChange={handleVideoResolutionChange}
+                         className="form-radio h-4 w-4 text-purple-600 border-gray-600 focus:ring-purple-500 bg-gray-700"
+                       />
+                       <span className="ml-2 text-sm text-gray-200">540p</span>
+                     </label>
+                     <label htmlFor="resolution720p" className="flex items-center cursor-pointer">
+                       <input
+                         type="radio"
+                         id="resolution720p"
+                         name="videoResolutionOption"
+                         value="720p"
+                         checked={videoResolution === '720p'}
+                         onChange={handleVideoResolutionChange}
+                         className="form-radio h-4 w-4 text-purple-600 border-gray-600 focus:ring-purple-500 bg-gray-700"
+                       />
+                       <span className="ml-2 text-sm text-gray-200">720p</span>
+                       <span className="ml-1 text-xs text-yellow-400">(Consumes 2x credits)</span>
+                     </label>
+                   </div>
+                 </div>
+
+                 {/* Aspect Ratio Selector */}
+                 <div>
+                   <label className="block text-sm font-medium text-gray-300 mb-1.5">
+                     Aspect Ratio
+                   </label>
+                   <div className="flex items-center space-x-4">
+                     <label htmlFor="aspect9to16" className="flex items-center cursor-pointer">
+                       <input
+                         type="radio"
+                         id="aspect9to16"
+                         name="aspectRatioOption"
+                         value="9:16"
+                         checked={aspectRatio === '9:16'}
+                         onChange={handleAspectRatioChange}
+                         className="form-radio h-4 w-4 text-purple-600 border-gray-600 focus:ring-purple-500 bg-gray-700"
+                       />
+                       <span className="ml-2 text-sm text-gray-200">9:16</span>
+                     </label>
+                     <label htmlFor="aspect1to1" className="flex items-center cursor-pointer">
+                       <input
+                         type="radio"
+                         id="aspect1to1"
+                         name="aspectRatioOption"
+                         value="1:1"
+                         checked={aspectRatio === '1:1'}
+                         onChange={handleAspectRatioChange}
+                         className="form-radio h-4 w-4 text-purple-600 border-gray-600 focus:ring-purple-500 bg-gray-700"
+                       />
+                       <span className="ml-2 text-sm text-gray-200">1:1</span>
+                     </label>
+                     <label htmlFor="aspect16to9" className="flex items-center cursor-pointer">
+                       <input
+                         type="radio"
+                         id="aspect16to9"
+                         name="aspectRatioOption"
+                         value="16:9"
+                         checked={aspectRatio === '16:9'}
+                         onChange={handleAspectRatioChange}
+                         className="form-radio h-4 w-4 text-purple-600 border-gray-600 focus:ring-purple-500 bg-gray-700"
+                       />
+                       <span className="ml-2 text-sm text-gray-200">16:9</span>
+                     </label>
+                   </div>
+                 </div>
+               </div>
         </div>
         
         {submissionStatus.message && (
@@ -760,7 +1076,7 @@ export default function DashboardClient({ currentCredits }: { currentCredits: nu
       )}
 
       {/* Global Loading Overlay (might be for initial page load or other global loading states) */}
-      {isLoading && ( // This isLoading might need to be tied to a more specific loading state now
+      {isLoading && ( 
         <div className="fixed inset-0 bg-black/30 flex items-center justify-center z-50">
           <p className="text-white text-xl">Loading dashboard...</p>
         </div>

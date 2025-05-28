@@ -569,3 +569,14 @@ npm run lint     # 代码检查
 
 ### 2024-07-28
 - **站点验证**: 将 `startupranking1337891618924910.html` 文件移动到 `public` 目录，使其可以通过 `https://www.babypodcast.pro/startupranking1337891618924910.html` 访问，用于站点所有权验证。 
+
+## 🐞 错误修复记录
+
+### 2024-05-29: 修复 Supabase RPC `create_initial_project` 参数不匹配问题
+- **问题**: 调用 `create_initial_project` 时，由于参数列表与数据库函数签名不一致，导致 "Could not find the function" 错误。
+- **原因**: 前端传递的参数（如 `p_appearance_mode`, `p_content_mode`, `p_audio_url`, `p_text_script`) 与数据库函数 `create_initial_project(p_aspect_ratio, p_creation_type, p_ethnicity, p_hair, p_image_url, p_job_id, p_topic, p_user_id, p_video_resolution)` 的期望参数不符。
+- **修复**:
+    - 在 `src/app/api/create-podcast-project/route.ts` 中，修改了调用 `supabase.rpc('create_initial_project', ...)` 时的参数对象。
+    - 移除了 `p_appearance_mode`, `p_content_mode` (旧), `p_audio_url`, `p_text_script`。
+    - 添加了 `p_creation_type` 参数，其值设置为原 `contentCreationMode` 的值。
+- **状态**: 已解决。建议测试创建播客项目流程。 
