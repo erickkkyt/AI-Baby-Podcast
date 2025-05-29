@@ -97,6 +97,6 @@ export const blogPosts: BlogPost[] = [
 ];
 
 // Helper function to get a post by slug
-export function getPostBySlug(slug: string): BlogPost | undefined {
+export async function getPostBySlug(slug: string): Promise<BlogPost | undefined> {
   return blogPosts.find(post => post.slug === slug);
 }
