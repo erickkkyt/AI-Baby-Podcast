@@ -1,9 +1,11 @@
 import type { MetadataRoute } from 'next';
+import { blogPosts } from '@/lib/blog-data'; // 导入博客数据
 
 const BASE_URL = 'https://www.babypodcast.pro'; // 确保这是您的生产域名
 
 export default function sitemap(): MetadataRoute.Sitemap {
-  return [
+  // 基础页面
+  const staticPages = [
     {
       url: `${BASE_URL}/`,
       lastModified: new Date(), // 可以设置为页面实际最后修改日期
@@ -28,6 +30,24 @@ export default function sitemap(): MetadataRoute.Sitemap {
       changeFrequency: 'yearly',
       priority: 0.5,
     },
-    // 如果您有其他希望被索引的公开页面，请在此处添加
+    {
+      url: `${BASE_URL}/blog`, // 博客列表页
+      lastModified: new Date(),
+      changeFrequency: 'weekly', // 假设博客每周更新
+      priority: 0.7,
+    },
+  ];
+
+  // 动态生成的博客文章页面
+  const blogPostEntries = blogPosts.map((post) => ({
+    url: `${BASE_URL}/blog/${post.slug}`,
+    lastModified: new Date(post.date), // 使用博文的日期作为 lastModified
+    changeFrequency: 'monthly' as const, // 或者 'yearly' 如果不常更新
+    priority: 0.6,
+  }));
+
+  return [
+    ...staticPages,
+    ...blogPostEntries,
   ];
 } 

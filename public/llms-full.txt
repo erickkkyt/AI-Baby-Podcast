@@ -115,4 +115,15 @@ If you have any questions or need technical support, please email support@babypo
 - **Fees & Payment**: Users agree to pay applicable fees. Subscriptions auto-renew unless canceled. Details on payment failures and cancellation procedures are provided.
 - **Refund Policy**: Generally, fees are non-refundable except as required by law or stated in terms.
 - **Termination**: AI Baby Generator reserves the right to terminate/suspend access for violations.
-- **Contact for TOS Concerns**: support@babypodcast.pro 
+- **Contact for TOS Concerns**: support@babypodcast.pro
+
+## Blog
+
+### [Blog Home](https://babypodcast.pro/blog)
+**Core Value**: Stay updated with the latest news, articles, guides, and insights from the AI Baby Generator team.
+**Main Content**:
+- Lists all published blog posts, allowing users to easily find and read content related to AI baby video creation, platform updates, and industry trends.
+
+### [How to Create AI Baby Videos](https://babypodcast.pro/blog/how-to-create-ai-baby-videos)
+**Title**: How to Create AI Baby Videos
+**Summary**: A step-by-step guide to creating your own engaging AI baby videos using the AI Baby Generator dashboard. Covers accessing the dashboard, defining the baby's appearance, crafting content, choosing output settings, and submitting for generation. 

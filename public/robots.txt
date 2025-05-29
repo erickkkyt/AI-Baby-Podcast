@@ -9,6 +9,8 @@ Allow: /privacy-policy$
 Allow: /privacy-policy/$
 Allow: /terms-of-service$
 Allow: /terms-of-service/$
+Allow: /blog$ # 允许博客列表页
+Allow: /blog/ # 允许所有博客文章页
 # Disallow: /admin/ # 如果未来有管理后台
 # Disallow: /private/ # 如果未来有用户私人内容区
 
@@ -21,7 +23,8 @@ Allow: /$
 Allow: /pricing$
 Allow: /privacy-policy$
 Allow: /terms-of-service$
-# Allow: /blog/$
+Allow: /blog$ 
+Allow: /blog/
 # Allow: /features$ # 如果 #features 是一个独立页面，用 /features$
 Disallow: /login
 Disallow: /dashboard/
@@ -35,7 +38,8 @@ Allow: /$
 Allow: /pricing$
 Allow: /privacy-policy$
 Allow: /terms-of-service$
-# Allow: /blog/$
+Allow: /blog$
+Allow: /blog/
 # Allow: /features$
 Disallow: /login
 Disallow: /dashboard/
@@ -49,7 +53,8 @@ Allow: /$
 Allow: /pricing$
 Allow: /privacy-policy$
 Allow: /terms-of-service$
-# Allow: /blog/$
+Allow: /blog$
+Allow: /blog/
 # Allow: /features$
 Disallow: /login
 Disallow: /dashboard/
@@ -63,7 +68,8 @@ Allow: /$
 Allow: /pricing$
 Allow: /privacy-policy$
 Allow: /terms-of-service$
-# Allow: /blog/$
+Allow: /blog$
+Allow: /blog/
 # Allow: /features$
 Disallow: /login
 Disallow: /dashboard/
@@ -77,7 +83,8 @@ Allow: /$
 Allow: /pricing$
 Allow: /privacy-policy$
 Allow: /terms-of-service$
-# Allow: /blog/$
+Allow: /blog$
+Allow: /blog/
 # Allow: /features$
 Disallow: /login
 Disallow: /dashboard/
@@ -91,7 +98,8 @@ Allow: /$
 Allow: /pricing$
 Allow: /privacy-policy$
 Allow: /terms-of-service$
-# Allow: /blog/$
+Allow: /blog$
+Allow: /blog/
 # Allow: /features$
 Disallow: /login
 Disallow: /dashboard/

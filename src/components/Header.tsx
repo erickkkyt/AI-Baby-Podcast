@@ -74,6 +74,9 @@ export default function Header() {
             <Link href="#faq" className="text-sm font-medium text-gray-600 hover:text-blue-600 transition-colors">
               FAQ
             </Link>
+            <Link href="/blog" className="text-sm font-medium text-gray-600 hover:text-blue-600 transition-colors">
+              Blog
+            </Link>
           </nav>
 
           {/* User specific actions */}
@@ -154,6 +157,7 @@ export default function Header() {
             <Link href="#how-it-works" className="block rounded-md px-3 py-2 text-base font-medium text-gray-700 hover:bg-gray-100 hover:text-blue-600" onClick={() => setMobileMenuOpen(false)}>How It Works</Link>
             <Link href="#pricing" className="block rounded-md px-3 py-2 text-base font-medium text-gray-700 hover:bg-gray-100 hover:text-blue-600" onClick={() => setMobileMenuOpen(false)}>Pricing</Link>
             <Link href="#faq" className="block rounded-md px-3 py-2 text-base font-medium text-gray-700 hover:bg-gray-100 hover:text-blue-600" onClick={() => setMobileMenuOpen(false)}>FAQ</Link>
+            <Link href="/blog" className="block rounded-md px-3 py-2 text-base font-medium text-gray-700 hover:bg-gray-100 hover:text-blue-600" onClick={() => setMobileMenuOpen(false)}>Blog</Link>
           </div>
           <div className="border-t border-gray-200 pb-3 pt-4">
             {loading ? (
