@@ -1,4 +1,5 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
+import { Inter } from "next/font/google";
 import Script from 'next/script'; // 导入 Script 组件
 import "./globals.css";
 
@@ -61,7 +62,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning>
       <head>
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <Script
@@ -76,6 +77,12 @@ export default function RootLayout({
               })(window, document, "clarity", "script", "rn16gjya9t");
             `,
           }}
+        />
+        {/* Google AdSense 脚本 */}
+        <Script
+          async
+          src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6313486072364487"
+          crossOrigin="anonymous"
         />
       </head>
       {/* 应用新的字体变量到 body */}
