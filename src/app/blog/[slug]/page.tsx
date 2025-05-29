@@ -1,19 +1,25 @@
-import { getPostBySlug, type BlogPost } from '@/lib/blog-data';
+import { getPostBySlug, type BlogPost, blogPosts } from '@/lib/blog-data';
 import { notFound } from 'next/navigation';
 import Link from 'next/link';
 import type { Metadata, ResolvingMetadata } from 'next';
 
-interface BlogPostPageProps {
-  params: {
-    slug: string;
-  };
+// 定义 params 的具体形状
+interface BlogPostPageParams {
+  slug: string;
+}
+
+// PageProps 接口，params 可以是 Promise 或已解析的对象
+interface PageProps {
+  params: BlogPostPageParams | Promise<BlogPostPageParams>;
+  // searchParams?: { [key: string]: string | string[] | undefined } | Promise<{ [key: string]: string | string[] | undefined }>;
 }
 
 // Function to generate metadata dynamically
 export async function generateMetadata(
-  { params }: BlogPostPageProps,
+  { params: paramsProp }: PageProps, // 接收 paramsProp
   parent: ResolvingMetadata
 ): Promise<Metadata> {
+  const params = await paramsProp; // 首先 await paramsProp
   const post = await getPostBySlug(params.slug);
 
   if (!post) {
@@ -44,7 +50,8 @@ export async function generateMetadata(
 }
 
 
-export default async function BlogPostPage({ params }: BlogPostPageProps) {
+export default async function BlogPostPage({ params: paramsProp }: PageProps) { // 接收 paramsProp
+  const params = await paramsProp; // 首先 await paramsProp
   const post = await getPostBySlug(params.slug);
 
   if (!post) {
@@ -84,10 +91,10 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
   );
 }
 
-// Optional: Generate static paths if you have a small number of posts and want to pre-render them
-// export async function generateStaticParams() {
-//   const { blogPosts } = await import('@/lib/blog-data');
-//   return blogPosts.map((post) => ({
-//     slug: post.slug,
-//   }));
-// } 
+// Generate static paths for each blog post
+export async function generateStaticParams() {
+  // blogPosts ಇಲ್ಲಿ ನೇರವಾಗಿ ಲಭ್ಯವಿರಬೇಕು કારણ ನಾವು ಅದನ್ನು ಮೇಲೆ ಆಮದು ಮಾಡಿಕೊಂಡಿದ್ದೇವೆ
+  return blogPosts.map((post) => ({
+    slug: post.slug,
+  }));
+} 
