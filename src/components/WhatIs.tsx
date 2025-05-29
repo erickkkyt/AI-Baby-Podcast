@@ -13,10 +13,10 @@ export default function WhatIs() {
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-12">
           <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-6">
-            What Is BabyPodcast?
+            What Is BabyGenerator?
           </h2>
           <p className="text-lg text-gray-600 mb-6 max-w-3xl mx-auto">
-            BabyPodcast is a viral trend taking over TikTok and YouTube Shorts. These AI-generated videos feature baby avatars as podcast hosts discussing various topics in entertaining and engaging ways. Combining advanced AI animation with creative scripting, BabyPodcast creates realistic baby faces that sync perfectly with podcast-style audio.
+            BabyGenerator is a viral trend taking over TikTok and YouTube Shorts. These AI-generated videos feature baby avatars as hosts discussing various topics in entertaining and engaging ways. Combining advanced AI animation with creative scripting, BabyGenerator creates realistic baby faces that sync perfectly with audio.
           </p>
         </div>
 
@@ -72,7 +72,7 @@ export default function WhatIs() {
               </svg>
             </div>
             <h3 className="text-lg font-medium text-gray-900 mb-2">Evolving Technology</h3>
-            <p className="text-gray-600">The BabyPodcast phenomenon represents the perfect intersection of AI technology, creative content production, and social media virality.</p>
+            <p className="text-gray-600">The BabyGenerator phenomenon represents the perfect intersection of AI technology, creative content production, and social media virality.</p>
           </div>
         </div>
       </div>

@@ -1,6 +1,6 @@
-# AI Baby Podcast: 个性化AI宝宝播客视频生成平台
+# AI Baby Generator: 个性化AI宝宝播客视频生成平台
 
-AI Baby Podcast 是一个基于 Next.js 的全栈Web应用，允许用户通过AI技术生成个性化的宝宝播客视频。用户可以自定义宝宝的种族、发型和播客主题等参数，系统将通过n8n工作流自动生成高质量的AI视频内容。
+AI Baby Generator 是一个基于 Next.js 的全栈Web应用，允许用户通过AI技术生成个性化的宝宝播客视频。用户可以自定义宝宝的种族、发型和播客主题等参数，系统将通过n8n工作流自动生成高质量的AI视频内容。
 
 ## ✨ 核心功能特性
 
@@ -434,6 +434,15 @@ npm run lint     # 代码检查
 - **添加 Google AdSense 脚本到主布局文件，用于展示广告。**
 - **创建 `public/ads.txt` 文件以符合 Google AdSense 的要求，等待用户提供发布商ID进行更新。**
 
+### 2024-07-29
+- **元数据优化**: 全局替换项目中的 "AI Baby Podcast" 和 "AI Baby Podcast Generator" 为 "AI Baby Generator"，并更新相关描述。
+
+### 2024-07-29 (UI更新)
+- **组件更新**:
+    - `src/components/Header.tsx`: 将Logo文本从 "AI Baby Podcast" 更新为 "AI Baby Generator"。
+    - `src/components/Hero.tsx`: 为标题 "AI Baby Generator" 添加 `whitespace-nowrap` Tailwind CSS 类，防止其在显示时换行。
+    - `src/components/Footer.tsx`: 将版权信息中的 "AI Baby Podcast" 更新为 "AI Baby Generator"。
+
 ## 🤝 技术支持
 
 ### 联系方式
@@ -457,7 +466,7 @@ npm run lint     # 代码检查
 
 ---
 
-*AI Baby Podcast - 让每个人都能轻松创建属于自己的AI播客视频内容* 🎬✨ 
+*AI Baby Generator - 让每个人都能轻松创建属于自己的AI播客视频内容* 🎬✨ 
 
 ### 10. SEO 和社交媒体优化
 - **Canonical URLs**: 为所有公开页面 (`/`, `/pricing`, `/privacy-policy`, `/terms-of-service`) 添加了 `<link rel="canonical">` 标签，通过 Next.js `metadata` API 实现。
@@ -550,6 +559,15 @@ npm run lint     # 代码检查
     - 将 `public/llms.txt` 和 `public/llms-full.txt` 的内容翻译为英文。
     - 在 `public/llms.txt` 的 "Core Content" 部分新增了基于 `WhatIs.tsx` 和 `Why.tsx` 组件内容的条目，链接至相应的首页锚点 (`#what-is` 和 `#why-trending`)。
     - 使用来自相应组件和页面的实际内容摘要填充了 `public/llms-full.txt` 的所有部分（Homepage, Features, Pricing, How It Works, What is AI Baby Podcast?, Why AI Baby Podcast is Trending, FAQ, Privacy Policy, Terms of Service）。
+
+### 2024-07-29
+- **元数据优化**: 全局替换项目中的 "AI Baby Podcast" 和 "AI Baby Podcast Generator" 为 "AI Baby Generator"，并更新相关描述。
+
+### 2024-07-29 (UI更新)
+- **组件更新**:
+    - `Header.tsx`: Logo文本更新为 "AI Baby Generator"。
+    - `Hero.tsx`: 标题 "AI Baby Generator" 应用 `whitespace-nowrap` 防止换行。
+    - `Footer.tsx`: 版权文本更新为 "AI Baby Generator"。
 
 ## 🔐 安全加固与漏洞修复
 

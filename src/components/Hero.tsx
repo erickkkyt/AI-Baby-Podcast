@@ -10,10 +10,10 @@ export default function Hero() {
         <div className="flex flex-col lg:flex-row lg:items-center lg:space-x-12">
           <div className="lg:w-1/2 mb-12 lg:mb-0">
             <h1 className="text-4xl sm:text-5xl md:text-6xl font-extrabold leading-tight text-gray-900 mb-6">
-              <span className="text-blue-600">AI Baby Podcast</span><br />Generator
+              <span className="text-blue-600 whitespace-nowrap">AI Baby Generator</span><br />
             </h1>
             <p className="text-xl text-gray-600 mb-8 max-w-lg">
-              Learn how to create, optimize, and monetize the latest viral trend taking TikTok and YouTube Shorts by storm. Join thousands of creators making AI baby podcast videos that generate millions of views!
+              Learn how to create, optimize, and monetize the latest viral trend taking TikTok and YouTube Shorts by storm. Join thousands of creators making AI baby videos that generate millions of views!
             </p>
             <div className="flex flex-col sm:flex-row space-y-4 sm:space-y-0 sm:space-x-4">
               <Link 

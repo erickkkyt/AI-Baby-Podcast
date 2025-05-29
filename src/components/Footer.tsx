@@ -11,7 +11,7 @@ export default function Footer() {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-12">
           <div className="lg:col-span-2">
             <div className="flex items-center mb-4">
-              <span className="text-xl font-bold text-blue-400 mr-2">AI Baby Podcast</span>
+              <span className="text-xl font-bold text-blue-400 mr-2">AI Baby Generator</span>
               <span className="text-xs px-2 py-1 rounded-full bg-blue-800 text-blue-200">AI</span>
             </div>
             <p className="text-gray-400 mb-6 max-w-md">
@@ -68,7 +68,7 @@ export default function Footer() {
         
         <div className="mt-12 pt-8 border-t border-gray-800 flex flex-col md:flex-row justify-start items-center">
           <p className="text-gray-400 text-sm mb-4 md:mb-0">
-            &copy; {new Date().getFullYear()} AI Baby Podcast. All rights reserved.
+            &copy; {new Date().getFullYear()} AI Baby Generator. All rights reserved.
           </p>
           <div className="mt-4 md:mt-0 md:ml-170">
             <a href="mailto:support@babypodcast.pro" className="text-xs text-gray-400 hover:text-white transition-colors">

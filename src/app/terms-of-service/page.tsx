@@ -3,14 +3,14 @@ import Link from 'next/link';
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
-  title: 'Terms of Service - AI Baby Podcast Generator',
-  description: 'Read the Terms of Service for AI Baby Podcast Generator. Understand your rights and responsibilities when using our platform.',
+  title: 'Terms of Service - AI Baby Generator',
+  description: 'Read the Terms of Service for AI Baby Generator. Understand your rights and responsibilities when using our platform.',
   alternates: {
     canonical: 'https://www.babypodcast.pro/terms-of-service',
   },
   openGraph: {
-    title: 'Terms of Service - AI Baby Podcast Generator',
-    description: 'Read the Terms of Service for AI Baby Podcast Generator. Understand your rights and responsibilities when using our platform.',
+    title: 'Terms of Service - AI Baby Generator',
+    description: 'Read the Terms of Service for AI Baby Generator. Understand your rights and responsibilities when using our platform.',
     url: 'https://www.babypodcast.pro/terms-of-service',
     // Uses default social share image from root layout unless a specific one is set here
     // images: [
@@ -18,15 +18,15 @@ export const metadata: Metadata = {
     //     url: '/social-share-tos.png',
     //     width: 1200,
     //     height: 630,
-    //     alt: 'Terms of Service - AI Baby Podcast Generator',
+    //     alt: 'Terms of Service - AI Baby Generator',
     //   },
     // ],
     type: 'website',
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Terms of Service - AI Baby Podcast Generator',
-    description: 'Read the Terms of Service for AI Baby Podcast Generator. Understand your rights and responsibilities when using our platform.',
+    title: 'Terms of Service - AI Baby Generator',
+    description: 'Read the Terms of Service for AI Baby Generator. Understand your rights and responsibilities when using our platform.',
     // Uses default social share image from root layout unless a specific one is set here
     // images: ['/social-share-tos.png'],
     // creator: '@YourTwitterHandle',
@@ -44,14 +44,14 @@ export default function TermsOfServicePage() {
 
       <section className="mb-8 p-6 bg-white dark:bg-gray-800 shadow-lg rounded-lg">
         <p className="mb-4">
-          By accessing and using <strong>AI Baby Podcast</strong> (&quot;the Service&quot;), you agree to comply with and be bound by the following Terms of Use (&quot;Terms&quot;) related to the use of Google Login. If you do not agree to these Terms, please do not use the Service or the Google Login functionality.
+          By accessing and using <strong>AI Baby Generator</strong> (&quot;the Service&quot;), you agree to comply with and be bound by the following Terms of Use (&quot;Terms&quot;) related to the use of Google Login. If you do not agree to these Terms, please do not use the Service or the Google Login functionality.
         </p>
       </section>
 
       <section className="mb-8 p-8 bg-white dark:bg-gray-800 shadow-xl rounded-2xl">
         <h2 className="text-3xl font-bold mb-6 text-blue-600 dark:text-blue-300 border-l-4 border-blue-500 pl-4">1. Google Login Integration</h2>
         <p className="mb-4 text-base leading-relaxed text-gray-700 dark:text-gray-300">
-          1.1. To enhance your experience, <strong>AI Baby Podcast</strong> offers a third-party authentication service powered by Google Login. By using Google Login, you allow us to access certain information from your Google Account, including but not limited to:
+          1.1. To enhance your experience, <strong>AI Baby Generator</strong> offers a third-party authentication service powered by Google Login. By using Google Login, you allow us to access certain information from your Google Account, including but not limited to:
         </p>
         <ul className="list-disc list-inside mb-4 space-y-1 pl-8">
           <li>
@@ -130,26 +130,26 @@ export default function TermsOfServicePage() {
           <li>Reverse-engineer or attempt to access the source code of the Service;</li>
           <li>Use bots, scrapers, or other automated means to access or manipulate content;</li>
           <li>Circumvent DRM protections or access controls on third-party platforms;</li>
-          <li>Interfere with or disrupt the Service, including through the use of automated tools; Infringe the rights of others, including intellectual property and privacy rights, including but without limits: 1) upload, generate, display, post, distribute or otherwise transmit any information that violates any third-party right, including any copyright, trademark, patent, trade secret, moral right, privacy right, right of publicity, or any other intellectual property or proprietary right; 2) use AI Baby Podcast Outputs in any immoral or illegal way, especially AI Baby Podcast Outputs which features a recognisable person; 3) use AI Baby Podcast Outputs on or in conjunction with anything pornographic, obscene, offensive (including but not limited to in relation to adult entertainment venues, escort services, drug use, dating services, in a way which portrays someone as suffering from, or medicating for, a physical or mental ailment), illegal, immoral, infringing, defamatory, hateful, threatening or libellous in nature, in a political context (such as the promotion, advertisement or endorsement of any party, candidate, or elected official or in connection with any political party or viewpoint); 4) use AI Baby Podcast Outputs in a misleading or deceptive way, including without limit (i) by suggesting that any depicted person, brand, organisation or other third party endorses or is affiliated with you or your goods or services, unless permission has been granted; or (ii) by giving the impression that AI Baby Podcast Outputs were created by anyone other than the intellectual property rights holder of AI Baby Podcast Outputs (including without limitation, by claiming or giving the impression that you hold ownership of, or exclusive rights to, AI Baby Podcast Outputs); 5) use AI Baby Podcast Outputs in breach of any law, regulation or industry code, or in any way which infringes the rights of any person or entity; 6) Copy, share, or display AI Baby Podcast Outputs without appropriate authorization.</li>
+          <li>Interfere with or disrupt the Service, including through the use of automated tools; Infringe the rights of others, including intellectual property and privacy rights, including but without limits: 1) upload, generate, display, post, distribute or otherwise transmit any information that violates any third-party right, including any copyright, trademark, patent, trade secret, moral right, privacy right, right of publicity, or any other intellectual property or proprietary right; 2) use AI Baby Generator Outputs in any immoral or illegal way, especially AI Baby Generator Outputs which features a recognisable person; 3) use AI Baby Generator Outputs on or in conjunction with anything pornographic, obscene, offensive (including but not limited to in relation to adult entertainment venues, escort services, drug use, dating services, in a way which portrays someone as suffering from, or medicating for, a physical or mental ailment), illegal, immoral, infringing, defamatory, hateful, threatening or libellous in nature, in a political context (such as the promotion, advertisement or endorsement of any party, candidate, or elected official or in connection with any political party or viewpoint); 4) use AI Baby Generator Outputs in a misleading or deceptive way, including without limit (i) by suggesting that any depicted person, brand, organisation or other third party endorses or is affiliated with you or your goods or services, unless permission has been granted; or (ii) by giving the impression that AI Baby Generator Outputs were created by anyone other than the intellectual property rights holder of AI Baby Generator Outputs (including without limitation, by claiming or giving the impression that you hold ownership of, or exclusive rights to, AI Baby Generator Outputs); 5) use AI Baby Generator Outputs in breach of any law, regulation or industry code, or in any way which infringes the rights of any person or entity; 6) Copy, share, or display AI Baby Generator Outputs without appropriate authorization.</li>
         </ul>
         <p>
-          5.6. The content provided by AI Baby Podcast such as pictures and videos are for personal use only. You are granted a limited, non-exclusive, non-transferable, revocable license to access and use AI Baby Podcast Outputs. You do not acquire any ownership rights in AI Baby Podcast Outputs. You have the exclusive right to use AI Baby Podcast Outputs solely for personal, educational, or non-commercial research purposes.
+          5.6. The content provided by AI Baby Generator such as pictures and videos are for personal use only. You are granted a limited, non-exclusive, non-transferable, revocable license to access and use AI Baby Generator Outputs. You do not acquire any ownership rights in AI Baby Generator Outputs. You have the exclusive right to use AI Baby Generator Outputs solely for personal, educational, or non-commercial research purposes.
         </p>
       </section>
 
       <section className="mb-8 p-6 bg-white dark:bg-gray-800 shadow-lg rounded-lg">
         <h2 className="text-2xl font-semibold mb-4 text-blue-500 dark:text-blue-300 border-l-4 border-blue-400 pl-3">6. Intellectual Property</h2>
         <p className="mb-2">
-           6.1. All content, trademarks, and intellectual property related to the Service are owned by AI Baby Podcast or its licensors. You may not use or reproduce any content without permission.
+           6.1. All content, trademarks, and intellectual property related to the Service are owned by AI Baby Generator or its licensors. You may not use or reproduce any content without permission.
         </p>
          <p className="mb-2">
-           6.2. AI Baby Podcast respects the intellectual property rights of others and expects users to do the same. Unauthorized use of copyrighted material is prohibited.
+           6.2. AI Baby Generator respects the intellectual property rights of others and expects users to do the same. Unauthorized use of copyrighted material is prohibited.
         </p>
         <p className="mb-2">
-           6.3. By using the Service, you grant AI Baby Podcast a license to use any content you submit or create, for the purpose of operating and improving the Service.
+           6.3. By using the Service, you grant AI Baby Generator a license to use any content you submit or create, for the purpose of operating and improving the Service.
         </p>
         <p className="mb-2">
-            6.4. You have the exclusive right to use AI Baby Podcast Outputs solely for personal, educational, or non-commercial research purposes.
+            6.4. You have the exclusive right to use AI Baby Generator Outputs solely for personal, educational, or non-commercial research purposes.
         </p>
         <p>
           6.5. By submitting feedback or suggestions, you grant us a royalty-free, perpetual, worldwide license to use and incorporate such input without obligation.
@@ -183,10 +183,10 @@ export default function TermsOfServicePage() {
             <strong>Authorization to Charge</strong>: By subscribing, you authorize us to charge your designated payment method now, and again at the beginning of any subsequent subscription period.
           </li>
           <li>
-            <strong>Payment Failure</strong>: If AI Baby Podcast does not receive payment upon renewal of your subscription, (i) you shall pay all amounts due on your account upon demand, and/or (ii) you agree that AI Baby Podcast may either terminate or suspend your subscription and continue to attempt to charge your designated payment method until payment is received (upon receipt of payment, your account will be activated and for purposes of automatic renewal, your new subscription commitment period will begin as of the day payment was received).
+            <strong>Payment Failure</strong>: If AI Baby Generator does not receive payment upon renewal of your subscription, (i) you shall pay all amounts due on your account upon demand, and/or (ii) you agree that AI Baby Generator may either terminate or suspend your subscription and continue to attempt to charge your designated payment method until payment is received (upon receipt of payment, your account will be activated and for purposes of automatic renewal, your new subscription commitment period will begin as of the day payment was received).
           </li>
           <li>
-            <strong>Cancellation</strong>: If you do not want your account to renew automatically, or if you want to change or terminate your subscription, you must do so through your account settings or contact AI Baby Podcast at <a href="mailto:support@babypodcast.pro" className="text-blue-600 hover:underline dark:text-blue-400">support@babypodcast.pro</a> prior to the next renewal date. If you purchased your subscription through a third-party application store, you must cancel, change, or terminate your subscription through such third-party application store before your renewal start date.
+            <strong>Cancellation</strong>: If you do not want your account to renew automatically, or if you want to change or terminate your subscription, you must do so through your account settings or contact AI Baby Generator at <a href="mailto:support@babypodcast.pro" className="text-blue-600 hover:underline dark:text-blue-400">support@babypodcast.pro</a> prior to the next renewal date. If you purchased your subscription through a third-party application store, you must cancel, change, or terminate your subscription through such third-party application store before your renewal start date.
           </li>
           <li>
             <strong>Effect of Cancellation</strong>: If you cancel your subscription, you may use your subscription until the end of your then-current subscription term; your subscription will not be renewed after your then-current term expires.
@@ -252,10 +252,10 @@ export default function TermsOfServicePage() {
       <section className="mb-8 p-6 bg-white dark:bg-gray-800 shadow-lg rounded-lg">
         <h2 className="text-2xl font-semibold mb-4 text-blue-500 dark:text-blue-300 border-l-4 border-blue-400 pl-3">11. Limitation of Liability</h2>
         <p className="mb-2">
-          11.1. To the fullest extent permitted by law, <strong>AI Baby Podcast</strong> shall not be liable for any direct, indirect, incidental, consequential, or special damages arising from the use of Google Login, including any issues related to authentication, security breaches, or data loss.
+          11.1. To the fullest extent permitted by law, <strong>AI Baby Generator</strong> shall not be liable for any direct, indirect, incidental, consequential, or special damages arising from the use of Google Login, including any issues related to authentication, security breaches, or data loss.
         </p>
         <p className="mb-2">
-          11.2. YOU SHALL USE THE SERVICES PROVIDED BY US AND AI Baby Podcast OUTPUTS IN STRICT ACCORDANCE WITH THIS AGREEMENT. WE ARE NOT LIABLE FOR LOSSES ARISING FROM YOUR BREACH OF THESE TERMS OR ANY OF OUR OTHER RULES.
+          11.2. YOU SHALL USE THE SERVICES PROVIDED BY US AND AI Baby Generator OUTPUTS IN STRICT ACCORDANCE WITH THIS AGREEMENT. WE ARE NOT LIABLE FOR LOSSES ARISING FROM YOUR BREACH OF THESE TERMS OR ANY OF OUR OTHER RULES.
         </p>
         <p className="mb-2">
           11.3. WE WILL NOT BE LIABLE TO YOU OR ANY OTHER INDIVIDUAL OR ENTITY FOR ANY INDIRECT DAMAGES.

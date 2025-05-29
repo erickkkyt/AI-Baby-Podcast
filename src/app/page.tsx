@@ -9,24 +9,24 @@ import FAQ from '../components/FAQ';
 import Footer from '../components/Footer';
 import type { Metadata } from 'next';
 
-const newTitle = "AI Baby Podcast: Create Unique Baby Story Videos";
+const newTitle = "AI Baby Generator: Create Unique Baby Story Videos";
 
 export const metadata: Metadata = {
   title: newTitle,
-  description: 'Turn your ideas into adorable, shareable baby podcast videos with AI. Customize features, upload images, and choose your style. Start creating memories today!',
+  description: 'Turn your ideas into adorable, shareable baby videos with AI. Customize features, upload images, and choose your style. Start creating memories today!',
   alternates: {
     canonical: 'https://www.babypodcast.pro',
   },
   openGraph: {
     title: newTitle,
-    description: 'Turn your ideas into adorable, shareable baby podcast videos with AI. Customize features, upload images, and choose your style. Start creating memories today!',
+    description: 'Turn your ideas into adorable, shareable baby videos with AI. Customize features, upload images, and choose your style. Start creating memories today!',
     url: 'https://www.babypodcast.pro',
     images: [
       {
         url: '/social-share.png',
         width: 1200,
         height: 630,
-        alt: 'AI Baby Podcast Generator - Social Share Image',
+        alt: 'AI Baby Generator - Social Share Image',
       },
     ],
     type: 'website',
@@ -34,7 +34,7 @@ export const metadata: Metadata = {
   twitter: {
     card: 'summary_large_image',
     title: newTitle,
-    description: 'Turn your ideas into adorable, shareable baby podcast videos with AI. Customize features, upload images, and choose your style. Start creating memories today!',
+    description: 'Turn your ideas into adorable, shareable baby videos with AI. Customize features, upload images, and choose your style. Start creating memories today!',
     images: ['/social-share.png'],
   },
   // If other metadata properties exist, they should be preserved.

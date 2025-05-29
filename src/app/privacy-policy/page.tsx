@@ -3,14 +3,14 @@ import Link from 'next/link';
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
-  title: 'Privacy Policy - AI Baby Podcast Generator',
-  description: 'Learn how AI Baby Podcast Generator collects, uses, and protects your personal information. Your privacy is important to us.',
+  title: 'Privacy Policy - AI Baby Generator',
+  description: 'Learn how AI Baby Generator collects, uses, and protects your personal information. Your privacy is important to us.',
   alternates: {
     canonical: 'https://www.babypodcast.pro/privacy-policy',
   },
   openGraph: {
-    title: 'Privacy Policy - AI Baby Podcast Generator',
-    description: 'Learn how AI Baby Podcast Generator collects, uses, and protects your personal information.',
+    title: 'Privacy Policy - AI Baby Generator',
+    description: 'Learn how AI Baby Generator collects, uses, and protects your personal information.',
     url: 'https://www.babypodcast.pro/privacy-policy',
     // Uses default social share image from root layout unless a specific one is set here
     // images: [
@@ -18,15 +18,15 @@ export const metadata: Metadata = {
     //     url: '/social-share-privacy.png', 
     //     width: 1200,
     //     height: 630,
-    //     alt: 'Privacy Policy - AI Baby Podcast Generator',
+    //     alt: 'Privacy Policy - AI Baby Generator',
     //   },
     // ],
     type: 'website',
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Privacy Policy - AI Baby Podcast Generator',
-    description: 'Learn how AI Baby Podcast Generator collects, uses, and protects your personal information.',
+    title: 'Privacy Policy - AI Baby Generator',
+    description: 'Learn how AI Baby Generator collects, uses, and protects your personal information.',
     // Uses default social share image from root layout unless a specific one is set here
     // images: ['/social-share-privacy.png'], 
     // creator: '@YourTwitterHandle',
@@ -44,7 +44,7 @@ export default function PrivacyPolicyPage() {
 
       <section className="mb-8 p-6 bg-white dark:bg-gray-800 shadow-lg rounded-lg">
         <p className="mb-4">
-          Welcome to <strong>AI Baby Podcast</strong>. Your privacy is of utmost importance to us. This Privacy Policy outlines how we collect, use, store, and protect your personal information when you use our services. By using our product, you consent to the collection and use of information in accordance with this policy.
+          Welcome to <strong>AI Baby Generator</strong>. Your privacy is of utmost importance to us. This Privacy Policy outlines how we collect, use, store, and protect your personal information when you use our services. By using our product, you consent to the collection and use of information in accordance with this policy.
         </p>
       </section>
 

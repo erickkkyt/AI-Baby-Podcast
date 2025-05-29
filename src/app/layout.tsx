@@ -3,25 +3,25 @@ import { Inter } from "next/font/google";
 import Script from 'next/script'; // 导入 Script 组件
 import "./globals.css";
 
-// TODO: 更新 metadata 以匹配 AI Baby Podcast 主题
+// TODO: 更新 metadata 以匹配 AI Baby Generator 主题
 export const metadata: Metadata = {
   metadataBase: new URL('https://www.babypodcast.pro'), // 替换为您的生产环境域名
   title: {
-    default: "AI Baby Podcast Generator", // 默认标题
-    template: "%s | AI Baby Podcast Generator", // 页面特定标题的模板
+    default: "AI Baby Generator", // 默认标题
+    template: "%s | AI Baby Generator", // 页面特定标题的模板
   },
-  description: "Create, optimize, and monetize AI-powered baby podcast videos.", // 示例新描述
+  description: "Create, optimize, and monetize AI-powered baby videos.", // 示例新描述
   openGraph: {
-    title: "AI Baby Podcast Generator",
-    description: "Create, optimize, and monetize AI-powered baby podcast videos.",
+    title: "AI Baby Generator",
+    description: "Create, optimize, and monetize AI-powered baby videos.",
     url: "https://www.babypodcast.pro", // 替换为您的生产环境域名
-    siteName: "AI Baby Podcast Generator", // 您的网站名称
+    siteName: "AI Baby Generator", // 您的网站名称
     images: [
       {
         url: '/social-share.png', // 确保您在 public 文件夹下有这个文件
         width: 1200,
         height: 630,
-        alt: 'AI Baby Podcast Generator - Social Share Image',
+        alt: 'AI Baby Generator - Social Share Image',
       },
     ],
     locale: 'en_US', // 根据您的目标受众调整
@@ -29,8 +29,8 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: 'summary_large_image',
-    title: "AI Baby Podcast Generator",
-    description: "Create, optimize, and monetize AI-powered baby podcast videos.",
+    title: "AI Baby Generator",
+    description: "Create, optimize, and monetize AI-powered baby videos.",
     // siteId: 'YourTwitterSiteID', // 如果有，您的 Twitter 网站 ID
     // creator: '@YourTwitterHandle', // 如果有，您的 Twitter @用户名
     // creatorId: 'YourTwitterCreatorID', // 如果有，您的 Twitter 创建者 ID

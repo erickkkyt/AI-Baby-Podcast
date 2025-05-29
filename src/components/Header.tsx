@@ -55,7 +55,7 @@ export default function Header() {
             <Link href="/" className="flex items-center gap-2">
               {/* Placeholder for a real logo SVG if available */}
               {/* <img className="h-8 w-auto" src="/logo.svg" alt="AI Baby Podcast" /> */}
-              <span className="text-xl font-bold text-blue-600">AI Baby Podcast</span>
+              <span className="text-xl font-bold text-blue-600">AI Baby Generator</span>
               <span className="text-xs px-1.5 py-0.5 rounded-full bg-blue-100 text-blue-700 font-medium">AI</span>
             </Link>
           </div>

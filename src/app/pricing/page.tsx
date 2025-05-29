@@ -154,10 +154,10 @@ export default function PricingPage() {
           <div className="container mx-auto px-4 sm:px-6 lg:px-8">
             <div className="text-center mb-12 md:mb-16">
               <h1 className="text-4xl md:text-5xl font-bold text-gray-900 mb-6">
-                AI Baby Podcast Pricing
+                AI Baby Generator Pricing
               </h1>
               <p className="text-xl text-gray-600 max-w-3xl mx-auto mb-8">
-                Create personalized AI baby podcast videos with our credit-based system. 
+                Create personalized AI baby videos with our credit-based system. 
                 <br />
                 Choose your plan or buy credits as needed.
               </p>
