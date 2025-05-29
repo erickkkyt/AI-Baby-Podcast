@@ -8,10 +8,10 @@ interface BlogPostPageParams {
   slug: string;
 }
 
-// PageProps 接口，params 可以是 Promise 或已解析的对象
+// PageProps 接口，params 现在是一个 Promise，解析后得到 BlogPostPageParams
 interface PageProps {
-  params: BlogPostPageParams | Promise<BlogPostPageParams>;
-  // searchParams?: { [key: string]: string | string[] | undefined } | Promise<{ [key: string]: string | string[] | undefined }>;
+  params: Promise<BlogPostPageParams>; // 修改类型为 Promise<BlogPostPageParams>
+  // searchParams?: Promise<{ [key: string]: string | string[] | undefined }>; // 对应修改 searchParams 如果使用
 }
 
 // Function to generate metadata dynamically
@@ -19,7 +19,7 @@ export async function generateMetadata(
   { params: paramsProp }: PageProps, // 接收 paramsProp
   parent: ResolvingMetadata
 ): Promise<Metadata> {
-  const params = await paramsProp; // 首先 await paramsProp
+  const params = await paramsProp; // 首先 await paramsProp，它是一个 Promise
   const post = await getPostBySlug(params.slug);
 
   if (!post) {
@@ -51,7 +51,7 @@ export async function generateMetadata(
 
 
 export default async function BlogPostPage({ params: paramsProp }: PageProps) { // 接收 paramsProp
-  const params = await paramsProp; // 首先 await paramsProp
+  const params = await paramsProp; // 首先 await paramsProp，它是一个 Promise
   const post = await getPostBySlug(params.slug);
 
   if (!post) {
