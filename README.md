@@ -629,3 +629,9 @@ npm run lint     # 代码检查
     - 移除了 `p_appearance_mode`, `p_content_mode` (旧), `p_audio_url`, `p_text_script`。
     - 添加了 `p_creation_type` 参数，其值设置为原 `contentCreationMode` 的值。
 - **状态**: 已解决。建议测试创建播客项目流程。 
+
+### 2024-07-26
+
+- **Feature**: Added a 15-second duration limit for custom audio script uploads in the podcast creation form.
+  - Modified `src/components/DashboardClient.tsx` to include client-side validation for audio duration.
+  - If an uploaded audio file exceeds 15 seconds, an error message is displayed, and the file is not accepted. 

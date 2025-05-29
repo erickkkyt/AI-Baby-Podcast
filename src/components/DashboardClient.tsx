@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import Image from 'next/image';
-import { Settings2, Sparkles, Film, SearchCode, ChevronDown } from 'lucide-react'; // Film might be unused now
+import { Settings2, Sparkles, Film, SearchCode, ChevronDown, X } from 'lucide-react'; // Film might be unused now
 import { ConfirmationModal } from './modals/ConfirmationModal';
 import InsufficientCreditsModal from './modals/InsufficientCreditsModal';
 import { useRouter } from 'next/navigation'; // Import useRouter
@@ -75,6 +75,9 @@ export default function DashboardClient({ currentCredits }: { currentCredits: nu
   // Option 2.3: Direct Text Input
   const [textScriptDirectInput, setTextScriptDirectInput] = useState('');
   const [textScriptDirectInputError, setTextScriptDirectInputError] = useState('');
+
+  // 动态最大字符数 = 当前积分 * 15
+  const maxTextScriptLength = currentCredits * 15;
 
   // --- States for Video Output Settings ---
   const [videoResolution, setVideoResolution] = useState<'540p' | '720p'>('540p');
@@ -194,8 +197,8 @@ export default function DashboardClient({ currentCredits }: { currentCredits: nu
     const value = event.target.value;
     setTextScriptDirectInput(value);
     setSubmissionStatus({ message: '', type: null });
-    if (value.length > MAX_TEXT_SCRIPT_LENGTH) {
-      setTextScriptDirectInputError(`Exceeded ${MAX_TEXT_SCRIPT_LENGTH} characters. Please shorten.`);
+    if (value.length > maxTextScriptLength) {
+      setTextScriptDirectInputError(`Exceeded ${maxTextScriptLength} characters. Please shorten.`);
     } else {
       setTextScriptDirectInputError('');
     }
@@ -351,14 +354,45 @@ export default function DashboardClient({ currentCredits }: { currentCredits: nu
         event.target.value = '';
         return;
       }
-      if (file.size > MAX_FILE_SIZE_MB * 1024 * 1024) { 
+      if (file.size > MAX_FILE_SIZE_MB * 1024 * 1024) {
         setAudioScriptError(`File is too large. Maximum size is ${MAX_FILE_SIZE_MB}MB.`);
         setAudioScriptFile(null);
         event.target.value = '';
         return;
       }
-      setAudioScriptFile(file);
-      setAudioScriptError('');
+
+      // 检查音频时长，最大为当前积分数
+      const audio = document.createElement('audio');
+      audio.preload = 'metadata';
+      const objectUrl = URL.createObjectURL(file);
+
+      audio.onloadedmetadata = () => {
+        URL.revokeObjectURL(objectUrl); // 及时释放
+        const maxDuration = currentCredits;
+        if (audio.duration > maxDuration) {
+          const durationCeil = Math.ceil(audio.duration);
+          setAudioScriptError(`Current audio duration: ${durationCeil}s. Audio duration cannot exceed ${maxDuration}s.`);
+          setAudioScriptFile(null);
+          if (event.target) {
+            event.target.value = '';
+          }
+        } else {
+          setAudioScriptFile(file);
+          setAudioScriptError('');
+        }
+      };
+
+      audio.onerror = () => {
+        URL.revokeObjectURL(objectUrl);
+        setAudioScriptError('Failed to load audio metadata. Please try a different file.');
+        setAudioScriptFile(null);
+        if (event.target) {
+            event.target.value = '';
+        }
+      };
+
+      audio.src = objectUrl;
+
     } else {
       setAudioScriptFile(null);
       setAudioScriptError('');
@@ -373,6 +407,13 @@ export default function DashboardClient({ currentCredits }: { currentCredits: nu
   const handleAspectRatioChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setAspectRatio(event.target.value as '1:1' | '16:9' | '9:16');
     setSubmissionStatus({ message: '', type: null });
+  };
+
+  const handleRemoveAudioScript = () => {
+    setAudioScriptFile(null);
+    setAudioScriptError('');
+    const fileInput = document.getElementById('audio-script-input') as HTMLInputElement | null;
+    if (fileInput) fileInput.value = '';
   };
 
   const executeSubmitLogic = async () => {
@@ -792,18 +833,6 @@ export default function DashboardClient({ currentCredits }: { currentCredits: nu
                 />
                 <span className="ml-2 text-sm text-gray-200">Generate with Topic</span>
               </label>
-              <label htmlFor="contentAudioScript" className="flex items-center cursor-pointer">
-                <input
-                  type="radio"
-                  id="contentAudioScript"
-                  name="contentCreationModeOption"
-                  value="audio_script"
-                  checked={contentCreationMode === 'audio_script'}
-                  onChange={handleContentModeChange}
-                  className="form-radio h-4 w-4 text-purple-600 border-gray-600 focus:ring-purple-500 bg-gray-700"
-                />
-                <span className="ml-2 text-sm text-gray-200">Upload Custom Audio Script</span>
-              </label>
               <label htmlFor="contentDirectTextInput" className="flex items-center cursor-pointer">
                 <input
                   type="radio"
@@ -815,6 +844,18 @@ export default function DashboardClient({ currentCredits }: { currentCredits: nu
                   className="form-radio h-4 w-4 text-purple-600 border-gray-600 focus:ring-purple-500 bg-gray-700"
                 />
                 <span className="ml-2 text-sm text-gray-200">Direct Podcast Content Input</span>
+              </label>
+              <label htmlFor="contentAudioScript" className="flex items-center cursor-pointer">
+                <input
+                  type="radio"
+                  id="contentAudioScript"
+                  name="contentCreationModeOption"
+                  value="audio_script"
+                  checked={contentCreationMode === 'audio_script'}
+                  onChange={handleContentModeChange}
+                  className="form-radio h-4 w-4 text-purple-600 border-gray-600 focus:ring-purple-500 bg-gray-700"
+                />
+                <span className="ml-2 text-sm text-gray-200">Upload Custom Audio Script</span>
               </label>
             </div>
           </div>
@@ -842,16 +883,53 @@ export default function DashboardClient({ currentCredits }: { currentCredits: nu
             </div>
           )}
 
+          {contentCreationMode === 'direct_text_input' && (
+            <div className="mb-6">
+              <label htmlFor="textScriptDirectInput" className="block text-sm font-medium text-gray-300 mb-1.5">
+                Type or paste your script here <span className="text-xs text-gray-400">(Directly type or paste your complete podcast script here.)</span>
+              </label>
+              <div className="mb-2">
+                {currentCredits > 0 ? (
+                  <span className="text-xs text-gray-400">You can input up to {maxTextScriptLength} characters, based on your current credits.</span>
+                ) : (
+                  <span className="text-xs text-red-400">Insufficient credits to input text.</span>
+                )}
+              </div>
+              <textarea
+                id="textScriptDirectInput"
+                name="textScriptDirectInput"
+                rows={8}
+                placeholder={`Enter your podcast script (max ${maxTextScriptLength} characters)...`}
+                value={textScriptDirectInput}
+                onChange={handleTextScriptDirectInputChange}
+                className={`${inputBaseClasses} min-h-[150px] ${textScriptDirectInputError ? 'border-red-500' : 'border-gray-700'}`}
+                maxLength={maxTextScriptLength > 0 ? maxTextScriptLength : 1}
+                disabled={currentCredits === 0}
+              />
+              <div className={charCountClasses}>
+                {textScriptDirectInput.length}/{maxTextScriptLength}
+              </div>
+              {textScriptDirectInputError && <p className={errorTextClasses}>{textScriptDirectInputError}</p>}
+            </div>
+          )}
+
           {contentCreationMode === 'audio_script' && (
             <div className="space-y-4 mb-6">
               <div>
                 <label htmlFor="audio-script-input" className="block text-sm font-medium text-gray-300 mb-1">
                   Upload Audio File <span className="text-xs text-gray-400">(Upload your pre-recorded audio script. The AI will process this audio.)</span>
                 </label>
+                <div className="mb-2">
+                  {currentCredits > 0 ? (
+                    <span className="text-xs text-gray-400">You can upload up to {currentCredits} seconds of audio, based on your current credits.</span>
+                  ) : (
+                    <span className="text-xs text-red-400">Insufficient credits to upload audio.</span>
+                  )}
+                </div>
                 <div className="mt-1 flex items-center">
                   <label
                     htmlFor="audio-script-input"
-                    className="cursor-pointer bg-purple-600 hover:bg-purple-700 text-white font-semibold py-2 px-4 rounded-md transition-colors duration-150 ease-in-out mr-3"
+                    className={`cursor-pointer bg-purple-600 hover:bg-purple-700 text-white font-semibold py-2 px-4 rounded-md transition-colors duration-150 ease-in-out mr-3 ${currentCredits === 0 ? 'opacity-50 cursor-not-allowed' : ''}`}
                   >
                     Choose File
                   </label>
@@ -862,35 +940,27 @@ export default function DashboardClient({ currentCredits }: { currentCredits: nu
                     accept={ALLOWED_AUDIO_TYPES.join(',')}
                     onChange={handleAudioScriptChange}
                     className="sr-only"
+                    disabled={currentCredits === 0}
                   />
-                  <span className="text-sm text-gray-400">
-                    {audioScriptFile ? audioScriptFile.name : 'No file chosen'}
+                  <span className="text-sm text-gray-400 flex items-center">
+                    {audioScriptFile ? (
+                      <>
+                        {audioScriptFile.name}
+                        <button
+                          type="button"
+                          onClick={handleRemoveAudioScript}
+                          className="ml-2 flex items-center text-red-500 hover:text-red-400 px-1.5 py-0.5 border border-transparent hover:border-red-400 rounded transition-colors group"
+                          aria-label="Remove uploaded audio"
+                        >
+                          <X size={16} />
+                          <span className="ml-1 text-xs hidden group-hover:inline">Remove</span>
+                        </button>
+                      </>
+                    ) : 'No file chosen'}
                   </span>
                 </div>
                 {audioScriptError && <p className={errorTextClasses}>{audioScriptError}</p>}
               </div>
-            </div>
-          )}
-
-          {contentCreationMode === 'direct_text_input' && (
-            <div className="mb-6">
-              <label htmlFor="textScriptDirectInput" className="block text-sm font-medium text-gray-300 mb-1.5">
-                Type or paste your script here <span className="text-xs text-gray-400">(Directly type or paste your complete podcast script here.)</span>
-              </label>
-              <textarea
-                id="textScriptDirectInput"
-                name="textScriptDirectInput"
-                rows={8}
-                placeholder="Enter your podcast script (max 500 characters)..."
-                value={textScriptDirectInput}
-                onChange={handleTextScriptDirectInputChange}
-                className={`${inputBaseClasses} min-h-[150px] ${textScriptDirectInputError ? 'border-red-500' : 'border-gray-700'}`}
-                maxLength={MAX_TEXT_SCRIPT_LENGTH + 1}
-              />
-              <div className={charCountClasses}>
-                {textScriptDirectInput.length}/{MAX_TEXT_SCRIPT_LENGTH}
-              </div>
-              {textScriptDirectInputError && <p className={errorTextClasses}>{textScriptDirectInputError}</p>}
             </div>
           )}
         </div>
