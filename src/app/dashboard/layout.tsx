@@ -15,5 +15,9 @@ export default function DashboardLayout({
   children: React.ReactNode;
 }) {
   // You can add shared dashboard UI structure here if needed (e.g., a sidebar, header specific to dashboard)
-  return <section>{children}</section>; // Using <section> or just <>{children}</>
+  return (
+    <section className="min-h-screen bg-[#161b22]">
+      {children}
+    </section>
+  );
 } 

@@ -6,6 +6,7 @@ import { Settings2, Sparkles, Film, SearchCode, ChevronDown, X } from 'lucide-re
 import { ConfirmationModal } from './modals/ConfirmationModal';
 import InsufficientCreditsModal from './modals/InsufficientCreditsModal';
 import { useRouter } from 'next/navigation'; // Import useRouter
+import AudioTrimUpload from './audio/audio-trim-upload';
 
 interface Notification {
   id: string;
@@ -92,6 +93,9 @@ export default function DashboardClient({ currentCredits }: { currentCredits: nu
   // Constants for file uploads
   const ALLOWED_IMAGE_TYPES = ['image/jpeg', 'image/png', 'image/webp'];
   const ALLOWED_AUDIO_TYPES = ['audio/mpeg', 'audio/wav', 'audio/mp4', 'audio/x-m4a']; // Example audio types
+
+  const [audioScriptFileBlob, setAudioScriptFileBlob] = useState<Blob | null>(null);
+  const [audioScriptFileName, setAudioScriptFileName] = useState<string>('');
 
   const handleRemoveCustomImage = () => {
     setCustomImageFile(null);
@@ -343,6 +347,12 @@ export default function DashboardClient({ currentCredits }: { currentCredits: nu
     }
   };
 
+  const handleAudioTrimReady = (blob: Blob, filename: string) => {
+    setAudioScriptFileBlob(blob);
+    setAudioScriptFileName(filename);
+    setAudioScriptError('');
+  };
+
   const handleAudioScriptChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setSubmissionStatus({ message: '', type: null });
     const file = event.target.files?.[0];
@@ -443,13 +453,11 @@ export default function DashboardClient({ currentCredits }: { currentCredits: nu
     // Append data based on Content Mode
     if (contentCreationMode === 'generate_from_topic') {
       formData.append('topic', topicOfBabyPodcast);
-    } else if (contentCreationMode === 'audio_script' && audioScriptFile) {
-      formData.append('audioScriptFile', audioScriptFile);
-      // If topic is still desired as optional metadata for audio/text, append it here if filled
-      // if (topicOfBabyPodcast.trim()) formData.append('topic', topicOfBabyPodcast);
+    } else if (contentCreationMode === 'audio_script' && audioScriptFileBlob) {
+      const file = new File([audioScriptFileBlob], audioScriptFileName || 'audio_clip.mp3', { type: 'audio/mpeg' });
+      formData.append('audioScriptFile', file);
     } else if (contentCreationMode === 'direct_text_input') {
       formData.append('textScriptDirectInput', textScriptDirectInput);
-      // if (topicOfBabyPodcast.trim()) formData.append('topic', topicOfBabyPodcast);
     }
     
     // As per the latest request, topic is only primary for 'generate_from_topic'.
@@ -568,7 +576,7 @@ export default function DashboardClient({ currentCredits }: { currentCredits: nu
     // Validation for Content Mode 'generate_from_topic'
     (contentCreationMode === 'generate_from_topic' && (!topicOfBabyPodcast.trim() || !!topicError)) ||
     // Validation for Content Mode 'audio_script'
-    (contentCreationMode === 'audio_script' && (!audioScriptFile || !!audioScriptError)) ||
+    (contentCreationMode === 'audio_script' && (!audioScriptFileBlob || !!audioScriptError)) ||
     // Validation for Content Mode 'direct_text_input'
     (contentCreationMode === 'direct_text_input' && (!textScriptDirectInput.trim() || !!textScriptDirectInputError));
 
@@ -915,52 +923,21 @@ export default function DashboardClient({ currentCredits }: { currentCredits: nu
 
           {contentCreationMode === 'audio_script' && (
             <div className="space-y-4 mb-6">
-              <div>
-                <label htmlFor="audio-script-input" className="block text-sm font-medium text-gray-300 mb-1">
-                  Upload Audio File <span className="text-xs text-gray-400">(Upload your pre-recorded audio script. The AI will process this audio.)</span>
-                </label>
-                <div className="mb-2">
-                  {currentCredits > 0 ? (
-                    <span className="text-xs text-gray-400">You can upload up to {currentCredits} seconds of audio, based on your current credits.</span>
-                  ) : (
-                    <span className="text-xs text-red-400">Insufficient credits to upload audio.</span>
-                  )}
-                </div>
-                <div className="mt-1 flex items-center">
-                  <label
-                    htmlFor="audio-script-input"
-                    className={`cursor-pointer bg-purple-600 hover:bg-purple-700 text-white font-semibold py-2 px-4 rounded-md transition-colors duration-150 ease-in-out mr-3 ${currentCredits === 0 ? 'opacity-50 cursor-not-allowed' : ''}`}
-                  >
-                    Choose File
-                  </label>
-                  <input
-                    type="file"
-                    id="audio-script-input"
-                    name="audioScriptFile"
-                    accept={ALLOWED_AUDIO_TYPES.join(',')}
-                    onChange={handleAudioScriptChange}
-                    className="sr-only"
-                    disabled={currentCredits === 0}
-                  />
-                  <span className="text-sm text-gray-400 flex items-center">
-                    {audioScriptFile ? (
-                      <>
-                        {audioScriptFile.name}
-                        <button
-                          type="button"
-                          onClick={handleRemoveAudioScript}
-                          className="ml-2 flex items-center text-red-500 hover:text-red-400 px-1.5 py-0.5 border border-transparent hover:border-red-400 rounded transition-colors group"
-                          aria-label="Remove uploaded audio"
-                        >
-                          <X size={16} />
-                          <span className="ml-1 text-xs hidden group-hover:inline">Remove</span>
-                        </button>
-                      </>
-                    ) : 'No file chosen'}
-                  </span>
-                </div>
-                {audioScriptError && <p className={errorTextClasses}>{audioScriptError}</p>}
+              <label className="block text-sm font-medium text-gray-300 mb-1">
+                Upload Audio File <span className="text-xs text-gray-400">(Upload your pre-recorded audio script. The AI will process this audio.)</span>
+              </label>
+              <div className="mb-2">
+                {currentCredits > 0 ? (
+                  <span className="text-xs text-gray-400">You can upload up to {currentCredits} seconds of audio, based on your current credits.</span>
+                ) : (
+                  <span className="text-xs text-red-400">Insufficient credits to upload audio.</span>
+                )}
               </div>
+              <AudioTrimUpload onAudioReady={handleAudioTrimReady} maxDuration={currentCredits} />
+              {audioScriptError && <p className={errorTextClasses}>{audioScriptError}</p>}
+              {audioScriptFileBlob && (
+                <div className="text-green-400 text-xs mt-1">Audio segment ready for upload: {audioScriptFileName}</div>
+              )}
             </div>
           )}
         </div>

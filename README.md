@@ -155,6 +155,13 @@ graph TD
     Q --> R[存储视频URL]
 ```
 
+## 🎨 前端组件与交互优化
+
+### `AudioTrimUpload` 组件问题修复 (2024-06-06)
+- **问题描述**: 用户上传音频后，无法通过拖拽选择音频片段进行裁剪，波形图上仅显示一条线，期望为两条可选区边界线。
+- **原因分析**: `wavesurfer.js` 的 Regions 插件需要为选区句柄 (handles) 定义 CSS 样式才能使其可见并可交互。
+- **解决方案**: 在 `src/components/audio/audio-trim-upload.tsx` 文件中，为 `.wavesurfer-handle` 类添加了明确的 CSS 样式，使其能够正确显示选区的开始和结束标记，从而允许用户进行拖拽选择。
+
 ### 3. 数据库设计
 
 #### 核心表结构
@@ -635,3 +642,11 @@ npm run lint     # 代码检查
 - **Feature**: Added a 15-second duration limit for custom audio script uploads in the podcast creation form.
   - Modified `src/components/DashboardClient.tsx` to include client-side validation for audio duration.
   - If an uploaded audio file exceeds 15 seconds, an error message is displayed, and the file is not accepted. 
+
+## 2024-05-30 音频裁剪上传功能升级
+
+- 新增音频裁剪上传功能，用户可在上传音频脚本时选择片段并裁剪，仅上传所选片段，极大提升体验和节省带宽。
+- 相关组件：`src/components/audio/audio-trim-upload.tsx`，已集成到`DashboardClient.tsx`的音频脚本上传分支。
+- 技术方案：前端使用wavesurfer.js展示波形，lamejs裁剪并编码为MP3，上传裁剪后音频。
+- 保持原有API接口不变，后端无需改动。
+- 所有变更已提交至main分支。 
