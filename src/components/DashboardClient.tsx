@@ -69,6 +69,33 @@ export default function DashboardClient({ currentCredits }: { currentCredits: nu
   const [topicOfBabyPodcast, setTopicOfBabyPodcast] = useState('');
   const [topicError, setTopicError] = useState('');
 
+  // 修改：音色选择状态的默认值
+  const [selectedVoiceId, setSelectedVoiceId] = useState('en-US-ken');
+
+  // 音色选项
+  const voiceOptions = [
+    { 
+      id: 'ken',
+      value: 'en-US-ken', 
+      label: 'Ken (Default) - Supports: Conversational, Promo, Newscast, Storytelling, Calm, Furious, Angry, Sobbing, Sad, Wizard, Audiobook' 
+    },
+    {
+      id: 'natalie',
+      value: 'en-US-natalie',
+      label: 'Natalie - Supports: Promo, Narration, Newscast Formal, Meditative, Sad, Angry, Conversational, Newscast Casual, Furious'
+    },
+    {
+      id: 'terrell',
+      value: 'en-US-terrell',
+      label: 'Terrell - Supports: Inspirational, Narration, Calm, Promo, Conversational'
+    },
+    {
+      id: 'ariana',
+      value: 'en-US-ariana',
+      label: 'Ariana - Supports: Conversational, Narration'
+    }
+  ];
+
   // Option 2.2: Upload Audio Script
   const [audioScriptFile, setAudioScriptFile] = useState<File | null>(null);
   const [audioScriptError, setAudioScriptError] = useState<string>('');
@@ -468,6 +495,11 @@ export default function DashboardClient({ currentCredits }: { currentCredits: nu
     // it is currently not being explicitly appended to FormData.
     // The `topic` field will only be populated in FormData if contentCreationMode === 'generate_from_topic'.
 
+    // 添加音色参数（仅在特定模式下）
+    if (contentCreationMode === 'generate_from_topic' || contentCreationMode === 'direct_text_input') {
+      formData.append('voiceId', selectedVoiceId);
+    }
+
     try {
       const response = await fetch('/api/submit-podcast-idea', { 
         method: 'POST',
@@ -579,6 +611,30 @@ export default function DashboardClient({ currentCredits }: { currentCredits: nu
     (contentCreationMode === 'audio_script' && (!audioScriptFileBlob || !!audioScriptError)) ||
     // Validation for Content Mode 'direct_text_input'
     (contentCreationMode === 'direct_text_input' && (!textScriptDirectInput.trim() || !!textScriptDirectInputError));
+
+  // 提取音色选择组件
+  const VoiceSelector = ({ mode }: { mode: 'topic' | 'direct' }) => (
+    <div className="mt-4">
+      <label htmlFor={`voiceSelect-${mode}`} className="block text-sm font-medium text-gray-300 mb-1.5">
+        Select Voice <span className="text-xs text-gray-400">(Choose the AI baby's voice and style)</span>
+      </label>
+      <select
+        id={`voiceSelect-${mode}`}
+        value={selectedVoiceId}
+        onChange={(e) => setSelectedVoiceId(e.target.value)}
+        className={`${inputBaseClasses} cursor-pointer`}
+      >
+        {voiceOptions.map(option => (
+          <option key={`${mode}-${option.id}`} value={option.value} className="text-wrap">
+            {option.label}
+          </option>
+        ))}
+      </select>
+      <p className="text-xs text-gray-400 mt-1">
+        Note: Each voice supports different styles. The available styles are listed with each voice option.
+      </p>
+    </div>
+  );
 
   return (
     <div className="space-y-8">
@@ -888,6 +944,9 @@ export default function DashboardClient({ currentCredits }: { currentCredits: nu
                 {topicOfBabyPodcast.length}/{MAX_TOPIC_LENGTH}
               </div>
               {topicError && <p className={errorTextClasses}>{topicError}</p>}
+              
+              {/* 使用提取的音色选择组件 */}
+              <VoiceSelector mode="topic" />
             </div>
           )}
 
@@ -918,6 +977,9 @@ export default function DashboardClient({ currentCredits }: { currentCredits: nu
                 {textScriptDirectInput.length}/{maxTextScriptLength}
               </div>
               {textScriptDirectInputError && <p className={errorTextClasses}>{textScriptDirectInputError}</p>}
+              
+              {/* 使用提取的音色选择组件 */}
+              <VoiceSelector mode="direct" />
             </div>
           )}
 

@@ -18,6 +18,7 @@ interface N8nRequestBody {
   topic?: string | null;
   audioScriptUrl?: string | null;
   textScriptDirectInput?: string | null;
+  voiceId?: string | null; // 修改：voice 改为 voiceId
 }
 
 // 新增：R2上传辅助函数
@@ -312,6 +313,11 @@ export async function POST(request: Request) {
         ...(contentCreationMode === 'audio_script' && { audioScriptUrl }),
         ...(contentCreationMode === 'direct_text_input' && { textScriptDirectInput }),
     };
+
+    // 仅在文本生成相关的模式下添加voiceId
+    if (contentCreationMode === 'generate_from_topic' || contentCreationMode === 'direct_text_input') {
+      requestBodyToN8n.voiceId = formData.get('voiceId') as string;
+    }
     
     Object.keys(requestBodyToN8n).forEach(key => {
         const typedKey = key as keyof N8nRequestBody; // 类型断言
