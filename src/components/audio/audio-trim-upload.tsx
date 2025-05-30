@@ -142,7 +142,7 @@ export default function SimpleAudioTrimUpload({ onAudioReady, maxDuration }: Pro
       
     } catch (e: unknown) {
       console.error('Trim error:', e);
-      setErr('Trim failed: ' + (e?.message || 'unknown'));
+      setErr('Trim failed: ' + (e instanceof Error ? e.message : 'unknown'));
     } finally {
       setBusy(false);
     }
