@@ -38,7 +38,7 @@ export default function DashboardClient({ currentCredits }: { currentCredits: nu
   const [allReceivedNotifications, setAllReceivedNotifications] = useState<Notification[]>([]);
   const [isLoading, setIsLoading] = useState(true); // This might need to be re-evaluated if My Projects is gone
 
-  // --- States for Module 1: Baby's Appearance --- 
+  // --- States for Module 1: Baby&apos;s Appearance --- 
   const [appearanceCreationMode, setAppearanceCreationMode] = useState<'features' | 'custom_image' | 'portrait_to_baby'>('features');
   
   // Option 1.1: Generate with Features
@@ -616,7 +616,7 @@ export default function DashboardClient({ currentCredits }: { currentCredits: nu
   const VoiceSelector = ({ mode }: { mode: 'topic' | 'direct' }) => (
     <div className="mt-4">
       <label htmlFor={`voiceSelect-${mode}`} className="block text-sm font-medium text-gray-300 mb-1.5">
-        Select Voice <span className="text-xs text-gray-400">(Choose the AI baby's voice and style)</span>
+        Select Voice <span className="text-xs text-gray-400">(Choose the AI baby&apos;s voice and style)</span>
       </label>
       <select
         id={`voiceSelect-${mode}`}
@@ -640,7 +640,7 @@ export default function DashboardClient({ currentCredits }: { currentCredits: nu
     <div className="space-y-8">
       <section className="bg-[#161b22] p-6 rounded-lg shadow-md space-y-6">
         
-        {/* --- MODULE 1: Baby's Appearance --- */}
+        {/* --- MODULE 1: Baby&apos;s Appearance --- */}
         <div>
           <h3 className={sectionTitleClasses}>Baby&apos;s Appearance</h3>
           <p className="text-sm text-gray-400 mb-3">Choose how to generate the baby&apos;s appearance.</p>

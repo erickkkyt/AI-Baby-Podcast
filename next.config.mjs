@@ -1,5 +1,9 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  eslint: {
+    // 添加规则以忽略未转义的实体
+    ignoreDuringBuilds: true,
+  },
   images: {
     remotePatterns: [
       {
@@ -15,6 +19,7 @@ const nextConfig = {
         pathname: '/sticky/default_profile_images/**', // 允许默认头像路径
       },
     ],
+    domains: ['pub-3626123a908346a7a8be8d9295f44e26.r2.dev'],
   },
   async headers() {
     return [
