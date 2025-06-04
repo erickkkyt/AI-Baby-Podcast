@@ -1,7 +1,8 @@
 import { redirect } from 'next/navigation';
 import { createClient } from '@/utils/supabase/server';
-import DashboardSiderbar from '@/components/DashboardSiderbar'; 
+import DashboardSiderbar from '@/components/DashboardSiderbar';
 import DashboardClient from '@/components/DashboardClient';
+import Beams from '@/components/3d/Beams';
 
 // Define a type for the profile to expect `credits`
 interface UserProfile {
@@ -42,12 +43,28 @@ export default async function DashboardPage() {
   }
 
   return (
-    <div className="flex h-screen bg-[#0f1218] text-white">
+    <div className="relative flex h-screen bg-[#0f1218] text-white">
+      {/* 3D 背景层 */}
+      <div className="fixed inset-0 z-0">
+        <Beams
+          beamWidth={1.5}
+          beamHeight={12}
+          beamNumber={8}
+          lightColor="#4f46e5"
+          speed={1.5}
+          noiseIntensity={1.2}
+          scale={0.15}
+          rotation={0}
+        />
+      </div>
+
       {/* 侧边栏: DashboardHeader 组件现在被用作侧边栏 */}
-      <DashboardSiderbar /> 
-      
+      <div className="relative z-10">
+        <DashboardSiderbar />
+      </div>
+
       {/* 主要内容区域: 添加了 ml-64 以适应侧边栏宽度 */}
-      <main className="flex-1 overflow-y-auto p-6 ml-64"> 
+      <main className="relative z-10 flex-1 overflow-y-auto p-6 ml-64">
         <DashboardClient currentCredits={userCredits} />
       </main>
     </div>

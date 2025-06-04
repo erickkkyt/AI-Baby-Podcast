@@ -3,6 +3,7 @@ import { createClient } from '@/utils/supabase/server';
 import DashboardSidebar from '@/components/DashboardSiderbar';
 import ProjectsClient from '@/components/ProjectsClient'; // Make sure this component is created later
 import type { Project } from '@/types/project'; // We'll define this type
+import Beams from '@/components/3d/Beams';
 
 export default async function ProjectsPage() {
   const supabase = await createClient();
@@ -39,9 +40,28 @@ export default async function ProjectsPage() {
   }
 
   return (
-    <div className="flex h-screen bg-[#0f1218] text-white">
-      <DashboardSidebar />
-      <main className="flex-1 overflow-y-auto p-6 md:ml-64"> {/* Adjusted ml for larger screens, check sidebar width */}
+    <div className="relative flex h-screen bg-[#0f1218] text-white">
+      {/* 3D 背景层 */}
+      <div className="fixed inset-0 z-0">
+        <Beams
+          beamWidth={1.5}
+          beamHeight={12}
+          beamNumber={8}
+          lightColor="#4f46e5"
+          speed={1.5}
+          noiseIntensity={1.2}
+          scale={0.15}
+          rotation={0}
+        />
+      </div>
+
+      {/* 侧边栏 */}
+      <div className="relative z-10">
+        <DashboardSidebar />
+      </div>
+
+      {/* 主要内容区域 */}
+      <main className="relative z-10 flex-1 overflow-y-auto p-6 md:ml-64"> {/* Adjusted ml for larger screens, check sidebar width */}
         <h1 className="text-3xl font-bold mb-8 text-gray-100">My Projects</h1>
         <ProjectsClient projects={projects} />
       </main>

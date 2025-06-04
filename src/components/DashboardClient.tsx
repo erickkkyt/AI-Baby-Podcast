@@ -583,11 +583,21 @@ export default function DashboardClient({ currentCredits }: { currentCredits: nu
     return () => clearTimeout(timer);
   }, []);
 
-  const selectBaseClasses = "w-full p-2.5 pr-8 bg-[#0d1117] border border-gray-700 rounded-md focus:ring-2 focus:ring-purple-500 focus:border-purple-500 text-white text-sm";
-  const inputBaseClasses = "w-full p-2.5 bg-[#0d1117] border border-gray-700 rounded-md focus:ring-2 focus:ring-purple-500 focus:border-purple-500 placeholder-gray-500 text-white text-sm";
-  const sectionTitleClasses = "text-xl font-semibold text-purple-400 mb-4 border-b border-gray-700 pb-2";
-  const errorTextClasses = "text-red-500 text-xs mt-1";
-  const charCountClasses = "text-xs text-gray-400 mt-1 text-right";
+  // 优化后的样式类
+  const selectBaseClasses = "w-full px-4 py-3 pr-10 bg-[#0d1117] border border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-white text-sm transition-all duration-200 hover:border-gray-500 appearance-none cursor-pointer";
+  const inputBaseClasses = "w-full px-4 py-3 bg-[#0d1117] border border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 placeholder-gray-400 text-white text-sm transition-all duration-200 hover:border-gray-500";
+  const textareaBaseClasses = "w-full px-4 py-3 bg-[#0d1117] border border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 placeholder-gray-400 text-white text-sm transition-all duration-200 hover:border-gray-500 resize-none";
+  const sectionTitleClasses = "text-2xl font-bold text-white mb-6 flex items-center gap-3";
+  const cardClasses = "bg-gradient-to-br from-[#161b22]/95 to-[#1c2128]/95 p-8 rounded-xl shadow-2xl border border-gray-700/50 backdrop-blur-md";
+  const labelClasses = "block text-sm font-semibold text-gray-200 mb-3";
+  const hintClasses = "text-xs text-gray-400 font-normal ml-1";
+  const errorTextClasses = "text-red-400 text-xs mt-2 font-medium";
+  const charCountClasses = "text-xs text-gray-400 mt-2 text-right font-medium";
+  const radioGroupClasses = "flex flex-wrap gap-4 mb-6";
+  const radioLabelClasses = "flex items-center cursor-pointer group";
+  const radioInputClasses = "w-4 h-4 text-blue-500 border-2 border-gray-500 focus:ring-2 focus:ring-blue-500 focus:ring-offset-0 bg-transparent transition-all duration-200";
+  const radioTextClasses = "ml-3 text-sm text-gray-200 group-hover:text-white transition-colors duration-200";
+  const sectionDescriptionClasses = "text-xs text-gray-400 font-normal leading-relaxed mt-3 mb-5";
 
   const isSubmitButtonDisabled = 
     isSubmitting ||
@@ -614,169 +624,185 @@ export default function DashboardClient({ currentCredits }: { currentCredits: nu
 
   // 提取音色选择组件
   const VoiceSelector = ({ mode }: { mode: 'topic' | 'direct' }) => (
-    <div className="mt-4">
-      <label htmlFor={`voiceSelect-${mode}`} className="block text-sm font-medium text-gray-300 mb-1.5">
-        Select Voice <span className="text-xs text-gray-400">(Choose the AI baby&apos;s voice and style)</span>
+    <div className="space-y-3">
+      <label htmlFor={`voiceSelect-${mode}`} className={labelClasses}>
+        Select Voice <span className={hintClasses}>(Choose the AI baby&apos;s voice and style)</span>
       </label>
-      <select
-        id={`voiceSelect-${mode}`}
-        value={selectedVoiceId}
-        onChange={(e) => setSelectedVoiceId(e.target.value)}
-        className={`${inputBaseClasses} cursor-pointer`}
-      >
-        {voiceOptions.map(option => (
-          <option key={`${mode}-${option.id}`} value={option.value} className="text-wrap">
-            {option.label}
-          </option>
-        ))}
-      </select>
-      <p className="text-xs text-gray-400 mt-1">
-        Note: Each voice supports different styles. The available styles are listed with each voice option.
+      <div className="relative">
+        <select
+          id={`voiceSelect-${mode}`}
+          value={selectedVoiceId}
+          onChange={(e) => setSelectedVoiceId(e.target.value)}
+          className={selectBaseClasses}
+        >
+          {voiceOptions.map(option => (
+            <option key={`${mode}-${option.id}`} value={option.value} className="text-wrap">
+              {option.label}
+            </option>
+          ))}
+        </select>
+        <ChevronDown className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 pointer-events-none" size={16} />
+      </div>
+      <p className="text-xs text-gray-400 mt-2 bg-gray-800/50 p-2 rounded-lg">
+        💡 <strong>Note:</strong> Each voice supports different styles. The available styles are listed with each voice option.
       </p>
     </div>
   );
 
   return (
     <div className="space-y-8">
-      <section className="bg-[#161b22] p-6 rounded-lg shadow-md space-y-6">
-        
+      <section className={cardClasses}>
+
         {/* --- MODULE 1: Baby&apos;s Appearance --- */}
-        <div>
-          <h3 className={sectionTitleClasses}>Baby&apos;s Appearance</h3>
-          <p className="text-sm text-gray-400 mb-3">Choose how to generate the baby&apos;s appearance.</p>
-          
-          <div className="mb-6 mt-4">
-            <div className="flex flex-col space-y-2 sm:flex-row sm:space-y-0 sm:space-x-4">
-              <label htmlFor="appearanceFeatures" className="flex items-center cursor-pointer">
-                <input
-                  type="radio"
-                  id="appearanceFeatures"
-                  name="appearanceCreationModeOption"
-                  value="features"
-                  checked={appearanceCreationMode === 'features'}
-                  onChange={handleAppearanceModeChange}
-                  className="form-radio h-4 w-4 text-purple-600 border-gray-600 focus:ring-purple-500 bg-gray-700"
-                />
-                <span className="ml-2 text-sm text-gray-200">Generate with Features</span>
-              </label>
-              <label htmlFor="appearanceCustomImage" className="flex items-center cursor-pointer">
-                <input
-                  type="radio"
-                  id="appearanceCustomImage"
-                  name="appearanceCreationModeOption"
-                  value="custom_image"
-                  checked={appearanceCreationMode === 'custom_image'}
-                  onChange={handleAppearanceModeChange}
-                  className="form-radio h-4 w-4 text-purple-600 border-gray-600 focus:ring-purple-500 bg-gray-700"
-                />
-                <span className="ml-2 text-sm text-gray-200">Upload Custom Baby Image</span>
-              </label>
-              <label htmlFor="appearancePortraitToBaby" className="flex items-center cursor-pointer">
-                <input
-                  type="radio"
-                  id="appearancePortraitToBaby"
-                  name="appearanceCreationModeOption"
-                  value="portrait_to_baby"
-                  checked={appearanceCreationMode === 'portrait_to_baby'}
-                  onChange={handleAppearanceModeChange}
-                  className="form-radio h-4 w-4 text-purple-600 border-gray-600 focus:ring-purple-500 bg-gray-700"
-                />
-                <span className="ml-2 text-sm text-gray-200">Convert Portrait to Baby Image (needs extra 1-2 minutes processing time)</span>
-              </label>
+        <div className="space-y-6">
+          <h3 className={sectionTitleClasses}>
+            <div className="w-8 h-8 bg-gradient-to-r from-blue-500 to-purple-500 rounded-lg flex items-center justify-center">
+              <span className="text-white font-bold text-sm">1</span>
             </div>
+            Baby&apos;s Appearance
+          </h3>
+          <p className={sectionDescriptionClasses}>Choose how to generate the baby&apos;s appearance for your AI podcast.</p>
+          
+          <div className={radioGroupClasses}>
+            <label htmlFor="appearanceFeatures" className={radioLabelClasses}>
+              <input
+                type="radio"
+                id="appearanceFeatures"
+                name="appearanceCreationModeOption"
+                value="features"
+                checked={appearanceCreationMode === 'features'}
+                onChange={handleAppearanceModeChange}
+                className={radioInputClasses}
+              />
+              <span className={radioTextClasses}>Generate with Features</span>
+            </label>
+            <label htmlFor="appearanceCustomImage" className={radioLabelClasses}>
+              <input
+                type="radio"
+                id="appearanceCustomImage"
+                name="appearanceCreationModeOption"
+                value="custom_image"
+                checked={appearanceCreationMode === 'custom_image'}
+                onChange={handleAppearanceModeChange}
+                className={radioInputClasses}
+              />
+              <span className={radioTextClasses}>Upload Custom Baby Image</span>
+            </label>
+            <label htmlFor="appearancePortraitToBaby" className={radioLabelClasses}>
+              <input
+                type="radio"
+                id="appearancePortraitToBaby"
+                name="appearanceCreationModeOption"
+                value="portrait_to_baby"
+                checked={appearanceCreationMode === 'portrait_to_baby'}
+                onChange={handleAppearanceModeChange}
+                className={radioInputClasses}
+              />
+              <span className={radioTextClasses}>Convert Portrait to Baby Image <span className="text-yellow-400 text-xs">(+1-2 min processing)</span></span>
+            </label>
           </div>
 
-          {/* Conditional Rendering based on appearanceCreationMode */} 
+          {/* Conditional Rendering based on appearanceCreationMode */}
           {appearanceCreationMode === 'features' && (
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-x-4 gap-y-4 mb-6">
-              <p className="md:col-span-2 text-sm text-gray-400 mb-3">Select the baby&apos;s ethnicity and hair features for AI generation.</p>
-              <div>
-                <label htmlFor="babyEthnicity" className="block text-sm font-medium text-gray-300 mb-1.5">
-                  Baby&apos;s Ethnicity
-                </label>
-                <div className="relative">
-                  {isEthnicityOther ? (
-                    <>
-                      <input
-                        id="customBabyEthnicity"
-                        type="text"
-                        value={customEthnicity}
-                        onChange={handleCustomEthnicityChange}
-                        onBlur={handleCustomEthnicityBlur}
-                        placeholder="Enter custom ethnicity"
-                        className={`${inputBaseClasses} ${customEthnicityError ? 'border-red-500' : 'border-gray-700'}`}
-                        maxLength={MAX_CUSTOM_FIELD_LENGTH + 1} 
-                      />
-                      {customEthnicityError && <p className={errorTextClasses}>{customEthnicityError}</p>}
-                      <p className={charCountClasses}>{customEthnicity.length}/{MAX_CUSTOM_FIELD_LENGTH}</p>
-                    </>
-                  ) : (
-                    <select
-                      id="babyEthnicity"
-                      value={selectedEthnicity}
-                      onChange={handleEthnicityChange}
-                      className={selectBaseClasses}
-                    >
-                      <option value="" disabled>Select ethnicity...</option>
-                      {ethnicityOptions.map((option) => (
-                        <option key={option.value} value={option.value}>
-                          {option.label}
-                        </option>
-                      ))}
-                    </select>
-                  )}
-                </div>
+            <div className="bg-[#0d1117] p-6 rounded-lg border border-gray-700/50 space-y-6">
+              <div className="space-y-3">
+                <p className={labelClasses}>Select the baby&apos;s ethnicity and hair features for AI generation.</p>
               </div>
-              <div>
-                <label htmlFor="babyHair" className="block text-sm font-medium text-gray-300 mb-1.5">
-                  Baby&apos;s Hair
-                </label>
-                <div className="relative">
-                  {isHairOther ? (
-                     <>
-                      <input
-                        id="customBabyHair"
-                        type="text"
-                        value={customHair}
-                        onChange={handleCustomHairChange}
-                        onBlur={handleCustomHairBlur}
-                        placeholder="Enter custom hair type"
-                        className={`${inputBaseClasses} ${customHairError ? 'border-red-500' : 'border-gray-700'}`}
-                        maxLength={MAX_CUSTOM_FIELD_LENGTH + 1} 
-                      />
-                      {customHairError && <p className={errorTextClasses}>{customHairError}</p>}
-                      <p className={charCountClasses}>{customHair.length}/{MAX_CUSTOM_FIELD_LENGTH}</p>
-                    </>
-                  ) : (
-                    <select
-                      id="babyHair"
-                      value={selectedHair}
-                      onChange={handleHairChange}
-                      className={selectBaseClasses}
-                    >
-                      <option value="" disabled>Select hair type...</option>
-                      {hairOptions.map((option) => (
-                        <option key={option.value} value={option.value}>
-                          {option.label}
-                        </option>
-                      ))}
-                    </select>
-                  )}
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div className="space-y-3">
+                  <label htmlFor="babyEthnicity" className="block text-sm font-medium text-gray-200 mb-3">
+                    Baby&apos;s Ethnicity
+                  </label>
+                  <div className="relative">
+                    {isEthnicityOther ? (
+                      <>
+                        <input
+                          id="customBabyEthnicity"
+                          type="text"
+                          value={customEthnicity}
+                          onChange={handleCustomEthnicityChange}
+                          onBlur={handleCustomEthnicityBlur}
+                          placeholder="Enter custom ethnicity"
+                          className={`${inputBaseClasses} ${customEthnicityError ? 'border-red-500 focus:border-red-500 focus:ring-red-500' : ''}`}
+                          maxLength={MAX_CUSTOM_FIELD_LENGTH + 1}
+                        />
+                        {customEthnicityError && <p className={errorTextClasses}>{customEthnicityError}</p>}
+                        <p className={charCountClasses}>{customEthnicity.length}/{MAX_CUSTOM_FIELD_LENGTH}</p>
+                      </>
+                    ) : (
+                      <div className="relative">
+                        <select
+                          id="babyEthnicity"
+                          value={selectedEthnicity}
+                          onChange={handleEthnicityChange}
+                          className={selectBaseClasses}
+                        >
+                          <option value="" disabled>Select ethnicity...</option>
+                          {ethnicityOptions.map((option) => (
+                            <option key={option.value} value={option.value}>
+                              {option.label}
+                            </option>
+                          ))}
+                        </select>
+                        <ChevronDown className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 pointer-events-none" size={16} />
+                      </div>
+                    )}
+                  </div>
+                </div>
+                <div className="space-y-3">
+                  <label htmlFor="babyHair" className="block text-sm font-medium text-gray-200 mb-3">
+                    Baby&apos;s Hair
+                  </label>
+                  <div className="relative">
+                    {isHairOther ? (
+                       <>
+                        <input
+                          id="customBabyHair"
+                          type="text"
+                          value={customHair}
+                          onChange={handleCustomHairChange}
+                          onBlur={handleCustomHairBlur}
+                          placeholder="Enter custom hair type"
+                          className={`${inputBaseClasses} ${customHairError ? 'border-red-500 focus:border-red-500 focus:ring-red-500' : ''}`}
+                          maxLength={MAX_CUSTOM_FIELD_LENGTH + 1}
+                        />
+                        {customHairError && <p className={errorTextClasses}>{customHairError}</p>}
+                        <p className={charCountClasses}>{customHair.length}/{MAX_CUSTOM_FIELD_LENGTH}</p>
+                      </>
+                    ) : (
+                      <div className="relative">
+                        <select
+                          id="babyHair"
+                          value={selectedHair}
+                          onChange={handleHairChange}
+                          className={selectBaseClasses}
+                        >
+                          <option value="" disabled>Select hair type...</option>
+                          {hairOptions.map((option) => (
+                            <option key={option.value} value={option.value}>
+                              {option.label}
+                            </option>
+                          ))}
+                        </select>
+                        <ChevronDown className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 pointer-events-none" size={16} />
+                      </div>
+                    )}
+                  </div>
                 </div>
               </div>
             </div>
           )}
 
           {appearanceCreationMode === 'custom_image' && (
-            <div className="space-y-4 mb-6">
-              <div>
-                <label htmlFor="custom-baby-image-input" className="block text-sm font-medium text-gray-300 mb-1">
-                  Upload Baby Image <span className="text-xs text-gray-400">(Upload your baby image. This image will be used directly.)</span>
+            <div className="bg-[#0d1117] p-6 rounded-lg border border-gray-700/50 space-y-6">
+              <div className="space-y-3">
+                <label htmlFor="custom-baby-image-input" className={labelClasses}>
+                  Upload Baby Image <span className={hintClasses}>(Upload your baby image. This image will be used directly.)</span>
                 </label>
-                <div className="mt-1 flex items-center">
+                <div className="flex items-center gap-4">
                   <label
                     htmlFor="custom-baby-image-input"
-                    className="cursor-pointer bg-purple-600 hover:bg-purple-700 text-white font-semibold py-2 px-4 rounded-md transition-colors duration-150 ease-in-out mr-3"
+                    className="cursor-pointer bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white font-semibold py-3 px-6 rounded-lg transition-all duration-200 transform hover:scale-105 shadow-lg"
                   >
                     Choose File
                   </label>
@@ -788,7 +814,7 @@ export default function DashboardClient({ currentCredits }: { currentCredits: nu
                     onChange={handleCustomImageChange}
                     className="sr-only"
                   />
-                  <span className="text-sm text-gray-400">
+                  <span className="text-sm text-gray-300 font-medium">
                     {customImageFile ? customImageFile.name : 'No file chosen'}
                   </span>
                 </div>
@@ -796,24 +822,25 @@ export default function DashboardClient({ currentCredits }: { currentCredits: nu
               </div>
 
               {customImagePreview && (
-                <div className="mt-4"> 
-                  <p className="block text-sm font-medium text-gray-300 mb-1.5">Image Preview:</p>
-                  <div className="flex items-end space-x-2">
-                    <div className="inline-block">
+                <div className="space-y-3">
+                  <p className={labelClasses}>Image Preview:</p>
+                  <div className="flex items-start gap-4">
+                    <div className="relative group">
                       <Image
                         src={customImagePreview}
                         alt="Custom baby preview"
-                        width={192} 
+                        width={192}
                         height={192}
-                        className="rounded-md border border-gray-700 object-contain"
+                        className="rounded-lg border-2 border-gray-600 object-cover shadow-lg group-hover:border-blue-500 transition-all duration-200"
                       />
                     </div>
                     <button
                       type="button"
                       onClick={handleRemoveCustomImage}
-                      className="text-sm text-red-500 hover:text-red-400 px-3 py-1 border border-red-500 hover:border-red-400 rounded-md transition-colors"
+                      className="flex items-center gap-2 text-sm text-red-400 hover:text-red-300 px-4 py-2 border border-red-500/50 hover:border-red-400 rounded-lg transition-all duration-200 hover:bg-red-500/10"
                       aria-label="Remove uploaded image"
                     >
+                      <X size={16} />
                       Remove
                     </button>
                   </div>
@@ -823,15 +850,15 @@ export default function DashboardClient({ currentCredits }: { currentCredits: nu
           )}
 
           {appearanceCreationMode === 'portrait_to_baby' && (
-            <div className="space-y-4 mb-6">
-              <div>
-                <label htmlFor="original-portrait-input" className="block text-sm font-medium text-gray-300 mb-1">
-                  Upload Your Portrait Photo <span className="text-xs text-gray-400">(Upload a portrait photo, and the AI will transform it into a baby image.)</span>
+            <div className="bg-[#0d1117] p-6 rounded-lg border border-gray-700/50 space-y-6">
+              <div className="space-y-3">
+                <label htmlFor="original-portrait-input" className={labelClasses}>
+                  Upload Your Portrait Photo <span className={hintClasses}>(Upload a portrait photo, and the AI will transform it into a baby image.)</span>
                 </label>
-                <div className="mt-1 flex items-center">
+                <div className="flex items-center gap-4">
                   <label
                     htmlFor="original-portrait-input"
-                    className="cursor-pointer bg-purple-600 hover:bg-purple-700 text-white font-semibold py-2 px-4 rounded-md transition-colors duration-150 ease-in-out mr-3"
+                    className="cursor-pointer bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white font-semibold py-3 px-6 rounded-lg transition-all duration-200 transform hover:scale-105 shadow-lg"
                   >
                     Choose File
                   </label>
@@ -843,7 +870,7 @@ export default function DashboardClient({ currentCredits }: { currentCredits: nu
                     onChange={handleOriginalPortraitChange}
                     className="sr-only"
                   />
-                  <span className="text-sm text-gray-400">
+                  <span className="text-sm text-gray-300 font-medium">
                     {originalPortraitFile ? originalPortraitFile.name : 'No file chosen'}
                   </span>
                 </div>
@@ -851,24 +878,25 @@ export default function DashboardClient({ currentCredits }: { currentCredits: nu
               </div>
 
               {originalPortraitPreview && (
-                <div className="mt-4"> 
-                  <p className="block text-sm font-medium text-gray-300 mb-1.5">Image Preview:</p>
-                  <div className="flex items-end space-x-2">
-                    <div className="inline-block">
+                <div className="space-y-3">
+                  <p className={labelClasses}>Image Preview:</p>
+                  <div className="flex items-start gap-4">
+                    <div className="relative group">
                       <Image
                         src={originalPortraitPreview}
                         alt="Original portrait preview"
-                        width={192} 
+                        width={192}
                         height={192}
-                        className="rounded-md border border-gray-700 object-contain"
+                        className="rounded-lg border-2 border-gray-600 object-cover shadow-lg group-hover:border-blue-500 transition-all duration-200"
                       />
                     </div>
                     <button
                       type="button"
                       onClick={handleRemoveOriginalPortrait}
-                      className="text-sm text-red-500 hover:text-red-400 px-3 py-1 border border-red-500 hover:border-red-400 rounded-md transition-colors"
+                      className="flex items-center gap-2 text-sm text-red-400 hover:text-red-300 px-4 py-2 border border-red-500/50 hover:border-red-400 rounded-lg transition-all duration-200 hover:bg-red-500/10"
                       aria-label="Remove uploaded image"
                     >
+                      <X size={16} />
                       Remove
                     </button>
                   </div>
@@ -879,142 +907,159 @@ export default function DashboardClient({ currentCredits }: { currentCredits: nu
         </div>
 
         {/* --- MODULE 2: Podcast Content --- */}
-        <div className="mt-6 pt-6 border-t border-gray-700">
-          <h3 className={sectionTitleClasses}>Podcast Content</h3>
-          <p className="text-sm text-gray-400 mb-3">Choose how to generate the podcast content.</p>
-
-          <div className="mb-6 mt-4">
-            <div className="flex flex-col space-y-2 sm:flex-row sm:space-y-0 sm:space-x-4">
-              <label htmlFor="contentGenerateTopic" className="flex items-center cursor-pointer">
-                <input
-                  type="radio"
-                  id="contentGenerateTopic"
-                  name="contentCreationModeOption"
-                  value="generate_from_topic"
-                  checked={contentCreationMode === 'generate_from_topic'}
-                  onChange={handleContentModeChange}
-                  className="form-radio h-4 w-4 text-purple-600 border-gray-600 focus:ring-purple-500 bg-gray-700"
-                />
-                <span className="ml-2 text-sm text-gray-200">Generate with Topic</span>
-              </label>
-              <label htmlFor="contentDirectTextInput" className="flex items-center cursor-pointer">
-                <input
-                  type="radio"
-                  id="contentDirectTextInput"
-                  name="contentCreationModeOption"
-                  value="direct_text_input"
-                  checked={contentCreationMode === 'direct_text_input'}
-                  onChange={handleContentModeChange}
-                  className="form-radio h-4 w-4 text-purple-600 border-gray-600 focus:ring-purple-500 bg-gray-700"
-                />
-                <span className="ml-2 text-sm text-gray-200">Direct Podcast Content Input</span>
-              </label>
-              <label htmlFor="contentAudioScript" className="flex items-center cursor-pointer">
-                <input
-                  type="radio"
-                  id="contentAudioScript"
-                  name="contentCreationModeOption"
-                  value="audio_script"
-                  checked={contentCreationMode === 'audio_script'}
-                  onChange={handleContentModeChange}
-                  className="form-radio h-4 w-4 text-purple-600 border-gray-600 focus:ring-purple-500 bg-gray-700"
-                />
-                <span className="ml-2 text-sm text-gray-200">Upload Custom Audio Script</span>
-              </label>
+        <div className="space-y-6 pt-8 border-t border-gray-600">
+          <h3 className={sectionTitleClasses}>
+            <div className="w-8 h-8 bg-gradient-to-r from-purple-500 to-pink-500 rounded-lg flex items-center justify-center">
+              <span className="text-white font-bold text-sm">2</span>
             </div>
+            Podcast Content
+          </h3>
+          <p className={sectionDescriptionClasses}>Choose how to generate the podcast content for your AI baby.</p>
+
+          <div className={radioGroupClasses}>
+            <label htmlFor="contentGenerateTopic" className={radioLabelClasses}>
+              <input
+                type="radio"
+                id="contentGenerateTopic"
+                name="contentCreationModeOption"
+                value="generate_from_topic"
+                checked={contentCreationMode === 'generate_from_topic'}
+                onChange={handleContentModeChange}
+                className={radioInputClasses}
+              />
+              <span className={radioTextClasses}>Generate with Topic</span>
+            </label>
+            <label htmlFor="contentDirectTextInput" className={radioLabelClasses}>
+              <input
+                type="radio"
+                id="contentDirectTextInput"
+                name="contentCreationModeOption"
+                value="direct_text_input"
+                checked={contentCreationMode === 'direct_text_input'}
+                onChange={handleContentModeChange}
+                className={radioInputClasses}
+              />
+              <span className={radioTextClasses}>Direct Podcast Content Input</span>
+            </label>
+            <label htmlFor="contentAudioScript" className={radioLabelClasses}>
+              <input
+                type="radio"
+                id="contentAudioScript"
+                name="contentCreationModeOption"
+                value="audio_script"
+                checked={contentCreationMode === 'audio_script'}
+                onChange={handleContentModeChange}
+                className={radioInputClasses}
+              />
+              <span className={radioTextClasses}>Upload Custom Audio Script</span>
+            </label>
           </div>
 
-          {/* Conditional Rendering based on contentCreationMode */} 
+          {/* Conditional Rendering based on contentCreationMode */}
           {contentCreationMode === 'generate_from_topic' && (
-            <div className="mb-6">
-              <label htmlFor="topicOfBabyPodcast" className="block text-sm font-medium text-gray-300 mb-1.5">
-                What is the podcast topic? <span className="text-xs text-gray-400">(Enter a topic, and the AI will generate a podcast script based on it.)</span>
-              </label>
-              <input
-                type="text"
-                id="topicOfBabyPodcast"
-                name="topicOfBabyPodcast"
-                placeholder="E.g. Politics, Economics, Trade, Global events..."
-                value={topicOfBabyPodcast}
-                onChange={handleTopicChange}
-                className={`${inputBaseClasses} ${topicError ? 'border-red-500' : 'border-gray-700'}`}
-                maxLength={MAX_TOPIC_LENGTH +1 }
-              />
-              <div className={charCountClasses}>
-                {topicOfBabyPodcast.length}/{MAX_TOPIC_LENGTH}
+            <div className="bg-[#0d1117] p-6 rounded-lg border border-gray-700/50 space-y-6">
+              <div className="space-y-3">
+                <label htmlFor="topicOfBabyPodcast" className={labelClasses}>
+                  What is the podcast topic? <span className={hintClasses}>(Enter a topic, and the AI will generate a podcast script based on it.)</span>
+                </label>
+                <input
+                  type="text"
+                  id="topicOfBabyPodcast"
+                  name="topicOfBabyPodcast"
+                  placeholder="E.g. Politics, Economics, Trade, Global events..."
+                  value={topicOfBabyPodcast}
+                  onChange={handleTopicChange}
+                  className={`${inputBaseClasses} ${topicError ? 'border-red-500 focus:border-red-500 focus:ring-red-500' : ''}`}
+                  maxLength={MAX_TOPIC_LENGTH +1 }
+                />
+                <div className={charCountClasses}>
+                  {topicOfBabyPodcast.length}/{MAX_TOPIC_LENGTH}
+                </div>
+                {topicError && <p className={errorTextClasses}>{topicError}</p>}
               </div>
-              {topicError && <p className={errorTextClasses}>{topicError}</p>}
-              
+
               {/* 使用提取的音色选择组件 */}
               <VoiceSelector mode="topic" />
             </div>
           )}
 
           {contentCreationMode === 'direct_text_input' && (
-            <div className="mb-6">
-              <label htmlFor="textScriptDirectInput" className="block text-sm font-medium text-gray-300 mb-1.5">
-                Type or paste your script here <span className="text-xs text-gray-400">(Directly type or paste your complete podcast script here.)</span>
-              </label>
-              <div className="mb-2">
-                {currentCredits > 0 ? (
-                  <span className="text-xs text-gray-400">You can input up to {maxTextScriptLength} characters, based on your current credits.</span>
-                ) : (
-                  <span className="text-xs text-red-400">Insufficient credits to input text.</span>
-                )}
+            <div className="bg-[#0d1117] p-6 rounded-lg border border-gray-700/50 space-y-6">
+              <div className="space-y-3">
+                <label htmlFor="textScriptDirectInput" className={labelClasses}>
+                  Type or paste your script here <span className={hintClasses}>(Directly type or paste your complete podcast script here.)</span>
+                </label>
+                <div className="text-sm text-gray-300 bg-blue-500/10 border border-blue-500/30 rounded-lg p-3">
+                  {currentCredits > 0 ? (
+                    <span>💡 You can input up to <strong>{maxTextScriptLength}</strong> characters, based on your current credits.</span>
+                  ) : (
+                    <span className="text-red-400">⚠️ Insufficient credits to input text.</span>
+                  )}
+                </div>
+                <textarea
+                  id="textScriptDirectInput"
+                  name="textScriptDirectInput"
+                  rows={8}
+                  placeholder={`Enter your podcast script (max ${maxTextScriptLength} characters)...`}
+                  value={textScriptDirectInput}
+                  onChange={handleTextScriptDirectInputChange}
+                  className={`${textareaBaseClasses} min-h-[200px] ${textScriptDirectInputError ? 'border-red-500 focus:border-red-500 focus:ring-red-500' : ''}`}
+                  maxLength={maxTextScriptLength > 0 ? maxTextScriptLength : 1}
+                  disabled={currentCredits === 0}
+                />
+                <div className={charCountClasses}>
+                  {textScriptDirectInput.length}/{maxTextScriptLength}
+                </div>
+                {textScriptDirectInputError && <p className={errorTextClasses}>{textScriptDirectInputError}</p>}
               </div>
-              <textarea
-                id="textScriptDirectInput"
-                name="textScriptDirectInput"
-                rows={8}
-                placeholder={`Enter your podcast script (max ${maxTextScriptLength} characters)...`}
-                value={textScriptDirectInput}
-                onChange={handleTextScriptDirectInputChange}
-                className={`${inputBaseClasses} min-h-[150px] ${textScriptDirectInputError ? 'border-red-500' : 'border-gray-700'}`}
-                maxLength={maxTextScriptLength > 0 ? maxTextScriptLength : 1}
-                disabled={currentCredits === 0}
-              />
-              <div className={charCountClasses}>
-                {textScriptDirectInput.length}/{maxTextScriptLength}
-              </div>
-              {textScriptDirectInputError && <p className={errorTextClasses}>{textScriptDirectInputError}</p>}
-              
+
               {/* 使用提取的音色选择组件 */}
               <VoiceSelector mode="direct" />
             </div>
           )}
 
           {contentCreationMode === 'audio_script' && (
-            <div className="space-y-4 mb-6">
-              <label className="block text-sm font-medium text-gray-300 mb-1">
-                Upload Audio File <span className="text-xs text-gray-400">(Upload your pre-recorded audio script. The AI will process this audio.)</span>
-              </label>
-              <div className="mb-2">
-                {currentCredits > 0 ? (
-                  <span className="text-xs text-gray-400">You can upload up to {currentCredits} seconds of audio, based on your current credits.</span>
-                ) : (
-                  <span className="text-xs text-red-400">Insufficient credits to upload audio.</span>
+            <div className="bg-[#0d1117] p-6 rounded-lg border border-gray-700/50 space-y-6">
+              <div className="space-y-3">
+                <label className={labelClasses}>
+                  Upload Audio File <span className={hintClasses}>(Upload your pre-recorded audio script. The AI will process this audio.)</span>
+                </label>
+                <div className="text-sm text-gray-300 bg-orange-500/10 border border-orange-500/30 rounded-lg p-3">
+                  {currentCredits > 0 ? (
+                    <span>🎵 You can upload up to <strong>{currentCredits}</strong> seconds of audio, based on your current credits.</span>
+                  ) : (
+                    <span className="text-red-400">⚠️ Insufficient credits to upload audio.</span>
+                  )}
+                </div>
+                <AudioTrimUpload onAudioReady={handleAudioTrimReady} maxDuration={currentCredits} />
+                {audioScriptError && <p className={errorTextClasses}>{audioScriptError}</p>}
+                {audioScriptFileBlob && (
+                  <div className="text-green-400 text-sm mt-2 bg-green-500/10 border border-green-500/30 rounded-lg p-3">
+                    ✅ Audio segment ready for upload: <strong>{audioScriptFileName}</strong>
+                  </div>
                 )}
               </div>
-              <AudioTrimUpload onAudioReady={handleAudioTrimReady} maxDuration={currentCredits} />
-              {audioScriptError && <p className={errorTextClasses}>{audioScriptError}</p>}
-              {audioScriptFileBlob && (
-                <div className="text-green-400 text-xs mt-1">Audio segment ready for upload: {audioScriptFileName}</div>
-              )}
             </div>
           )}
         </div>
 
         {/* --- MODULE 3: Video Output Settings --- */}
-        <div className="mt-6 pt-6 border-t border-gray-700">
-            <h3 className={sectionTitleClasses}>Video Output Settings</h3>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-4">
+        <div className="space-y-6 pt-8 border-t border-gray-600">
+          <h3 className={sectionTitleClasses}>
+            <div className="w-8 h-8 bg-gradient-to-r from-green-500 to-teal-500 rounded-lg flex items-center justify-center">
+              <span className="text-white font-bold text-sm">3</span>
+            </div>
+            Video Output Settings
+          </h3>
+          <div className="bg-[#0d1117] p-6 rounded-lg border border-gray-700/50">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                  {/* Video Resolution Selector */}
-                 <div>
-                   <label className="block text-sm font-medium text-gray-300 mb-1.5">
+                 <div className="space-y-4">
+                   <label className={labelClasses}>
                      Video Resolution
                    </label>
-                   <div className="flex items-center space-x-4">
-                     <label htmlFor="resolution540p" className="flex items-center cursor-pointer">
+                   <div className="space-y-3">
+                     <label htmlFor="resolution540p" className={radioLabelClasses}>
                        <input
                          type="radio"
                          id="resolution540p"
@@ -1022,11 +1067,11 @@ export default function DashboardClient({ currentCredits }: { currentCredits: nu
                          value="540p"
                          checked={videoResolution === '540p'}
                          onChange={handleVideoResolutionChange}
-                         className="form-radio h-4 w-4 text-purple-600 border-gray-600 focus:ring-purple-500 bg-gray-700"
+                         className={radioInputClasses}
                        />
-                       <span className="ml-2 text-sm text-gray-200">540p</span>
+                       <span className={radioTextClasses}>540p <span className="text-green-400 text-xs">(Standard)</span></span>
                      </label>
-                     <label htmlFor="resolution720p" className="flex items-center cursor-pointer">
+                     <label htmlFor="resolution720p" className={radioLabelClasses}>
                        <input
                          type="radio"
                          id="resolution720p"
@@ -1034,21 +1079,20 @@ export default function DashboardClient({ currentCredits }: { currentCredits: nu
                          value="720p"
                          checked={videoResolution === '720p'}
                          onChange={handleVideoResolutionChange}
-                         className="form-radio h-4 w-4 text-purple-600 border-gray-600 focus:ring-purple-500 bg-gray-700"
+                         className={radioInputClasses}
                        />
-                       <span className="ml-2 text-sm text-gray-200">720p</span>
-                       <span className="ml-1 text-xs text-yellow-400">(Consumes 2x credits)</span>
+                       <span className={radioTextClasses}>720p <span className="text-yellow-400 text-xs">(2x credits)</span></span>
                      </label>
                    </div>
                  </div>
 
                  {/* Aspect Ratio Selector */}
-                 <div>
-                   <label className="block text-sm font-medium text-gray-300 mb-1.5">
+                 <div className="space-y-4">
+                   <label className={labelClasses}>
                      Aspect Ratio
                    </label>
-                   <div className="flex items-center space-x-4">
-                     <label htmlFor="aspect9to16" className="flex items-center cursor-pointer">
+                   <div className="space-y-3">
+                     <label htmlFor="aspect9to16" className={radioLabelClasses}>
                        <input
                          type="radio"
                          id="aspect9to16"
@@ -1056,11 +1100,11 @@ export default function DashboardClient({ currentCredits }: { currentCredits: nu
                          value="9:16"
                          checked={aspectRatio === '9:16'}
                          onChange={handleAspectRatioChange}
-                         className="form-radio h-4 w-4 text-purple-600 border-gray-600 focus:ring-purple-500 bg-gray-700"
+                         className={radioInputClasses}
                        />
-                       <span className="ml-2 text-sm text-gray-200">9:16</span>
+                       <span className={radioTextClasses}>9:16 <span className="text-blue-400 text-xs">(Vertical/Mobile)</span></span>
                      </label>
-                     <label htmlFor="aspect1to1" className="flex items-center cursor-pointer">
+                     <label htmlFor="aspect1to1" className={radioLabelClasses}>
                        <input
                          type="radio"
                          id="aspect1to1"
@@ -1068,11 +1112,11 @@ export default function DashboardClient({ currentCredits }: { currentCredits: nu
                          value="1:1"
                          checked={aspectRatio === '1:1'}
                          onChange={handleAspectRatioChange}
-                         className="form-radio h-4 w-4 text-purple-600 border-gray-600 focus:ring-purple-500 bg-gray-700"
+                         className={radioInputClasses}
                        />
-                       <span className="ml-2 text-sm text-gray-200">1:1</span>
+                       <span className={radioTextClasses}>1:1 <span className="text-purple-400 text-xs">(Square/Social)</span></span>
                      </label>
-                     <label htmlFor="aspect16to9" className="flex items-center cursor-pointer">
+                     <label htmlFor="aspect16to9" className={radioLabelClasses}>
                        <input
                          type="radio"
                          id="aspect16to9"
@@ -1080,37 +1124,39 @@ export default function DashboardClient({ currentCredits }: { currentCredits: nu
                          value="16:9"
                          checked={aspectRatio === '16:9'}
                          onChange={handleAspectRatioChange}
-                         className="form-radio h-4 w-4 text-purple-600 border-gray-600 focus:ring-purple-500 bg-gray-700"
+                         className={radioInputClasses}
                        />
-                       <span className="ml-2 text-sm text-gray-200">16:9</span>
+                       <span className={radioTextClasses}>16:9 <span className="text-orange-400 text-xs">(Widescreen)</span></span>
                      </label>
                    </div>
                  </div>
                </div>
+            </div>
         </div>
         
         {submissionStatus.message && (
-          <div 
-            className={`mt-4 p-3 rounded-md text-sm ${
-              submissionStatus.type === 'success' ? 'bg-green-800/50 text-green-300 border border-green-700' :
-              submissionStatus.type === 'error' ? 'bg-red-800/50 text-red-300 border border-red-700' :
-              'bg-blue-800/50 text-blue-300 border border-blue-700'
+          <div
+            className={`mt-6 p-4 rounded-lg text-sm font-medium border-l-4 ${
+              submissionStatus.type === 'success' ? 'bg-green-500/10 text-green-300 border-green-500/30' :
+              submissionStatus.type === 'error' ? 'bg-red-500/10 text-red-300 border-red-500/30' :
+              'bg-blue-500/10 text-blue-300 border-blue-500/30'
             }`}
           >
             {submissionStatus.message}
           </div>
         )}
 
-        <div className="mt-6 flex items-center justify-between">
-          <button className="flex items-center space-x-1.5 px-3 py-1.5 bg-gray-700 hover:bg-gray-600 rounded-md text-gray-300 transition-colors">
-            <Settings2 size={16} />
-          </button>
-          <button 
-            className="flex items-center space-x-1.5 px-4 py-2 bg-purple-600 hover:bg-purple-700 rounded-md text-white font-medium transition-colors disabled:opacity-50"
-            onClick={handleAICreatePress} 
+        <div className="mt-8 flex items-center justify-end">
+          <button
+            className={`flex items-center gap-3 px-8 py-4 rounded-xl text-white font-bold text-lg transition-all duration-200 transform hover:scale-105 shadow-lg ${
+              isSubmitButtonDisabled
+                ? 'bg-gray-600 cursor-not-allowed opacity-50'
+                : 'bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 hover:shadow-xl'
+            }`}
+            onClick={handleAICreatePress}
             disabled={isSubmitButtonDisabled}
           >
-              <Sparkles size={16} />
+              <Sparkles size={20} />
               <span>{isSubmitting ? 'Processing...' : 'AI Create'}</span>
           </button>
         </div>
@@ -1185,7 +1231,7 @@ export default function DashboardClient({ currentCredits }: { currentCredits: nu
       )}
 
       {/* Global Loading Overlay (might be for initial page load or other global loading states) */}
-      {isLoading && ( 
+      {isLoading && (
         <div className="fixed inset-0 bg-black/30 flex items-center justify-center z-50">
           <p className="text-white text-xl">Loading dashboard...</p>
         </div>
