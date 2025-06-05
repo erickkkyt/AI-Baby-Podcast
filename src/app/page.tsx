@@ -9,7 +9,7 @@ import FAQ from '../components/FAQ';
 import Footer from '../components/Footer';
 import type { Metadata } from 'next';
 
-const newTitle = "AI Baby Generator: Create Unique Baby Story Videos";
+const newTitle = "AI Baby Generator: Create Unique AI Baby Pictures&Videos";
 
 export const metadata: Metadata = {
   title: newTitle,
@@ -19,7 +19,7 @@ export const metadata: Metadata = {
   },
   openGraph: {
     title: newTitle,
-    description: 'Turn your ideas into adorable, shareable baby videos with AI. Customize features, upload images, and choose your style. Start creating memories today!',
+    description: 'Turn your ideas into adorable, shareable baby pictures&videos with AI. Customize features, upload images, and choose your style. Start creating memories today!',
     url: 'https://www.babypodcast.pro',
     images: [
       {
