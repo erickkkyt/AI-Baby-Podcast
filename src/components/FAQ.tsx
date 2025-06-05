@@ -5,44 +5,44 @@ import { useState } from 'react';
 export default function FAQ() {
   const faqs = [
     {
-      question: 'What is BabyGenerator?',
-      answer: 'BabyGenerator is a viral trend taking over TikTok and YouTube Shorts. These AI-generated videos feature baby avatars as hosts discussing various topics in entertaining and engaging ways. Combining advanced AI animation with creative scripting, BabyGenerator creates realistic baby faces that sync perfectly with audio.',
+      question: 'What is AI Baby Generator?',
+      answer: 'AI Baby Generator is a viral trend taking over TikTok and YouTube Shorts. These AI-generated videos feature baby avatars as hosts discussing various topics in entertaining and engaging ways. Combining advanced AI animation with creative scripting, AI Baby Generator creates realistic baby faces that sync perfectly with audio.',
     },
     {
-      question: 'What equipment do I need to create BabyGenerator content?',
-      answer: 'You\'ll need a computer with decent processing power (8GB RAM minimum), access to AI tools like Hedra for animation and ElevenLabs for voice generation, and basic video editing software like CapCut. No physical recording equipment is required as all BabyGenerator elements are generated digitally.',
+      question: 'What equipment do I need to create AI Baby Generator content?',
+      answer: 'You\'ll need a computer with decent processing power (8GB RAM minimum), access to AI tools like Hedra for animation and ElevenLabs for voice generation, and basic video editing software like CapCut. No physical recording equipment is required as all AI Baby Generator elements are generated digitally.',
     },
     {
-      question: 'Is BabyGenerator legal to monetize?',
-      answer: 'Yes, when creating transformative content. Ensure your BabyGenerator adds substantial creative elements beyond any source material. Most successful BabyGenerator creators develop original scripts or transform existing content significantly to qualify as new creative works.',
+      question: 'Is AI Baby Generator legal to monetize?',
+      answer: 'Yes, when creating transformative content. Ensure your AI Baby Generator adds substantial creative elements beyond any source material. Most successful AI Baby Generator creators develop original scripts or transform existing content significantly to qualify as new creative works.',
     },
     {
-      question: 'How much can I earn from creating BabyGenerator content?',
-      answer: 'Earnings vary based on view count and engagement. Successful BabyGenerator creators report $3,000-$15,000 monthly from platform revenue sharing programs. Channels with consistent output of 3-5 BabyGenerator videos daily and strong engagement typically see the best financial results.',
+      question: 'How much can I earn from creating AI Baby Generator content?',
+      answer: 'Earnings vary based on view count and engagement. Successful AI Baby Generator creators report $3,000-$15,000 monthly from platform revenue sharing programs. Channels with consistent output of 3-5 AI Baby Generator videos daily and strong engagement typically see the best financial results.',
     },
     {
-      question: 'How long should BabyGenerator videos be?',
-      answer: 'For TikTok and YouTube Shorts, the most successful BabyGenerator videos are 15-60 seconds long, with 30 seconds being the sweet spot for maximizing view completion rates. For Instagram Reels, keeping BabyGenerator under 30 seconds is often more effective. Consistent length helps establish your BabyGenerator brand identity.',
+      question: 'How long should AI Baby Generator videos be?',
+      answer: 'For TikTok and YouTube Shorts, the most successful AI Baby Generator videos are 15-60 seconds long, with 30 seconds being the sweet spot for maximizing view completion rates. For Instagram Reels, keeping AI Baby Generator under 30 seconds is often more effective. Consistent length helps establish your AI Baby Generator brand identity.',
     },
     {
-      question: 'What topics work best for BabyGenerator videos?',
+      question: 'What topics work best for AI Baby Generator videos?',
       answer: 'Popular topics include simplified explanations of complex subjects (finance, technology, science), reactions to trending news, relationship advice, and humorous takes on everyday situations. The contrast between baby hosts and adult topics creates the engagement that drives virality.',
     },
     {
-      question: 'How do I make my BabyGenerator stand out?',
+      question: 'How do I make my AI Baby Generator stand out?',
       answer: 'Develop a consistent baby character with recognizable traits (specific hairstyle, outfit, or background). Create a content niche rather than covering random topics. Focus on high-quality animation with realistic lip-syncing, and use professional audio recording techniques for clear sound quality.',
     },
     {
-      question: 'Can I use copyrighted content in my BabyGenerator videos?',
-      answer: 'It\'s best to avoid directly copying protected content. Instead, create transformative content by significantly altering source material, providing commentary, or creating original scripts. Many successful BabyGenerator creators use the format to discuss topics in their own words rather than copying existing content directly.',
+      question: 'Can I use copyrighted content in my AI Baby Generator videos?',
+      answer: 'It\'s best to avoid directly copying protected content. Instead, create transformative content by significantly altering source material, providing commentary, or creating original scripts. Many successful AI Baby Generator creators use the format to discuss topics in their own words rather than copying existing content directly.',
     },
     {
       question: 'Do you offer templates to get started?',
-      answer: 'Yes! Our platform provides starter templates for baby avatar designs, script formats that have proven successful, optimized export settings for different platforms, and tutorial guides to help you master the technical aspects of BabyGenerator creation.',
+      answer: 'Yes! Our platform provides starter templates for baby avatar designs, script formats that have proven successful, optimized export settings for different platforms, and tutorial guides to help you master the technical aspects of AI Baby Generator creation.',
     },
     {
-      question: 'How frequently should I post new BabyGenerator content?',
-      answer: 'Consistency is key for algorithm performance. Most successful creators post 1-3 BabyGenerator videos daily when starting out, then scale to 3-5 daily as their channel grows. The content volume helps with testing different approaches and builds a library that can continue generating views and revenue.',
+      question: 'How frequently should I post new AI Baby Generator content?',
+      answer: 'Consistency is key for algorithm performance. Most successful creators post 1-3 AI Baby Generator videos daily when starting out, then scale to 3-5 daily as their channel grows. The content volume helps with testing different approaches and builds a library that can continue generating views and revenue.',
     },
   ];
 
@@ -58,7 +58,7 @@ export default function FAQ() {
         <div className="text-center mb-16">
           <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">Frequently Asked Questions</h2>
           <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-            Everything you need to know about creating viral BabyGenerator content for social media platforms.
+            Everything you need to know about creating viral AI Baby Generator content for social media platforms.
           </p>
         </div>
 
@@ -86,7 +86,7 @@ export default function FAQ() {
         </div>
 
         <div className="mt-16 text-center">
-          <p className="text-gray-600 mb-4">Ready to start creating viral BabyGenerator content?</p>
+          <p className="text-gray-600 mb-4">Ready to start creating viral AI Baby Generator content?</p>
           <a 
             href="/dashboard" 
             className="inline-flex items-center text-blue-600 hover:text-blue-800 font-medium"

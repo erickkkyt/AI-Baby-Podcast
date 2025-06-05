@@ -12,7 +12,7 @@ export interface BlogPost {
 export const blogPosts: BlogPost[] = [
   {
     slug: 'how-to-create-ai-baby-videos',
-    title: 'How to Create AI Baby Videos',
+    title: 'How to Create AI Baby Generator Videos',
     author: 'AI Baby Team',
     date: 'May 29, 2025',
     summary: 'A step-by-step guide to creating your own engaging AI baby videos using the AI Baby Generator dashboard.',

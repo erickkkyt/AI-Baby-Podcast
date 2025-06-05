@@ -18,8 +18,8 @@ export default function Footer() {
               Create viral videos featuring baby hosts who talk like adults, transforming ordinary content into engaging social media sensations.
             </p>
             <div className="mt-4 mb-6">
-              <a href="https://www.producthunt.com/products/ai-baby-podcast-generator?embed=true&utm_source=badge-featured&utm_medium=badge&utm_source=badge-ai&#0045;baby&#0045;podcast&#0045;generator" target="_blank" rel="noopener noreferrer" style={{ display: 'inline-block' }}>
-                <Image src="https://api.producthunt.com/widgets/embed-image/v1/featured.svg?post_id=970402&theme=light&t=1749039627017" alt="AI baby podcast generator - Hear your baby's future speech, AI-voiced today | Product Hunt" style={{width: '160px', height: '35px'}} width="160" height="35" />
+              <a href="https://www.producthunt.com/products/ai-baby-generator?embed=true&utm_source=badge-featured&utm_medium=badge&utm_source=badge-ai-baby-generator" target="_blank" rel="noopener noreferrer" style={{ display: 'inline-block' }}>
+                <Image src="https://api.producthunt.com/widgets/embed-image/v1/featured.svg?post_id=970402&theme=light&t=1749039627017" alt="AI Baby Generator - Hear your baby's future speech, AI-voiced today | Product Hunt" style={{width: '160px', height: '35px'}} width="160" height="35" />
               </a>
             </div>
             <div className="flex space-x-4">

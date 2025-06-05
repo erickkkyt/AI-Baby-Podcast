@@ -1,4 +1,4 @@
-# AI Baby Generator: 个性化AI宝宝播客视频生成平台
+# AI Baby Generator: 个性化AI宝宝视频生成平台
 
 AI Baby Generator 是一个基于 Next.js 的全栈Web应用，允许用户通过AI技术生成个性化的宝宝播客视频。用户可以自定义宝宝的种族、发型和播客主题等参数，系统将通过n8n工作流自动生成高质量的AI视频内容。
 
