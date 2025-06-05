@@ -134,7 +134,7 @@ export default function DashboardSidebar() {
   };
 
   return (
-    <aside className="w-64 bg-[#1c2532] text-white p-4 flex flex-col justify-between h-full border-r border-gray-700 fixed left-0 top-0">
+    <aside className="w-64 bg-white/70 text-yellow-900 p-4 flex flex-col justify-between h-full border-r border-[#f5eecb] rounded-r-2xl fixed left-0 top-0 backdrop-blur-md shadow-lg">
       <div>
         {/* Logo and Brand Name */}
         <div className="flex items-center space-x-2 mb-10 p-2">
@@ -182,10 +182,10 @@ export default function DashboardSidebar() {
 
       <div className="space-y-3">
         {/* Credit Info */}
-        <div className="bg-gray-700/40 p-3 rounded-lg text-sm">
+        <div className="bg-yellow-50/80 p-3 rounded-xl text-sm border-2 border-yellow-300 flex flex-col items-center">
             <div className="flex items-center justify-between text-gray-300 mb-2">
-                <span className="flex items-center font-medium"><Zap size={16} className="mr-1.5 text-yellow-400"/>Credit left</span>
-                <span className="font-semibold text-white">{loading ? '...' : credits}</span>
+                <span className="flex items-center font-medium text-yellow-700"><Zap size={16} className="mr-1.5 text-yellow-400"/>Credit left</span>
+                <span className="font-bold text-yellow-700 text-lg ml-2">{loading ? '...' : credits}</span>
             </div>
             {/* Changed button to Link for navigation */}
             <Link href="/pricing" className="block w-full bg-gray-600 hover:bg-purple-500/80 text-white text-center py-2 rounded-md text-xs font-medium transition-colors">
@@ -202,7 +202,7 @@ export default function DashboardSidebar() {
         ) : user ? (
           <div className="border-t border-gray-700/50 pt-3 mt-2">
             <div className="flex items-center space-x-2 p-2 rounded-lg hover:bg-gray-700/60 group relative transition-colors">
-              <div className="w-9 h-9 rounded-full bg-gray-600 flex items-center justify-center text-white text-base font-semibold">
+              <div className="w-9 h-9 rounded-full bg-white/80 flex items-center justify-center text-gray-200 text-base font-semibold border border-gray-700/50">
                 {user.email?.charAt(0).toUpperCase()}
               </div>
               <div className="overflow-hidden">

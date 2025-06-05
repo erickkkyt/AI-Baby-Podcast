@@ -16,7 +16,15 @@ export default function DashboardLayout({
 }) {
   // You can add shared dashboard UI structure here if needed (e.g., a sidebar, header specific to dashboard)
   return (
-    <section className="min-h-screen bg-[#161b22]">
+    <section
+      className="min-h-screen"
+      style={{
+        backgroundImage: "url('/background.png')",
+        backgroundRepeat: 'repeat',
+        backgroundSize: 'auto',
+        backgroundPosition: 'center',
+      }}
+    >
       {children}
     </section>
   );

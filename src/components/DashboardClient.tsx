@@ -584,20 +584,20 @@ export default function DashboardClient({ currentCredits }: { currentCredits: nu
   }, []);
 
   // 优化后的样式类
-  const selectBaseClasses = "w-full px-4 py-3 pr-10 bg-[#0d1117] border border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-white text-sm transition-all duration-200 hover:border-gray-500 appearance-none cursor-pointer";
-  const inputBaseClasses = "w-full px-4 py-3 bg-[#0d1117] border border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 placeholder-gray-400 text-white text-sm transition-all duration-200 hover:border-gray-500";
-  const textareaBaseClasses = "w-full px-4 py-3 bg-[#0d1117] border border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 placeholder-gray-400 text-white text-sm transition-all duration-200 hover:border-gray-500 resize-none";
-  const sectionTitleClasses = "text-2xl font-bold text-white mb-6 flex items-center gap-3";
-  const cardClasses = "bg-gradient-to-br from-[#161b22]/95 to-[#1c2128]/95 p-8 rounded-xl shadow-2xl border border-gray-700/50 backdrop-blur-md";
-  const labelClasses = "block text-sm font-semibold text-gray-200 mb-3";
-  const hintClasses = "text-xs text-gray-400 font-normal ml-1";
-  const errorTextClasses = "text-red-400 text-xs mt-2 font-medium";
-  const charCountClasses = "text-xs text-gray-400 mt-2 text-right font-medium";
+  const selectBaseClasses = "w-full px-4 py-3 pr-10 bg-white/70 border border-[#f5eecb] rounded-lg focus:ring-2 focus:ring-yellow-200 focus:border-yellow-300 text-gray-800 text-sm transition-all duration-200 hover:border-yellow-200 appearance-none cursor-pointer backdrop-blur-md";
+  const inputBaseClasses = "w-full px-4 py-3 bg-white/70 border border-[#f5eecb] rounded-lg focus:ring-2 focus:ring-yellow-200 focus:border-yellow-300 placeholder-gray-400 text-gray-900 text-sm transition-all duration-200 hover:border-yellow-200 backdrop-blur-md";
+  const textareaBaseClasses = "w-full px-4 py-3 bg-white/70 border border-[#f5eecb] rounded-lg focus:ring-2 focus:ring-yellow-200 focus:border-yellow-300 placeholder-gray-400 text-gray-900 text-sm transition-all duration-200 hover:border-yellow-200 resize-none backdrop-blur-md";
+  const sectionTitleClasses = "text-2xl font-bold text-yellow-900 mb-6 flex items-center gap-3";
+  const cardClasses = "bg-white/80 p-8 rounded-2xl shadow-lg border border-[#f5eecb] backdrop-blur-md";
+  const labelClasses = "block text-sm font-semibold text-yellow-900 mb-3";
+  const hintClasses = "text-xs text-yellow-700 font-normal ml-1";
+  const errorTextClasses = "text-red-500 text-xs mt-2 font-medium";
+  const charCountClasses = "text-xs text-gray-500 mt-2 text-right font-medium";
   const radioGroupClasses = "flex flex-wrap gap-4 mb-6";
   const radioLabelClasses = "flex items-center cursor-pointer group";
-  const radioInputClasses = "w-4 h-4 text-blue-500 border-2 border-gray-500 focus:ring-2 focus:ring-blue-500 focus:ring-offset-0 bg-transparent transition-all duration-200";
-  const radioTextClasses = "ml-3 text-sm text-gray-200 group-hover:text-white transition-colors duration-200";
-  const sectionDescriptionClasses = "text-xs text-gray-400 font-normal leading-relaxed mt-3 mb-5";
+  const radioInputClasses = "w-4 h-4 text-yellow-400 border-2 border-yellow-200 focus:ring-2 focus:ring-yellow-300 focus:ring-offset-0 bg-transparent transition-all duration-200";
+  const radioTextClasses = "ml-3 text-sm text-yellow-900 group-hover:text-yellow-700 transition-colors duration-200";
+  const sectionDescriptionClasses = "text-xs text-yellow-800 font-normal leading-relaxed mt-3 mb-5";
 
   const isSubmitButtonDisabled = 
     isSubmitting ||
@@ -643,7 +643,7 @@ export default function DashboardClient({ currentCredits }: { currentCredits: nu
         </select>
         <ChevronDown className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 pointer-events-none" size={16} />
       </div>
-      <p className="text-xs text-gray-400 mt-2 bg-gray-800/50 p-2 rounded-lg">
+      <p className="text-xs text-blue-700 mt-2 bg-blue-100/70 p-2 rounded-lg">
         💡 <strong>Note:</strong> Each voice supports different styles. The available styles are listed with each voice option.
       </p>
     </div>
@@ -704,13 +704,13 @@ export default function DashboardClient({ currentCredits }: { currentCredits: nu
 
           {/* Conditional Rendering based on appearanceCreationMode */}
           {appearanceCreationMode === 'features' && (
-            <div className="bg-[#0d1117] p-6 rounded-lg border border-gray-700/50 space-y-6">
+            <div className="bg-white/80 p-6 rounded-lg border border-gray-700/50 space-y-6">
               <div className="space-y-3">
                 <p className={labelClasses}>Select the baby&apos;s ethnicity and hair features for AI generation.</p>
               </div>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div className="space-y-3">
-                  <label htmlFor="babyEthnicity" className="block text-sm font-medium text-gray-200 mb-3">
+                  <label htmlFor="babyEthnicity" className="block text-sm font-medium text-gray-800 mb-3">
                     Baby&apos;s Ethnicity
                   </label>
                   <div className="relative">
@@ -750,7 +750,7 @@ export default function DashboardClient({ currentCredits }: { currentCredits: nu
                   </div>
                 </div>
                 <div className="space-y-3">
-                  <label htmlFor="babyHair" className="block text-sm font-medium text-gray-200 mb-3">
+                  <label htmlFor="babyHair" className="block text-sm font-medium text-gray-800 mb-3">
                     Baby&apos;s Hair
                   </label>
                   <div className="relative">
@@ -794,7 +794,7 @@ export default function DashboardClient({ currentCredits }: { currentCredits: nu
           )}
 
           {appearanceCreationMode === 'custom_image' && (
-            <div className="bg-[#0d1117] p-6 rounded-lg border border-gray-700/50 space-y-6">
+            <div className="bg-white/80 p-6 rounded-lg border border-gray-700/50 space-y-6">
               <div className="space-y-3">
                 <label htmlFor="custom-baby-image-input" className={labelClasses}>
                   Upload Baby Image <span className={hintClasses}>(Upload your baby image. This image will be used directly.)</span>
@@ -850,7 +850,7 @@ export default function DashboardClient({ currentCredits }: { currentCredits: nu
           )}
 
           {appearanceCreationMode === 'portrait_to_baby' && (
-            <div className="bg-[#0d1117] p-6 rounded-lg border border-gray-700/50 space-y-6">
+            <div className="bg-white/80 p-6 rounded-lg border border-gray-700/50 space-y-6">
               <div className="space-y-3">
                 <label htmlFor="original-portrait-input" className={labelClasses}>
                   Upload Your Portrait Photo <span className={hintClasses}>(Upload a portrait photo, and the AI will transform it into a baby image.)</span>
@@ -957,7 +957,7 @@ export default function DashboardClient({ currentCredits }: { currentCredits: nu
 
           {/* Conditional Rendering based on contentCreationMode */}
           {contentCreationMode === 'generate_from_topic' && (
-            <div className="bg-[#0d1117] p-6 rounded-lg border border-gray-700/50 space-y-6">
+            <div className="bg-white/80 p-6 rounded-lg border border-gray-700/50 space-y-6">
               <div className="space-y-3">
                 <label htmlFor="topicOfBabyPodcast" className={labelClasses}>
                   What is the podcast topic? <span className={hintClasses}>(Enter a topic, and the AI will generate a podcast script based on it.)</span>
@@ -984,12 +984,12 @@ export default function DashboardClient({ currentCredits }: { currentCredits: nu
           )}
 
           {contentCreationMode === 'direct_text_input' && (
-            <div className="bg-[#0d1117] p-6 rounded-lg border border-gray-700/50 space-y-6">
+            <div className="bg-white/80 p-6 rounded-lg border border-gray-700/50 space-y-6">
               <div className="space-y-3">
                 <label htmlFor="textScriptDirectInput" className={labelClasses}>
                   Type or paste your script here <span className={hintClasses}>(Directly type or paste your complete podcast script here.)</span>
                 </label>
-                <div className="text-sm text-gray-300 bg-blue-500/10 border border-blue-500/30 rounded-lg p-3">
+                <div className="text-sm text-blue-700 bg-blue-100/70 border border-blue-500/30 rounded-lg p-3">
                   {currentCredits > 0 ? (
                     <span>💡 You can input up to <strong>{maxTextScriptLength}</strong> characters, based on your current credits.</span>
                   ) : (
@@ -1019,12 +1019,12 @@ export default function DashboardClient({ currentCredits }: { currentCredits: nu
           )}
 
           {contentCreationMode === 'audio_script' && (
-            <div className="bg-[#0d1117] p-6 rounded-lg border border-gray-700/50 space-y-6">
+            <div className="bg-white/80 p-6 rounded-lg border border-gray-700/50 space-y-6">
               <div className="space-y-3">
                 <label className={labelClasses}>
                   Upload Audio File <span className={hintClasses}>(Upload your pre-recorded audio script. The AI will process this audio.)</span>
                 </label>
-                <div className="text-sm text-gray-300 bg-orange-500/10 border border-orange-500/30 rounded-lg p-3">
+                <div className="text-sm text-blue-700 bg-blue-100/70 border border-blue-500/30 rounded-lg p-3">
                   {currentCredits > 0 ? (
                     <span>🎵 You can upload up to <strong>{currentCredits}</strong> seconds of audio, based on your current credits.</span>
                   ) : (
@@ -1051,7 +1051,7 @@ export default function DashboardClient({ currentCredits }: { currentCredits: nu
             </div>
             Video Output Settings
           </h3>
-          <div className="bg-[#0d1117] p-6 rounded-lg border border-gray-700/50">
+          <div className="bg-white/80 p-6 rounded-lg border border-gray-700/50">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                  {/* Video Resolution Selector */}
                  <div className="space-y-4">
@@ -1189,7 +1189,7 @@ export default function DashboardClient({ currentCredits }: { currentCredits: nu
         </h2>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {youtubeVideos.map(video => (
-            <div key={video.id} className="bg-[#1c2128] p-4 rounded-lg shadow-lg hover:shadow-purple-500/30 transition-shadow">
+            <div key={video.id} className="bg-white/80 p-4 rounded-lg shadow-lg hover:shadow-purple-500/30 transition-shadow">
               <div className="aspect-video overflow-hidden rounded-md mb-3">
                 <iframe
                   className="w-full h-full"
@@ -1210,7 +1210,7 @@ export default function DashboardClient({ currentCredits }: { currentCredits: nu
 
       {/* Recent Notifications Section */}
       {allReceivedNotifications.length > 0 && !isLoading && (
-        <section className="bg-[#1c2128] p-6 rounded-lg shadow-lg">
+        <section className="bg-white/80 p-6 rounded-lg shadow-lg">
           <h3 className="text-xl font-semibold mb-4 text-white">Recent Notifications</h3>
           <div className="space-y-3 max-h-96 overflow-y-auto">
             {allReceivedNotifications.map((notification) => (

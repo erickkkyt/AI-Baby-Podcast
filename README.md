@@ -650,3 +650,8 @@ npm run lint     # 代码检查
 - 技术方案：前端使用wavesurfer.js展示波形，lamejs裁剪并编码为MP3，上传裁剪后音频。
 - 保持原有API接口不变，后端无需改动。
 - 所有变更已提交至main分支。 
+
+## 2024-06-09
+- 3D背景光束（Beams.tsx）主色调和光源色调由白色/黑色统一调整为浅黄色（#FFFACD），以提升整体明亮柔和的视觉效果。
+  - 修改了 Beams 组件的 lightColor 默认值。
+  - 修改了 extendMaterial 的 diffuse 颜色参数。 
