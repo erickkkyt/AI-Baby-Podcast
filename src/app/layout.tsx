@@ -65,8 +65,6 @@ export default function RootLayout({
     <html lang="en" suppressHydrationWarning>
       <head>
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        {/* foundr 站点验证用，可验证后移除 */}
-        <meta name="_foundr" content="67cba4ea4ae38fe00e37ba39bb853a8e" />
         <Script
           id="clarity-init"
           strategy="afterInteractive"
