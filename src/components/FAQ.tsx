@@ -88,7 +88,7 @@ export default function FAQ() {
         <div className="mt-16 text-center">
           <p className="text-gray-600 mb-4">Ready to start creating viral AI Baby Generator content?</p>
           <a 
-            href="/dashboard" 
+            href="https://www.vogueai.net/ai-baby-podcast" 
             className="inline-flex items-center text-blue-600 hover:text-blue-800 font-medium"
           >
             Get started now 

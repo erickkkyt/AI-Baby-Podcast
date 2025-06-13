@@ -110,13 +110,13 @@ export default function Header() {
             ) : (
               <>
                 <Link
-                  href="/login"
+                  href="https://www.vogueai.net/ai-baby-podcast"
                   className="flex h-8 items-center justify-center rounded-md px-3 text-sm font-medium text-gray-600 transition-colors hover:text-blue-600"
                 >
                   Login
                 </Link>
                 <Link
-                  href="/login"
+                  href="https://www.vogueai.net/ai-baby-podcast"
                   className="flex h-8 items-center justify-center rounded-md bg-blue-600 px-3 text-sm font-medium text-white shadow-sm transition-colors hover:bg-blue-700 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-500"
                 >
                   Sign Up
@@ -176,10 +176,10 @@ export default function Header() {
               </div>
             ) : (
               <div className="space-y-3 px-4">
-                <Link href="/login" className="block w-full rounded-md border border-gray-300 bg-white px-4 py-2 text-center text-base font-medium text-gray-700 shadow-sm hover:bg-gray-50" onClick={() => setMobileMenuOpen(false)}>
+                <Link href="https://www.vogueai.net/ai-baby-podcast" className="block w-full rounded-md border border-gray-300 bg-white px-4 py-2 text-center text-base font-medium text-gray-700 shadow-sm hover:bg-gray-50" onClick={() => setMobileMenuOpen(false)}>
                   Login
                 </Link>
-                <Link href="/login" className="block w-full rounded-md border border-transparent bg-blue-600 px-4 py-2 text-center text-base font-medium text-white shadow-sm hover:bg-blue-700" onClick={() => setMobileMenuOpen(false)}>
+                <Link href="https://www.vogueai.net/ai-baby-podcast" className="block w-full rounded-md border border-transparent bg-blue-600 px-4 py-2 text-center text-base font-medium text-white shadow-sm hover:bg-blue-700" onClick={() => setMobileMenuOpen(false)}>
                   Sign Up
                 </Link>
               </div>

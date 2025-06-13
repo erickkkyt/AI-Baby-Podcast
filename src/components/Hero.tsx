@@ -17,7 +17,7 @@ export default function Hero() {
             </p>
             <div className="flex flex-col sm:flex-row space-y-4 sm:space-y-0 sm:space-x-4">
               <Link 
-                href="/dashboard" 
+                href="https://www.vogueai.net/ai-baby-podcast" 
                 className="inline-block bg-blue-600 text-white font-medium px-8 py-4 rounded-full text-center hover:bg-blue-700 transition-colors"
               >
                 Start Creating

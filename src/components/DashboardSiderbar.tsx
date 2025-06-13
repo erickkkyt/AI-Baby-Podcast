@@ -218,7 +218,7 @@ export default function DashboardSidebar() {
             </div>
           </div>
         ) : (
-          <Link href="/login" className="block w-full text-center p-2.5 bg-purple-600 hover:bg-purple-700 rounded-lg text-sm font-medium text-white transition-colors">
+          <Link href="https://www.vogueai.net/ai-baby-podcast" className="block w-full text-center p-2.5 bg-purple-600 hover:bg-purple-700 rounded-lg text-sm font-medium text-white transition-colors">
             Login
           </Link>
         )}

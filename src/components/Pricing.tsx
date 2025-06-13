@@ -32,7 +32,7 @@ export default function Pricing() {
         'Credits never expire'
       ],
       cta: 'Get Starter Plan',
-      ctaLink: '/pricing',
+      ctaLink: 'https://www.vogueai.net/ai-baby-podcast',
       highlight: false,
     },
     {
@@ -50,7 +50,7 @@ export default function Pricing() {
         'Online customer support'
       ],
       cta: 'Get Pro Plan',
-      ctaLink: '/pricing',
+      ctaLink: 'https://www.vogueai.net/ai-baby-podcast',
       highlight: true,
     },
     {
@@ -68,7 +68,7 @@ export default function Pricing() {
         'Custom requirements support'
       ],
       cta: 'Get Creator Plan',
-      ctaLink: '/pricing',
+      ctaLink: 'https://www.vogueai.net/ai-baby-podcast',
       highlight: false,
     },
   ];
