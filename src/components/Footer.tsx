@@ -3,6 +3,7 @@
 import React from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
+import { Calendar, LinkIcon, Users, BookOpen, Edit } from 'lucide-react';
 
 export default function Footer() {
   return (
@@ -23,6 +24,51 @@ export default function Footer() {
               </a>
             </div>
             <div className="flex space-x-4">
+              <a 
+                href="https://cal.com/kkkkeric" 
+                target="_blank" 
+                rel="noopener noreferrer"
+                className="text-gray-400 hover:text-blue-600 transition-colors"
+                title="预约会议 - Cal"
+              >
+                <Calendar size={24} />
+              </a>
+              <a 
+                href="https://linktr.ee/kkkkeric" 
+                target="_blank" 
+                rel="noopener noreferrer"
+                className="text-gray-400 hover:text-green-600 transition-colors"
+                title="所有链接 - Linktree"
+              >
+                <LinkIcon size={24} />
+              </a>
+              <a 
+                href="https://www.creem.io/bip/kkkkeric" 
+                target="_blank" 
+                rel="noopener noreferrer"
+                className="text-gray-400 hover:text-purple-600 transition-colors"
+                title="构建记录 - Creem"
+              >
+                <Users size={24} />
+              </a>
+              <a 
+                href="https://substack.com/@kkkk282763" 
+                target="_blank" 
+                rel="noopener noreferrer"
+                className="text-gray-400 hover:text-orange-600 transition-colors"
+                title="博客 - Substack"
+              >
+                <BookOpen size={24} />
+              </a>
+              <a 
+                href="https://medium.com/@kh844257437" 
+                target="_blank" 
+                rel="noopener noreferrer"
+                className="text-gray-400 hover:text-black transition-colors"
+                title="文章 - Medium"
+              >
+                <Edit size={24} />
+              </a>
             </div>
           </div>
           
