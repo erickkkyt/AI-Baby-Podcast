@@ -52,7 +52,7 @@ export default function Footer() {
                 <Users size={24} />
               </a>
               <a 
-                href="https://substack.com/@kkkk282763" 
+                href="https://substack.com/@jackkkk123" 
                 target="_blank" 
                 rel="noopener noreferrer"
                 className="text-gray-400 hover:text-orange-600 transition-colors"
